@@ -1,10 +1,12 @@
-from flask import request, jsonify
-from models.User import User
-from schemas.userSchema import user_schema
-from app import app, db
+from flask import Blueprint, request, jsonify
+from ..models.User import User
+from ..app import db
+from ..schemas.userSchema import user_schema
 import re
 
-@app.route('/user', methods=['POST'])
+user_bp = Blueprint('user_bp', __name__)
+
+@user_bp.route('/user', methods=['POST'])
 def create_user():
     try:
         data = request.json

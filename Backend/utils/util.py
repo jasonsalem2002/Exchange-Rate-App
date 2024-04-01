@@ -1,5 +1,5 @@
 import datetime, jwt
-from config import SECRET_KEY
+from ..config import SECRET_KEY
 
 def create_token(user_id):
     payload = {

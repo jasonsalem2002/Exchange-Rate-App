@@ -1,4 +1,5 @@
-from app import db, datetime
+from ..app import db
+import datetime
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,11 +1,13 @@
-from flask import request, jsonify
-from app import app, db
-from utils.util import extract_auth_token, decode_token
+from flask import Blueprint, request, jsonify
+from ..app import db
+from ..utils.util import extract_auth_token, decode_token
+from ..models.Transaction import Transaction
+from ..schemas.transactionSchema import transaction_schema, transactions_schema
 import jwt
-from models.Transaction import Transaction
-from schemas.transactionSchema import transaction_schema, transactions_schema
 
-@app.route('/transaction', methods=['POST'])
+transaction_bp = Blueprint('transaction_bp', __name__)
+
+@transaction_bp.route('/transaction', methods=['POST'])
 def create_transaction():
     try:
         data = request.json
@@ -43,7 +45,7 @@ def create_transaction():
     except Exception as e:
         return jsonify({'error': 'Internal server error.'}), 500
     
-@app.route('/transaction', methods=['GET'])
+@transaction_bp.route('/transaction', methods=['GET'])
 def get_user_transactions():
     try:
         token = extract_auth_token(request)

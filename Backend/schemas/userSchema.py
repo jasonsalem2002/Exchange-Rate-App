@@ -1,4 +1,4 @@
-from app import ma
+from ..app import ma
 
 class UserSchema(ma.Schema):
     class Meta:

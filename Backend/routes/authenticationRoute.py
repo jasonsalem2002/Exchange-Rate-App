@@ -1,9 +1,11 @@
-from flask import request, jsonify
-from app import app, bcrypt
-from utils.util import create_token
-from models.User import User
+from flask import Blueprint, request, jsonify
+from ..app import bcrypt
+from ..models.User import User
+from ..utils.util import create_token
 
-@app.route('/auth', methods=['POST'])
+auth_bp = Blueprint('auth_bp', __name__)
+
+@auth_bp.route('/auth', methods=['POST'])
 def authenticate_user():
     try:
         data = request.json

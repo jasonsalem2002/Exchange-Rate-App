@@ -1,9 +1,10 @@
-from flask import jsonify
+from flask import Blueprint, jsonify
 import datetime
-from app import app
-from models.Transaction import Transaction
+from ..models.Transaction import Transaction
 
-@app.route('/exchangeRate', methods=['GET'])
+exchange_rate_bp = Blueprint('exchange_rate_bp', __name__)
+
+@exchange_rate_bp.route('/exchangeRate', methods=['GET'])
 def get_exchange_rate():
     try:
         end_date =datetime.datetime.now()
