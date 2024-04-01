@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Currency Exchange</string>
+    <string name="usd_amount" />
+    <string name="lbp_amount" />
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lbp_amountt">LBP Amount</string>
+</resources>

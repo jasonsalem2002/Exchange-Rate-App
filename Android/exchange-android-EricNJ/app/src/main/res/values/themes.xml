@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.CurrencyExchange" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="colorSecondary">@color/purple_500</item>
+    </style>
+</resources>
