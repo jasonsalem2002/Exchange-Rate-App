@@ -1,6 +1,6 @@
 from flask import request, jsonify
-from models import User
-from schemas import user_schema
+from models.User import User
+from schemas.userSchema import user_schema
 from app import app, db
 import re
 
