@@ -1,0 +1,43 @@
+.root {
+    -fx-font-family: 'Gill Sans MT';
+    -fx-font-size: 14px;
+}
+
+#borderPane {
+    -fx-background-color: #E4E6EB;
+}
+
+#borderPane.left {
+    -fx-alignment: top-center;
+}
+
+.top {
+}
+.top-header {
+    -fx-pref-height: 50px;
+    -fx-pref-width: Infinity;
+    -fx-padding: 0 0 0 40px;
+    -fx-font-size: 24px;
+    /*-fx-font-weight: bold;*/
+    -fx-background-color: C5C5C5;
+}
+
+.nav-container {
+    /*-fx-border-color: white;*/
+    -fx-border-width: 1px;
+    -fx-pref-width: 150px;
+    -fx-background-color: #006BA4;
+    -fx-border-color: #006BA4;
+    -fx-alignment: top-center;
+    -fx-spacing: 10px;
+    -fx-padding: 15px 0 0 0;
+}
+.nav-button {
+    -fx-pref-width: inherit;
+    -fx-start-margin: 10px;
+    -fx-border-width: 0px;
+    -fx-background-color: #c5c5c5;
+    /*-fx-padding: 0;*/
+
+}
+
