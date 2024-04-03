@@ -37,9 +37,10 @@ class ExchangeFragment : Fragment() {
         fetchrates()
         buyUsdTextView = view.findViewById(R.id.txtBuyUsdRate)
         sellUsdTextView = view.findViewById(R.id.txtSellUsdRate)
-        setupConversionUI(view)
+        //setupConversionUI(view)
         return view
     }
+    /*
     private fun setupConversionUI(view: View) {
         etAmount = view.findViewById(R.id.etAmount)
         tvConvertedAmount = view.findViewById(R.id.tvConvertedAmount)
@@ -77,7 +78,7 @@ class ExchangeFragment : Fragment() {
             tvConvertedAmount.text = "Please select a conversion type" +
                     "."
         }
-    }
+    }*/
 
     fun fetchrates(){
         ExchangeService.exchangeApi().getExchangeRates().enqueue(object :

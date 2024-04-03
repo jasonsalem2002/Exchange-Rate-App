@@ -14,7 +14,7 @@ import retrofit2.http.POST
 
 
 object ExchangeService {
-    private const val API_URL: String = "http://10.0.2.2:5000"
+    private const val API_URL: String = "http://f05c-212-36-194-11.ngrok-free.app/"
     fun exchangeApi(): Exchange {
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl(API_URL)
@@ -24,7 +24,7 @@ object ExchangeService {
     }
 
     interface Exchange {
-        @GET("/exchangeRate")
+        @GET("exchangeRate")
         fun getExchangeRates(): Call<ExchangeRates>
 
         @POST("/transaction")

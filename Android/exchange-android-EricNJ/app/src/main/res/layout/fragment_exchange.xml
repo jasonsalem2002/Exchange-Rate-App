@@ -30,7 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/vwSellUsd"
         app:layout_constraintHorizontal_weight="1"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         app:layout_constraintVertical_bias="0.0">
 
         <TextView
@@ -62,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         app:layout_constraintStart_toEndOf="@id/vwBuyUsd"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintVertical_bias="0.0">
 
@@ -85,67 +85,105 @@
             android:gravity="center"
             android:textSize="20sp" />
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/etAmount"
-        android:textColor="@color/Dark_Grey"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:hint="Enter amount"
-        android:inputType="numberDecimal"
-        app:layout_constraintTop_toBottomOf="@id/vwSellUsd"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="120dp"/>
-
-    <RadioGroup
-        android:id="@+id/rgConversionDirection"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/etAmount"
+        app:layout_constraintTop_toBottomOf="@id/vwSellUsd"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp">
 
-        <RadioButton
-            android:id="@+id/rbUsdToLbp"
+        <Button
+            android:id="@+id/buttonFragmentOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Fragment One" />
+
+        <Button
+            android:id="@+id/buttonFragmentTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fragment Two"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/buttonFragmentThree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fragment Three"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/buttonFragmentFour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fragment Four"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+    <!--detail>
+        <EditText
+            android:id="@+id/etAmount"
+            android:textColor="@color/Dark_Grey"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:hint="Enter amount"
+            android:inputType="numberDecimal"
+            app:layout_constraintTop_toBottomOf="@id/vwSellUsd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="120dp"/>
+
+        <RadioGroup
+            android:id="@+id/rgConversionDirection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/Dark_Grey"
-            android:text="USD to LBP"/>
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/etAmount"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp">
 
-        <RadioButton
-            android:id="@+id/rbLbpToUsd"
+            <RadioButton
+                android:id="@+id/rbUsdToLbp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Dark_Grey"
+                android:text="USD to LBP"/>
+
+            <RadioButton
+                android:id="@+id/rbLbpToUsd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Dark_Grey"
+                android:text="LBP to USD"/>
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnConvert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Convert"
+            app:backgroundTint="@color/Vibrant_Blue"
             android:textColor="@color/Dark_Grey"
-            android:text="LBP to USD"/>
-    </RadioGroup>
+            app:layout_constraintTop_toBottomOf="@id/rgConversionDirection"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
 
-    <Button
-        android:id="@+id/btnConvert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Convert"
-        app:backgroundTint="@color/Vibrant_Blue"
-        android:textColor="@color/Dark_Grey"
-        app:layout_constraintTop_toBottomOf="@id/rgConversionDirection"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        <TextView
+            android:id="@+id/tvConvertedAmount"
+            android:textColor="@color/Dark_Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Converted Amount"
 
-    <TextView
-        android:id="@+id/tvConvertedAmount"
-        android:textColor="@color/Dark_Grey"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Converted Amount"
+            app:layout_constraintTop_toBottomOf="@id/btnConvert"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
 
-        app:layout_constraintTop_toBottomOf="@id/btnConvert"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+     </detail-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
