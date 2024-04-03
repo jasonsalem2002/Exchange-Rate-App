@@ -85,43 +85,7 @@
             android:gravity="center"
             android:textSize="20sp" />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/vwSellUsd"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp">
 
-        <Button
-            android:id="@+id/buttonFragmentOne"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Fragment One" />
-
-        <Button
-            android:id="@+id/buttonFragmentTwo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fragment Two"
-            android:layout_marginTop="8dp"/>
-
-        <Button
-            android:id="@+id/buttonFragmentThree"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fragment Three"
-            android:layout_marginTop="8dp"/>
-
-        <Button
-            android:id="@+id/buttonFragmentFour"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fragment Four"
-            android:layout_marginTop="8dp"/>
-    </LinearLayout>
 
     <!--detail>
         <EditText
