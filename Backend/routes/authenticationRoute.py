@@ -5,7 +5,7 @@ from ..utils.util import create_token
 
 auth_bp = Blueprint('auth_bp', __name__)
 
-@auth_bp.route('/auth', methods=['POST'])
+@auth_bp.route('/authentication', methods=['POST'])
 def authenticate_user():
     try:
         data = request.json
