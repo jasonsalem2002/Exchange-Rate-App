@@ -26,11 +26,13 @@ def create_app():
     from .routes.exchangeRateRoute import exchange_rate_bp
     from .routes.transactionRoute import transaction_bp
     from .routes.userRoute import user_bp
+    from .routes.statistics import statistics_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api')
     app.register_blueprint(exchange_rate_bp, url_prefix='/api')
     app.register_blueprint(transaction_bp, url_prefix='/api')
     app.register_blueprint(user_bp, url_prefix='/api')
+    app.register_blueprint(statistics_bp, url_prefix='/api')
 
     return app
 
