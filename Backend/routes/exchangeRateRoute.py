@@ -43,4 +43,4 @@ def get_exchange_rate():
         return jsonify(exchange_rates)
 
     except Exception as e:
-        return jsonify({'error': 'Internal server error.'}), 500
+        return jsonify({'error': 'Internal Server Error'}), 500
