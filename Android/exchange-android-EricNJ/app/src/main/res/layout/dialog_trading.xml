@@ -5,11 +5,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/txtInptUsdAmount"
+        android:id="@+id/AmountToTrade"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="USD Amount"
+        android:hint="Amount To Trade"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,40 +24,60 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/txtInptLbpAmount"
+        android:id="@+id/AmountRequested"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/lbp_amount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtInptUsdAmount">
+        app:layout_constraintTop_toBottomOf="@id/AmountToTrade">
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/lbp_amountt"
+            android:hint="Amount Requested"
             android:inputType="number"
             android:singleLine="true"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ExchangeRate"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/lbp_amount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AmountRequested">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Exchange Rate"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textSize="20sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <RadioGroup
         android:id="@+id/rdGrpTransactionType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtInptLbpAmount">
+        app:layout_constraintTop_toBottomOf="@id/ExchangeRate">
+
         <RadioButton
             android:id="@+id/rdBtnBuyUsd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Buy USD" />
+
         <RadioButton
             android:id="@+id/rdBtnSellUsd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sell USD" />
     </RadioGroup>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
