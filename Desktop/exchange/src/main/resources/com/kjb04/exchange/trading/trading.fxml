@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Button?>
+
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            fx:id="borderPane" fx:controller="com.kjb04.exchange.trading.Trading"
+            xmlns:fx="http://javafx.com/fxml" prefHeight="400.0"
+            stylesheets="@trading.css"
+            prefWidth="600.0">
+    <top>
+        <VBox alignment="CENTER">
+            <Label styleClass="header"
+                   text="LBP-USD Trading"
+                   textAlignment="CENTER"
+            />
+            <Label styleClass="subheader"
+                   text="Trade with other users online"
+                   textAlignment="CENTER"
+            />
+            <HBox alignment="CENTER">
+                <Button fx:id="tradingOffersButton" styleClass="btn"
+                        text="View Offers" onAction="#tradingOffersSelected"/>
+                <Button fx:id="tradingCreateButton" styleClass="btn"
+                        text="Create Request" onAction="#tradingCreateSelected"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <fx:include source="tradingOffers/tradingOffers.fxml"/>
+    </center>
+
+
+
+</BorderPane>
+

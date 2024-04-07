@@ -1,0 +1,10 @@
+.header {
+    -fx-font-size: 24;
+}
+.subheader {
+    -fx-font-size: 18;
+}
+.btn {
+    -fx-background-color: D4AF57;
+    -fx-margin:3;
+}

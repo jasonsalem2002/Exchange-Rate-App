@@ -8,9 +8,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Parent implements Initializable, OnPageCompleteListener{
+public class Parent implements Initializable, OnPageCompleteListener {
     public BorderPane borderPane;
     public Button transactionButton;
+    public Button tradingButton;
     public Button loginButton;
     public Button registerButton;
     public Button logoutButton;
@@ -29,6 +30,9 @@ public class Parent implements Initializable, OnPageCompleteListener{
     }
     public void transactionsSelected() {
         swapContent(Section.TRANSACTIONS);
+    }
+    public void tradingSelected() {
+        swapContent(Section.TRADING);
     }
     public void loginSelected() { swapContent(Section.LOGIN); }
     public void registerSelected() {
@@ -58,6 +62,8 @@ public class Parent implements Initializable, OnPageCompleteListener{
                 null;
         transactionButton.setManaged(authenticated);
         transactionButton.setVisible(authenticated);
+        tradingButton.setManaged(authenticated);
+        tradingButton.setVisible(authenticated);
         loginButton.setManaged(!authenticated);
         loginButton.setVisible(!authenticated);
         registerButton.setManaged(!authenticated);
@@ -70,6 +76,7 @@ public class Parent implements Initializable, OnPageCompleteListener{
     private enum Section {
         RATES,
         TRANSACTIONS,
+        TRADING,
         LOGIN,
         REGISTER;
         public String getResource() {
@@ -78,6 +85,8 @@ public class Parent implements Initializable, OnPageCompleteListener{
                         "/com/kjb04/exchange/rates/rates.fxml";
                 case TRANSACTIONS ->
                         "/com/kjb04/exchange/transactions/transactions.fxml";
+                case TRADING ->
+                        "/com/kjb04/exchange/trading/trading.fxml";
                 case LOGIN ->
                         "/com/kjb04/exchange/login/login.fxml";
                 case REGISTER ->

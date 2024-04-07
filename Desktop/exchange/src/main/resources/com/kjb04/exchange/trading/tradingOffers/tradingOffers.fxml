@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:id="anchorPane"
+            fx:controller="com.kjb04.exchange.trading.tradingOffers.TradingOffers"
+            prefHeight="200.0" prefWidth="600.0">
+    <TableView
+            fx:id="tableView"
+            AnchorPane.bottomAnchor="4"
+            AnchorPane.leftAnchor="4"
+            AnchorPane.rightAnchor="4"
+            AnchorPane.topAnchor="4">
+        <columns>
+            <TableColumn text="Offer ID" fx:id="offerID"
+                         prefWidth="150"/>
+            <TableColumn text="Transaction Type" fx:id="transactionType"
+                         prefWidth="150"/>
+            <TableColumn text="Amount Offered" fx:id="amountOffered"
+                         prefWidth="150"/>
+            <TableColumn text="Amount Requested" fx:id="amountRequested"
+                         prefWidth="150"/>
+            <TableColumn text="Rate" fx:id="rate"
+                         prefWidth="150"/>
+            <TableColumn text="Time Placed" fx:id="timePlaced"
+                         prefWidth="150"/>
+        </columns>
+    </TableView>
+</AnchorPane>

@@ -16,18 +16,18 @@
         />
     </top>
     <left>
-        <VBox spacing="5" styleClass="nav-container" fillWidth="true" >
-            <Button styleClass="nav-button" text="Exchange Rate"
-                    onAction="#ratesSelected"/>
-            <Button fx:id="transactionButton" styleClass="nav-button"
-                    text="Transactions"
-                    onAction="#transactionsSelected"/>
-            <Button fx:id="loginButton" styleClass="nav-button"
-                    text="Login" onAction="#loginSelected"/>
-            <Button fx:id="registerButton" styleClass="nav-button"
-                    text="Register" onAction="#registerSelected"/>
-            <Button fx:id="logoutButton" styleClass="nav-button" text="Log
-out" onAction="#logoutSelected"/>
+        <VBox styleClass="nav-container" fillWidth="true" VBox.vgrow="ALWAYS">
+            <VBox spacing="5">
+                <Button fx:id="exchangeRateButton" styleClass="nav-button" text="Exchange Rate" onAction="#ratesSelected"/>
+                <Button fx:id="transactionButton" styleClass="nav-button" text="Transactions" onAction="#transactionsSelected"/>
+                <Button fx:id="tradingButton" styleClass="nav-button" text="Trading" onAction="#tradingSelected"/>
+            </VBox>
+            <Pane VBox.vgrow="ALWAYS"/>
+            <VBox spacing="5">
+                <Button fx:id="loginButton" styleClass="nav-button" text="Login" onAction="#loginSelected"/>
+                <Button fx:id="registerButton" styleClass="nav-button" text="Register" onAction="#registerSelected"/>
+                <Button fx:id="logoutButton" styleClass="nav-button" text="Log out" onAction="#logoutSelected"/>
+            </VBox>
         </VBox>
     </left>
     <center>

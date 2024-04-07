@@ -18,8 +18,8 @@
     -fx-pref-width: Infinity;
     -fx-padding: 0 0 0 40px;
     -fx-font-size: 24px;
-    /*-fx-font-weight: bold;*/
-    -fx-background-color: C5C5C5;
+    -fx-font-weight: bold;
+    -fx-background-color: D4AF57;
 }
 
 .nav-container {
@@ -30,7 +30,7 @@
     -fx-border-color: #006BA4;
     -fx-alignment: top-center;
     -fx-spacing: 10px;
-    -fx-padding: 15px 0 0 0;
+    -fx-padding: 15px 0 15px 0;
 }
 .nav-button {
     -fx-pref-width: inherit;

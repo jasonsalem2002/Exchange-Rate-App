@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<GridPane fx:controller="com.kjb04.exchange.trading.tradingCreate.TradingCreate"
+          xmlns:fx="http://javafx.com/fxml"
+          stylesheets="@tradingCreate.css"
+          alignment="center"
+          hgap="10" vgap="10"
+          prefHeight="200.0" prefWidth="600.0" >
+
+    <HBox GridPane.rowIndex="3" GridPane.columnIndex="0">
+        <RadioButton text="Buy USD ">
+            <toggleGroup>
+                <ToggleGroup fx:id="transactionType"/>
+            </toggleGroup>
+        </RadioButton>
+        <RadioButton text="Sell USD"
+                     toggleGroup="$transactionType"/>
+    </HBox>
+    <Label styleClass="value-label"
+           fx:id="tradeAmountLabel" text="Amount to Trade"
+           GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+    <TextField fx:id="tradeAmountTextField"
+               GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+    <Label styleClass="value-label"
+           fx:id="tradeAmountReqLabel" text="Amount Requested"
+           GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+    <TextField fx:id="tradeAmountReqTextField"
+               GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+    <Label styleClass="value-label"
+           fx:id="tradeRateLabel" text="ExchangeRate"
+           GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+    <TextField fx:id="tradeRateTextField"
+               GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+    <Button text="Submit" onAction="#submitOffer"
+            GridPane.columnIndex="0" GridPane.rowIndex="10" GridPane.columnSpan="2" GridPane.halignment="CENTER"/>
+
+
+
+
+
+</GridPane>

@@ -16,7 +16,6 @@
            text="LBP Exchange Rate"
            textAlignment="CENTER" GridPane.columnSpan="2"
            GridPane.halignment="CENTER"
-           GridPane.rowIndex="0"
     />
 
     <Label styleClass="value-label"
@@ -45,7 +44,7 @@
     <TextField fx:id="lbpTextField"
                GridPane.columnIndex="1" GridPane.rowIndex="8"/>
 
-    <RadioButton text="Buy USD" GridPane.rowIndex="9" >
+    <RadioButton text="Buy USD" GridPane.columnIndex="0" GridPane.rowIndex="9">
         <toggleGroup>
             <ToggleGroup fx:id="transactionType"/>
         </toggleGroup>
@@ -53,38 +52,7 @@
     <RadioButton text="Sell USD" GridPane.columnIndex="1" GridPane.rowIndex="9"
                  toggleGroup="$transactionType"/>
     <Button text="Add Transaction" onAction="#addTransaction"
-            GridPane.columnIndex="0" GridPane.rowIndex="10" GridPane.columnSpan="2" GridPane.halignment="CENTER"/>
-
-    <Separator orientation="HORIZONTAL" GridPane.RowIndex="11"
-               GridPane.columnIndex="0" GridPane.columnSpan="2"/>
-
-
-    <Label styleClass="header"
-           text="Convert"
-           textAlignment="CENTER" GridPane.columnSpan="2"
-           GridPane.columnIndex="0" GridPane.rowIndex="12"
-           GridPane.halignment="CENTER"
-    />
-    <Label styleClass="value-label"
-           fx:id="usdAmountLabelConvert" text="USD Amount"
-           GridPane.columnIndex="0" GridPane.rowIndex="13"/>
-    <TextField fx:id="usdTextFieldConvert"
-               GridPane.columnIndex="0" GridPane.rowIndex="14"/>
-    <Label styleClass="value-label"
-           fx:id="lbpAmountLabelConvert" text="LBP Amount"
-           GridPane.columnIndex="1" GridPane.rowIndex="13"/>
-    <TextField fx:id="lbpTextFieldConvert"
-               GridPane.columnIndex="1" GridPane.rowIndex="14"/>
-
-    <RadioButton text="USD to LBP" GridPane.columnIndex="0" GridPane.rowIndex="15">
-        <toggleGroup>
-            <ToggleGroup fx:id="transactionTypeConvert"/>
-        </toggleGroup>
-    </RadioButton>
-    <RadioButton text="LBP to USD" GridPane.columnIndex="1" GridPane.rowIndex="15"
-                 toggleGroup="$transactionTypeConvert"/>
-    <Button text="Convert" onAction="#convert"
-            GridPane.columnIndex="0" GridPane.rowIndex="16" GridPane.columnSpan="2" GridPane.halignment="CENTER"/>
+            GridPane.columnIndex="0" GridPane.rowIndex="10" GridPane.columnSpan="2"/>
 
 
 </GridPane>

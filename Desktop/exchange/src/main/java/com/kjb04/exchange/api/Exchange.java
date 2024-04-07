@@ -1,9 +1,6 @@
 package com.kjb04.exchange.api;
 
-import com.kjb04.exchange.api.model.ExchangeRates;
-import com.kjb04.exchange.api.model.Token;
-import com.kjb04.exchange.api.model.Transaction;
-import com.kjb04.exchange.api.model.User;
+import com.kjb04.exchange.api.model.*;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -13,16 +10,19 @@ import retrofit2.http.POST;
 import java.util.List;
 
 public interface Exchange {
-    @POST("/user")
+    @POST("/api/user")
     Call<User> addUser(@Body User user);
-    @POST("/authentication")
+    @POST("/api/authentication")
     Call<Token> authenticate(@Body User user);
-    @GET("/exchangeRate")
+    @GET("/api/exchangeRate")
     Call<ExchangeRates> getExchangeRates();
-    @POST("/transaction")
+    @POST("/api/transaction")
     Call<Object> addTransaction(@Body Transaction transaction,
                                 @Header("Authorization") String authorization);
-    @GET("/transaction")
+    @GET("/api/transaction")
     Call<List<Transaction>> getTransactions(@Header("Authorization")
                                             String authorization);
+    @POST("/api/offer")
+    Call<Object> addOffer(@Body Offer offer,
+                                @Header("Authorization") String authorization);
 }
