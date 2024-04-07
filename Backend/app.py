@@ -11,6 +11,7 @@ bcrypt = Bcrypt()
 
 
 def create_app():
+    # from .models import Offer, Transaction, User
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
     db.init_app(app)
@@ -27,12 +28,14 @@ def create_app():
     from .routes.transactionRoute import transaction_bp
     from .routes.userRoute import user_bp
     from .routes.statistics import statistics_bp
+    from .routes.offersRoute import offers_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api')
     app.register_blueprint(exchange_rate_bp, url_prefix='/api')
     app.register_blueprint(transaction_bp, url_prefix='/api')
     app.register_blueprint(user_bp, url_prefix='/api')
     app.register_blueprint(statistics_bp, url_prefix='/api')
+    app.register_blueprint(offers_bp, url_prefix='/api')
 
     return app
 
