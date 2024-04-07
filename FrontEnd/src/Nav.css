@@ -1,0 +1,130 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+
+
+body {
+    background-color: #d3d3d3;
+}
+
+@media screen and (max-width: 600px) {
+    
+    html{
+        font-size: 12px;
+    };
+  }
+
+@media screen and (min-width: 600px) {
+    
+    html{
+        font-size: 14px;
+    };
+  }
+
+
+
+
+
+
+.navlinkdrawer 
+{
+    color: black;
+    font-size: 1.5rem;
+    height: 10%;
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding:auto;
+    text-decoration: none;
+    transition: opacity .25s ease-in-out;
+}
+
+.navlinkdrawer p
+{
+    color: black;
+    font-size: 1.5rem;
+    height: 100%;
+    width:50%;
+    font-family: "With My Woes";
+    text-decoration: none;
+    font-weight:600;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
+    
+}
+
+.navlink
+{
+    color: white;
+    font-size: 1.4rem;
+    padding-right: 20px;
+    transition: opacity .25s ease-in-out;
+    font-family: "With My Woes";
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+.navlinkdrawer:hover,cursor
+{
+    opacity:0.6;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+
+}
+
+
+
+.navlink:hover
+{
+    
+    text-decoration: underline;
+}
+
+
