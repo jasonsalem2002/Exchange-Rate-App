@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import './App.css';
+import './Nav.css';
 import React, { useCallback, useEffect } from 'react'
 import { useState } from 'react';
 import { Alert, AppBar, Box, Button, Link, MenuItem, Select, Snackbar, TextField, Toolbar, Typography } from '@mui/material';
@@ -21,8 +21,10 @@ const {SERVER_URL}= User()
 const {login}= User()
 const {logout}= User()
 const {setLoginState}= User()
+const {setRegisterState}= User()
 const {loginRejected}= User()
 const {userTransactions}= User()
+const {registerRejected}= User()
 
   return (
     <div>
@@ -35,7 +37,7 @@ const {userTransactions}= User()
       <Box>
       <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/transactions'>Rates</a>
       <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/offers'  >Transactions</a>
-      <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/calculator'>Offers</a>
+      <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/offers'>Offers</a>
       <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/offers'  >Calculator</a>
 
       </Box>
@@ -71,6 +73,7 @@ const {userTransactions}= User()
       </Toolbar>
     </AppBar>
 
+
     <UserCredentialsDialog open={authState===States.USER_CREATION} title={"Register"} onSubmit={createUser} onClose={()=>{setAuthState(States.PENDING)}} submitText={"Register"} />
     <UserCredentialsDialog open={authState===States.USER_LOG_IN} title={"Login"} onSubmit={login} onClose={()=>{setAuthState(States.PENDING)}} submitText={"Login"} />
     <Snackbar elevation={6}variant="filled" open={loginRejected} autoHideDuration={2000} onClose={() => setLoginState(false)}>
@@ -78,6 +81,9 @@ const {userTransactions}= User()
     </Snackbar>
     <Snackbar elevation={6}variant="filled" open={authState === States.USER_AUTHENTICATED} autoHideDuration={2000} onClose={() => setAuthState(States.PENDING)}>
         <Alert severity="success">Success</Alert>
+    </Snackbar>
+    <Snackbar elevation={6}variant="filled" open={registerRejected} autoHideDuration={2000} onClose={() => setRegisterState(false)}>
+        <Alert severity="error">Password must be between 8 and 64 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.</Alert>
     </Snackbar>
 
     

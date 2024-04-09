@@ -13,7 +13,7 @@ import { UserProvider } from './UserContext';
 
 
 function App() {
-
+  //put offers
   return (
     <div style={{}}>
       <UserProvider>

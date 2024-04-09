@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import './App.css';
+import './Home.css';
 import React, { useCallback, useEffect } from 'react'
 import { useState } from 'react';
 import { Alert, AppBar, Box, Button,  MenuItem, Select, Snackbar, TextField, Toolbar, Typography } from '@mui/material';
@@ -8,6 +8,7 @@ import { getUserToken,saveUserToken, clearUserToken } from "./localstorage";
 import { DataGrid } from '@mui/x-data-grid';
 import Nav from './Nav';
 import { User } from './UserContext';
+import Calculator from './Calculator';
 
 
 
@@ -37,7 +38,7 @@ const {userTransactions}= User()
  
 
 function fetchRates() {
-  fetch(`${SERVER_URL}/exchangeRate`)
+  fetch(`${SERVER_URL}/api/exchangeRate`)
   .then(response => {
   return response.json();
 })
@@ -58,7 +59,7 @@ function fetchRates() {
   var usdToLbp=transactionType
   
 
-  fetch(`${SERVER_URL}/transaction`, {
+  fetch(`${SERVER_URL}/api/transaction`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -75,15 +76,7 @@ function fetchRates() {
   })
 }
 
-const handleCalculate = () => {
-  const rate = transactionType === 1 ? sellUsdRate : buyUsdRate;
-  const result = transactionType === 1 ? rate * amountInput : amountInput / rate;
-  setrateResult(Math.round(100 * result) / 100);
-};
-
-
-
- // useEffect(fetchRates, []);
+ useEffect(fetchRates, []);
 
   return (
     <div style={{}}>
@@ -123,55 +116,9 @@ const handleCalculate = () => {
         </form>
   
     </div>
-    <hr style={{ margin: '40px auto' }} />
-    <div className="calculator">
-          <Typography variant="h4">Rate Calculator</Typography>
-          <Select
-            labelId="transaction-type"
-            id="transaction-type"
-            value={transactionType}
-            onChange={(e) => {
-              setTransactionType(e.target.value);
-              setrateResult("");
-            }}
-            style={{ fontSize: '15px', padding: '0px' }}
-          >
-            <MenuItem value={1}>USD to LBP</MenuItem>
-            <MenuItem value={0}>LBP to USD</MenuItem>
-          </Select>
-          <br />
-          <br />
-          <form name="transaction-entry">
-            <div className="amount-input">
-              <Typography variant="h5" htmlFor="amount-input">
-                {transactionType === 1
-                  ? "Amount in USD"
-                  : "Amount in LBP"}
-              </Typography>
-              <TextField
-                id="amount-input"
-                type="number"
-                value={amountInput}
-                onChange={(e) => setAmountInput(e.target.value)}
-              />
-            </div>
-            <Typography variant="h5">
-              {transactionType === 1
-                ? "Amount in LBP"
-                : "Amount in USD"} : {" "}
-              <span id="rate-result">{rateResult}</span>
-            </Typography>
-            <br />         
-            <Button
-              id="calculate-button"
-              variant="contained"
-              color="primary"
-              onClick={handleCalculate}
-            >
-              Calculate
-            </Button>
-          </form>
-        </div>
+
+    <Calculator/>
+    
         <hr style={{ margin: '40px auto' }} />
         </body>
         {userToken && (

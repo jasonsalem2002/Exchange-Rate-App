@@ -10,22 +10,41 @@ import { User } from './UserContext';
 import { DataGrid } from '@mui/x-data-grid';
 
 
-function CreateOffer() {
+function CreateOffer(fetchOffers) {
 
    const [dialogOpen, setDialogOpen] = useState(false);
-   const [formData, setFormData] = useState({
-    amountOffered:'',
-    amountRequested: '',
-    exchangeRate: '',
-  });
+   const [transactionType,setTransactionType]= useState();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+   const [amountRequested,setAmountRequested]=  useState();
+  const [amountToTrade,setAmountToTrade]= useState();
+
+  const {SERVER_URL}= useState();
+  const {userToken}= useState();
+  function addOffer() {
+  
+    var amount_requested = JSON.stringify(parseFloat(amountRequested));
+    var lbp_amount = JSON.stringify(parseFloat(amountToTrade));
+    var usdToLbp=transactionType
+  
+    fetch(`${SERVER_URL}/api/transaction`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userToken}`,
+      },
+      body: JSON.stringify({
+        "amount_requested": amountRequested,
+        "amount_to_trade": amountToTrade,
+        "usd_to_lbp": transactionType
+      })
+    })
+    .then(response => {
+      return response.json();
+    })
+  }  
+  
+
+
 
    return(
    <div>
@@ -36,13 +55,13 @@ function CreateOffer() {
             
             
             <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
-              
+            
             <TextField
               sx={{width:'50%', borderRadius:'5%'}}
               label="Amount Requested"
-              name="amountRequested"
-              value={formData.amountRequested}
-              onChange={handleChange}
+              name="amount_requested"
+              value={amountRequested}
+              onChange={(e)=>{setAmountRequested(e.target.value)}}
             />
             </Box>
 
@@ -50,25 +69,22 @@ function CreateOffer() {
 
             <TextField
              sx={{width:'50%', borderRadius:'5%'}}
-              label="Amount Offered"
-              name="amountOffered"
-              value={formData.amountOffered}
-              onChange={handleChange}
-            />
-            </Box>
-        
-            <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
-            <TextField
-             sx={{width:'50%', borderRadius:'5%'}}
-              label="Exchange Rate"
-              name="exchangeRate"
-              value={formData.exchangeRate}
-              onChange={handleChange}
+              label="Amount To Trade"
+              name="amount_to_trade"
+              value={amountToTrade}
+              onChange={(e)=>{setAmountToTrade(e.target.value)}}
             />
             </Box>
 
-         
-            <Button style={{width:'80px',padding:'8px',backgroundColor:'#0093d5'}} variant="contained" color="primary" type="submit">
+            <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
+            <Select defaultValue="usd-to-lbp" sx={{width:'50%', borderRadius:'5%'}} id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(1)}
+              else{setTransactionType(0)}}} >
+                <MenuItem value="usd-to-lbp" >USD to LBP</MenuItem>
+                <MenuItem value="lbp-to-usd">LBP to USD</MenuItem>
+               </Select>
+            </Box>
+
+            <Button onClick={()=> addOffer()} style={{width:'80px',padding:'8px',backgroundColor:'#0093d5'}} variant="contained" color="primary" type="submit">
               Add
             </Button>
 

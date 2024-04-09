@@ -13,15 +13,50 @@ import CreateOffer from './CreateOffer';
 
 
 function Offers() {
+  
 
-    const rows = [
-        { id: 1,username:'ymc09' ,amountRequested: 5000000, amountOffered:5,exchangeRate:100000 ,added_date: '2024-04-04'},
-        { id: 2,username:'ymc06' ,amountRequested: 5, amountOffered:500000,exchangeRate:1000000 ,added_date: '2024-04-07' },
-        { id: 3,username:'ymc04' ,amountRequested: 2, amountOffered:180000,exchangeRate:900000 ,added_date: '2024-04-03' },
-        { id: 4,username:'ymc02' ,amountRequested: 5000000, amountOffered:5,exchangeRate:100000 ,added_date: '2024-04-01'},
-        { id: 5,username:'ymc06' ,amountRequested: 8, amountOffered:760000,exchangeRate:950000 ,added_date: '2024-04-02' },
-        { id: 6,username:'ymc08' ,amountRequested: 2000000, amountOffered:25,exchangeRate:80000 ,added_date: '2024-04-03' }
-    ]
+  const {userToken}= User();
+  const {SERVER_URL}= User();
+
+  const [offers, setOffers] = useState([]);
+
+
+  const markComplete = () => {
+    setDialogOpen(false);
+    fetch(`${SERVER_URL}/api/accept_offer/${selectedRow.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userToken}`,
+      },
+    })
+    .then(response => {
+      return response.json();
+    })
+  
+  
+  };
+
+  const fetchOffers = useCallback(() => {
+    fetch(`${SERVER_URL}/api/offers`, {
+        method:'GET',
+        headers: {
+            Authorization: `Bearer ${userToken}`,
+        },
+    })
+    .then((response) => response.json())
+    .then((offers) => setOffers(offers));
+}, [SERVER_URL, userToken,markComplete]);
+
+
+
+
+
+useEffect(() => {
+  if (userToken) {
+      fetchOffers();
+  }
+}, [fetchOffers, userToken]);
 
     const [selectedRow, setSelectedRow] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -30,32 +65,29 @@ function Offers() {
         setDialogOpen(true);
       };
 
-      const handleAccept = () => {
-        setDialogOpen(false);
-      };
+     
     
       const handleReject = () => {
         setDialogOpen(false);
       };
-
+    
   return (
-    <div style={{}}>
+    <div>
         <Nav/>
         
         <Box sx={{paddingTop:'10%', width:'100%',height:'600px',display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'space-around'}}>
             {/* <Typography variant='h5' sx={{height:'100px'}}>OFFERS</Typography> */}
-            <CreateOffer/>
+            <CreateOffer fetchOffers={fetchOffers}/>
         <DataGrid sx={{marginTop:'5%'}}
               columns={[
                 { field: 'id', headerName: 'ID' },
-                { field: 'username', headerName: 'Username' },
-                { field: 'amountOffered', headerName: 'Amount Offered' },
-                { field: 'amountRequested', headerName: 'Amount Requested' },
+                { field: 'user_id', headerName: 'Username' },
+                { field: 'amount_requested', headerName: 'Amount Offered' },
+                { field: 'amount_to_trade', headerName: 'Amount Requested' },
                 { field: 'exchangeRate', headerName: 'Exchange Rate' },
                 { field: 'added_date', headerName: 'Date' },
-        
               ]}
-              rows={rows}
+              rows={offers}
               onRowClick={handleRowClick}
               autoHeight
             />
@@ -64,7 +96,7 @@ function Offers() {
              <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
 
         <DialogActions sx={{display:'flex',flexDirection:'column'}}>
-          <Button onClick={handleAccept} >
+          <Button onClick={markComplete} >
             Accept
           </Button>
           <Button onClick={handleReject} >
