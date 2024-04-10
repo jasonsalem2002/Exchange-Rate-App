@@ -33,8 +33,7 @@ class TransactionsFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_transactions,
             container, false)
         listview = view.findViewById(R.id.listview)
-        adapter =
-            TransactionAdapter(layoutInflater, transactions!!)
+        adapter = TransactionAdapter(layoutInflater, transactions!!)
         listview?.adapter = adapter
         return view
     }
@@ -79,7 +78,6 @@ class TransactionsFragment : Fragment() {
                         response: Response<List<Transaction>>
                     ) {
                         if(response.body()==null){
-                            // Handle the case where no transactions are found
                             Toast.makeText(requireContext(), "No transactions found.", Toast.LENGTH_LONG).show()
                         }
                         else{
