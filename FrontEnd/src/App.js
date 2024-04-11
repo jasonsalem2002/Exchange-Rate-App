@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { useCallback, useEffect } from 'react'
 import { useState } from 'react';
@@ -16,7 +15,7 @@ function App() {
   //put offers
   return (
     <div style={{}}>
-      <UserProvider>
+    <UserProvider>
     <Router>
       <Routes>
         <Route path='/' element={<Home/>}></Route>

@@ -76,9 +76,9 @@ useEffect(() => {
         <Nav/>
         
         <Box sx={{paddingTop:'10%', width:'100%',height:'600px',display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'space-around'}}>
-            {/* <Typography variant='h5' sx={{height:'100px'}}>OFFERS</Typography> */}
+             <Typography variant='h5' sx={{height:'100px'}}>OFFERS</Typography> 
             <CreateOffer fetchOffers={fetchOffers}/>
-        <DataGrid sx={{marginTop:'5%'}}
+        <DataGrid sx={{marginTop:'5%',maxWidth:'100%'}}
               columns={[
                 { field: 'id', headerName: 'ID' },
                 { field: 'user_id', headerName: 'Username' },
@@ -89,11 +89,11 @@ useEffect(() => {
               ]}
               rows={offers}
               onRowClick={handleRowClick}
-              autoHeight
+            
             />
              </Box>
 
-             <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+             {/* <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
 
         <DialogActions sx={{display:'flex',flexDirection:'column'}}>
           <Button onClick={markComplete} >
@@ -103,7 +103,7 @@ useEffect(() => {
             Reject
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog>  */}
     </div>
   );
 }

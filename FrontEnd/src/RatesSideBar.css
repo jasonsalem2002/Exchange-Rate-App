@@ -1,0 +1,34 @@
+.headerDrawer
+{
+    height:30%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    background-color:#0093d5;
+    margin-top: 0%;
+    padding-top: 0%;
+}
+
+.headerText
+{
+    font-weight: bold;
+    padding-left:5%;
+     color:white;
+}
+
+#calculatorHeader
+{
+    height:20%;
+}
+
+#conversion-type
+{
+    height:2%;
+ 
+}
+
+
+#calculate-button
+{
+    height:15%;
+}

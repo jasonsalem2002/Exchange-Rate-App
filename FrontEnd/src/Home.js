@@ -1,20 +1,22 @@
 import logo from './logo.svg';
+import './App.css';
 import './Home.css';
 import React, { useCallback, useEffect } from 'react'
 import { useState } from 'react';
-import { Alert, AppBar, Box, Button,  MenuItem, Select, Snackbar, TextField, Toolbar, Typography } from '@mui/material';
+import { Alert, AppBar, Box, Button,  Input,  MenuItem, Select, Snackbar, TextField, Toolbar, Typography } from '@mui/material';
 import UserCredentialsDialog from './UserCredentialsDialog/UserCredentialsDialog';
 import { getUserToken,saveUserToken, clearUserToken } from "./localstorage";
 import { DataGrid } from '@mui/x-data-grid';
 import Nav from './Nav';
 import { User } from './UserContext';
-import Calculator from './Calculator';
+import RatesSideBar from './RatesSideBar';
+import ChatDrawer from './ChatDrawer';
+
 
 
 
 function Home() {
-  let [buyUsdRate, setBuyUsdRate] = useState(null);
- let [sellUsdRate, setSellUsdRate] = useState(null);
+ 
  let [lbpInput, setLbpInput] = useState("");
  let [usdInput, setUsdInput] = useState("");
  let [transactionType, setTransactionType] = useState(0);
@@ -37,18 +39,7 @@ const {loginRejected}= User()
 const {userTransactions}= User()
  
 
-function fetchRates() {
-  fetch(`${SERVER_URL}/api/exchangeRate`)
-  .then(response => {
-  return response.json();
-})
-  .then(data => {
-  
-    setBuyUsdRate( data['usd_to_lbp']);
-    setSellUsdRate(data['lbp_to_usd']);
 
-  });
- }
 
  
  
@@ -76,7 +67,7 @@ function fetchRates() {
   })
 }
 
- useEffect(fetchRates, []);
+
 
   return (
     <div style={{}}>
@@ -87,37 +78,30 @@ function fetchRates() {
     <body>
     <Nav/>
 
+    <ChatDrawer/>
     
-    
-    
+    <RatesSideBar/>
    <div className="wrapper">
-        <h2>Today's Exchange Rate</h2>
-        <p>LBP to USD Exchange Rate</p>
-        <Typography variant="h5">Buy USD: <span id="buy-usd-rate">{buyUsdRate}</span></Typography>
-        <Typography variant="h5">Sell USD: <span id="sell-usd-rate">{sellUsdRate}</span></Typography>
-        <hr/>
-        <Typography variant="h4">Record Transaction</Typography>
-        <form name="transaction-entry" style={{display:'flex',flexDirection:'column'}}>
-            <div className="amount-input">
-                <label htmlFor="lbp-amount">LBP Amount</label>
-                <input id="lbp-amount" type="number" value={lbpInput} onChange={e =>setLbpInput(e.target.value)}/>
-               </div>
-               <div className="amount-input">
-                <label htmlFor="usd-amount">USD Amount</label>
-                <input id="usd-amount" type="number" value={usdInput} onChange={e =>setUsdInput(e.target.value)}/>
-               </div>
-
-               <Select id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(1)}
+       
+        <Box className='header'>
+        <Typography className='headerText' variant="h4">Record Transaction</Typography>
+        </Box>
+        <form  style={{height:'75%',display:'flex',flexDirection:'column',justifyContent:'space-around',paddingLeft:'5%'}}>
+    
+              <TextField  className='formField' label="LBP Amount" type="number" value={lbpInput} onChange={e =>setLbpInput(e.target.value)}/>
+              <TextField className='formField' label="USD Amount" type="number" value={usdInput} onChange={e =>setUsdInput(e.target.value)}/> 
+              <Select className='formField' defaultValue={"usd-to-lbp"} id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(1)}
               else{setTransactionType(0)}}} >
-                <MenuItem value="usd-to-lbp" >USD to LBP</MenuItem>
-                <MenuItem value="lbp-to-usd">LBP to USD</MenuItem>
+
+                  <MenuItem value="usd-to-lbp" >USD to LBP</MenuItem>
+                  <MenuItem value="lbp-to-usd">LBP to USD</MenuItem>
                </Select>
-               <button id="add-button" onClick={addItem}  className="button" type="button">Add</button>
+               <Button class='formButton'  onClick={addItem} type="button">Add</Button>
         </form>
   
     </div>
 
-    <Calculator/>
+   
     
         <hr style={{ margin: '40px auto' }} />
         </body>

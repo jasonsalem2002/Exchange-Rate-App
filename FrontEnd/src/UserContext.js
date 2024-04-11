@@ -20,6 +20,21 @@ export function UserProvider({ children }) {
     const [userTransactions, setUserTransactions] = useState([]);
     const [authState, setAuthState] = useState(States.PENDING);
     const [SERVER_URL, setServerUrl] = useState("http://192.168.31.85:4820");
+    let [buyUsdRate, setBuyUsdRate] = useState(null);
+    let [sellUsdRate, setSellUsdRate] = useState(null);
+    const [userId,setUserId]=useState(0)
+    function fetchRates() {
+        fetch(`${SERVER_URL}/api/exchangeRate`)
+        .then(response => {
+        return response.json();
+      })
+        .then(data => {
+        
+          setBuyUsdRate( data['usd_to_lbp']);
+          setSellUsdRate(data['lbp_to_usd']);
+      
+        });
+       }
 
     const login = useCallback((username, password) => {
         return fetch(`${SERVER_URL}/api/authentication`, {
@@ -42,6 +57,7 @@ export function UserProvider({ children }) {
 
             else
             {
+                console.log(response.json)
                 return response.json();
             }
     })
@@ -109,7 +125,7 @@ export function UserProvider({ children }) {
     }, []);
 
     return (
-        <UserContext.Provider value={{ logout, authState, setAuthState, saveUserToken, States, login, createUser, userToken, fetchUserTransactions, SERVER_URL, loginRejected, setLoginState, setUserToken, setUserTransactions,registerRejected,setRegisterState }}>
+        <UserContext.Provider value={{ logout, authState, setAuthState, saveUserToken, States, login, createUser, userToken, fetchUserTransactions, SERVER_URL, loginRejected, setLoginState, setUserToken, setUserTransactions,registerRejected,setRegisterState,buyUsdRate,sellUsdRate,fetchRates,userId }}>
             {children}
         </UserContext.Provider>
     );

@@ -57,7 +57,7 @@ function CreateOffer(fetchOffers) {
             <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
             
             <TextField
-              sx={{width:'50%', borderRadius:'5%'}}
+              className='formField'
               label="Amount Requested"
               name="amount_requested"
               value={amountRequested}
@@ -68,7 +68,7 @@ function CreateOffer(fetchOffers) {
             <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
 
             <TextField
-             sx={{width:'50%', borderRadius:'5%'}}
+             className='formField'
               label="Amount To Trade"
               name="amount_to_trade"
               value={amountToTrade}
@@ -77,7 +77,7 @@ function CreateOffer(fetchOffers) {
             </Box>
 
             <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
-            <Select defaultValue="usd-to-lbp" sx={{width:'50%', borderRadius:'5%'}} id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(1)}
+            <Select className='formField' defaultValue="usd-to-lbp" sx={{width:'50%', borderRadius:'5%'}} id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(1)}
               else{setTransactionType(0)}}} >
                 <MenuItem value="usd-to-lbp" >USD to LBP</MenuItem>
                 <MenuItem value="lbp-to-usd">LBP to USD</MenuItem>

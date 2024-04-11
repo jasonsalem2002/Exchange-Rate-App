@@ -1,0 +1,26 @@
+.sentMessage
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    align-self: flex-start;
+    background-color: blue;
+}
+
+.recievedMessage
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    align-self: flex-end;
+    background-color: lightgray;
+}
+
+
+.messageText
+{
+    color:white;
+    padding-left: 3%;
+}
