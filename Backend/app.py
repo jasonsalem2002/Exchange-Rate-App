@@ -12,7 +12,7 @@ bcrypt = Bcrypt()
 socketio = SocketIO()
 
 def create_app():
-    # from .models import Offer, Transaction, User
+    from .models import Offer, Transaction, User, Message
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
     db.init_app(app)
@@ -22,7 +22,7 @@ def create_app():
     socketio.init_app(app)
 
     # was used to create the database tables
-    # migrate = Migrate(app, db)
+    migrate = Migrate(app, db)
 
     from Backend.routes.authenticationRoute import auth_bp
     from Backend.routes.exchangeRateRoute import exchange_rate_bp
