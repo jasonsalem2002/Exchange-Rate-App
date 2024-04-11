@@ -3,13 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_marshmallow import Marshmallow
 from flask_bcrypt import Bcrypt
-from flask_socketio import SocketIO
 from flask_migrate import Migrate
 
 db = SQLAlchemy()
 ma = Marshmallow()
 bcrypt = Bcrypt()
-socketio = SocketIO()
 
 def create_app():
     from .models import Offer, Transaction, User, Message
@@ -19,9 +17,6 @@ def create_app():
     ma.init_app(app)
     bcrypt.init_app(app)
     CORS(app)
-    socketio.init_app(app)
-
-    # was used to create the database tables
     migrate = Migrate(app, db)
 
     from Backend.routes.authenticationRoute import auth_bp
@@ -32,6 +27,7 @@ def create_app():
     from Backend.routes.offersRoute import offers_bp
     from Backend.routes.acceptedOfferRoute import accepted_offer_bp
     from Backend.routes.chatRoute import chat_bp
+    from Backend.routes.usernameRoute import usernames_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api')
     app.register_blueprint(exchange_rate_bp, url_prefix='/api')
@@ -41,9 +37,9 @@ def create_app():
     app.register_blueprint(offers_bp, url_prefix='/api')
     app.register_blueprint(accepted_offer_bp, url_prefix='/api')
     app.register_blueprint(chat_bp)
+    app.register_blueprint(usernames_bp)
 
     return app
 
 if __name__ == '__main__':
     app = create_app()
-    socketio.run(app)  # Use SocketIO's run method instead of Flask's run

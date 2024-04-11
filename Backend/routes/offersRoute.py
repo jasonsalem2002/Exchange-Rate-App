@@ -3,7 +3,6 @@ from ..app import db
 from ..utils.util import extract_auth_token, decode_token
 from ..models.Offer import Offer
 from ..schemas.offerSchema import offer_schema
-from flask_socketio import SocketIO
 import jwt
 
 offers_bp = Blueprint('offers_bp', __name__)

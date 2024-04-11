@@ -48,19 +48,23 @@ def handle_send_message():
         print(e)
         return jsonify({'error': 'Internal server error.'}), 500
 
-@chat_bp.route('/api/chat/<int:user_id>', methods=['GET'])
-def get_user_messages(user_id):
+@chat_bp.route('/api/chat/<string:username>', methods=['GET'])
+def get_user_messages(username):
     try:
         token = extract_auth_token(request)
         if not token:
             return jsonify({'error': 'Unauthorized, no token was provided'}), 403
 
-        # try to see if i can retreive with username
         current_user_id = decode_token(token)
-        if current_user_id != user_id:
+        
+        user = User.query.filter_by(user_name=username).first()
+        if not user:
+            return jsonify({'error': 'User not found.'}), 404
+
+        if current_user_id != user.id:
             return jsonify({'error': 'You are not authorized to access this resource.'}), 403
 
-        user_messages = Message.query.filter((Message.sender_id == user_id) | (Message.recipient_id == user_id)).all()
+        user_messages = Message.query.filter((Message.sender_id == user.id) | (Message.recipient_id == user.id)).all()
 
         return jsonify(messages_schema.dump(user_messages)), 200
 
