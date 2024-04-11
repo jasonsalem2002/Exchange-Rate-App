@@ -10,7 +10,7 @@ ma = Marshmallow()
 bcrypt = Bcrypt()
 
 def create_app():
-    from .models import Offer, Transaction, User, Message
+    from .models import Offer, Transaction, User, Message, Group
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
     db.init_app(app)
@@ -28,16 +28,18 @@ def create_app():
     from Backend.routes.acceptedOfferRoute import accepted_offer_bp
     from Backend.routes.chatRoute import chat_bp
     from Backend.routes.usernameRoute import usernames_bp
+    from Backend.routes.groupRoute import group_bp
 
-    app.register_blueprint(auth_bp, url_prefix='/api')
-    app.register_blueprint(exchange_rate_bp, url_prefix='/api')
-    app.register_blueprint(transaction_bp, url_prefix='/api')
-    app.register_blueprint(user_bp, url_prefix='/api')
-    app.register_blueprint(statistics_bp, url_prefix='/api')
-    app.register_blueprint(offers_bp, url_prefix='/api')
-    app.register_blueprint(accepted_offer_bp, url_prefix='/api')
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(exchange_rate_bp)
+    app.register_blueprint(transaction_bp)
+    app.register_blueprint(user_bp)
+    app.register_blueprint(statistics_bp)
+    app.register_blueprint(offers_bp)
+    app.register_blueprint(accepted_offer_bp)
     app.register_blueprint(chat_bp)
     app.register_blueprint(usernames_bp)
+    app.register_blueprint(group_bp)
 
     return app
 

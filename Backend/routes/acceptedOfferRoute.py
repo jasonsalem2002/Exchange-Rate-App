@@ -21,5 +21,4 @@ def accept_offer(offer_id):
         return jsonify({'message': 'Offer accepted successfully'}), 200
 
     except Exception as e:
-        print(e)
         return jsonify({'error': 'Internal server error.'}), 500

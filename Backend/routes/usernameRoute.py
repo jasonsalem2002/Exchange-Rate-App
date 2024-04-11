@@ -4,7 +4,7 @@ from ..utils.util import extract_auth_token, decode_token
 
 usernames_bp = Blueprint('usernames_bp', __name__)
 
-@usernames_bp.route('/api/usernames', methods=['GET'])
+@usernames_bp.route('/usernames', methods=['GET'])
 def get_all_usernames():
     try:
         token = extract_auth_token(request)
@@ -20,5 +20,4 @@ def get_all_usernames():
         return jsonify(usernames), 200
 
     except Exception as e:
-        print(e)
         return jsonify({'error': 'Internal server error.'}), 500

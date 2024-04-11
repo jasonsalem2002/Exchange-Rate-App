@@ -8,7 +8,7 @@ import jwt
 
 chat_bp = Blueprint('chat_bp', __name__)
 
-@chat_bp.route('/api/chat', methods=['POST'])
+@chat_bp.route('/chat', methods=['POST'])
 def handle_send_message():
     try:
         token = extract_auth_token(request)
@@ -42,7 +42,6 @@ def handle_send_message():
         db.session.add(new_message)
         db.session.commit()
 
-        # Fetch sender and recipient usernames
         sender_username = User.query.get(sender_id).user_name
         recipient_username = recipient.user_name
 
@@ -56,11 +55,10 @@ def handle_send_message():
         return jsonify(response_data), 201
 
     except Exception as e:
-        print(e)
         return jsonify({'error': 'Internal server error.'}), 500
 
 
-@chat_bp.route('/api/chat/<string:username>', methods=['GET'])
+@chat_bp.route('/chat/<string:username>', methods=['GET'])
 def get_user_messages(username):
     try:
         token = extract_auth_token(request)
@@ -93,5 +91,4 @@ def get_user_messages(username):
         return jsonify(formatted_messages), 200
 
     except Exception as e:
-        print(e)
         return jsonify({'error': 'Internal server error.'}), 500

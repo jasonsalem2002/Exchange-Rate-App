@@ -52,7 +52,6 @@ def create_offer():
         return jsonify(serialized_offer), 201
 
     except Exception as e:
-        print(e)
         return jsonify({'error': 'Internal server error.'}), 500
 
 
@@ -72,5 +71,4 @@ def get_all_offers():
         return jsonify(serialized_offers), 200
 
     except Exception as e:
-        print(e)
         return jsonify({'error': 'Internal server error.'}), 500
