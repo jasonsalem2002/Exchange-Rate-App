@@ -11,25 +11,31 @@
             fx:id="anchorPane"
             fx:controller="com.kjb04.exchange.trading.tradingOffers.TradingOffers"
             prefHeight="200.0" prefWidth="600.0">
-    <TableView
-            fx:id="tableView"
-            AnchorPane.bottomAnchor="4"
-            AnchorPane.leftAnchor="4"
-            AnchorPane.rightAnchor="4"
-            AnchorPane.topAnchor="4">
-        <columns>
-            <TableColumn text="Offer ID" fx:id="offerID"
-                         prefWidth="150"/>
-            <TableColumn text="Transaction Type" fx:id="transactionType"
-                         prefWidth="150"/>
-            <TableColumn text="Amount Offered" fx:id="amountOffered"
-                         prefWidth="150"/>
-            <TableColumn text="Amount Requested" fx:id="amountRequested"
-                         prefWidth="150"/>
-            <TableColumn text="Rate" fx:id="rate"
-                         prefWidth="150"/>
-            <TableColumn text="Time Placed" fx:id="timePlaced"
-                         prefWidth="150"/>
-        </columns>
-    </TableView>
+    <VBox alignment="CENTER" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <Button fx:id="tradingRefreshButton" styleClass="btn"
+                text="REFRESH" onAction="#refreshOffers" />
+        <TableView
+                fx:id="tableView"
+                AnchorPane.bottomAnchor="4"
+                AnchorPane.leftAnchor="4"
+                AnchorPane.rightAnchor="4"
+                AnchorPane.topAnchor="4">
+            <columns>
+                <TableColumn text="Accept" fx:id="buttonColumn" />
+
+                <TableColumn text="Offer ID" fx:id="offerID"
+                             prefWidth="150"/>
+                <TableColumn text="Transaction Type" fx:id="usdToLbp"
+                             prefWidth="150"/>
+                <TableColumn text="Amount Offered" fx:id="amountToTrade"
+                             prefWidth="150"/>
+                <TableColumn text="Amount Requested" fx:id="amountRequested"
+                             prefWidth="150"/>
+                <TableColumn text="Rate" fx:id="rate"
+                             prefWidth="150"/>
+                <TableColumn text="Time Placed" fx:id="addedDate"
+                             prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
 </AnchorPane>

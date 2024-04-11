@@ -34,9 +34,9 @@ public class TradingCreate implements PageCompleter {
         Float tradeAmount = Float.parseFloat(tradeAmountTextField.getText());
         Float tradeAmountReq = Float.parseFloat(tradeAmountReqTextField.getText());
         Offer offer = new Offer(
-                radioButton.getText().equals("Sell USD"),
+                tradeAmountReq,
                 tradeAmount,
-                tradeAmountReq
+                radioButton.getText().equals("Sell USD")
         );
         String userToken = Authentication.getInstance().getToken();
         String authHeader = userToken != null ? "Bearer " + userToken : null;

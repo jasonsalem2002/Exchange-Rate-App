@@ -9,6 +9,8 @@ public class User {
     String username;
     @SerializedName("password")
     String password;
+
+    public String getUsername() { return username; }
     public User(String username, String password) {
         this.username = username;
         this.password = password;

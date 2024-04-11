@@ -12,6 +12,7 @@ public class Parent implements Initializable, OnPageCompleteListener {
     public BorderPane borderPane;
     public Button transactionButton;
     public Button tradingButton;
+    public Button chatButton;
     public Button loginButton;
     public Button registerButton;
     public Button logoutButton;
@@ -33,6 +34,9 @@ public class Parent implements Initializable, OnPageCompleteListener {
     }
     public void tradingSelected() {
         swapContent(Section.TRADING);
+    }
+    public void chatSelected() {
+        swapContent(Section.CHAT);
     }
     public void loginSelected() { swapContent(Section.LOGIN); }
     public void registerSelected() {
@@ -64,6 +68,8 @@ public class Parent implements Initializable, OnPageCompleteListener {
         transactionButton.setVisible(authenticated);
         tradingButton.setManaged(authenticated);
         tradingButton.setVisible(authenticated);
+        chatButton.setManaged(authenticated);
+        chatButton.setVisible(authenticated);
         loginButton.setManaged(!authenticated);
         loginButton.setVisible(!authenticated);
         registerButton.setManaged(!authenticated);
@@ -77,6 +83,7 @@ public class Parent implements Initializable, OnPageCompleteListener {
         RATES,
         TRANSACTIONS,
         TRADING,
+        CHAT,
         LOGIN,
         REGISTER;
         public String getResource() {
@@ -87,6 +94,8 @@ public class Parent implements Initializable, OnPageCompleteListener {
                         "/com/kjb04/exchange/transactions/transactions.fxml";
                 case TRADING ->
                         "/com/kjb04/exchange/trading/trading.fxml";
+                case CHAT ->
+                        "/com/kjb04/exchange/chat/chat.fxml";
                 case LOGIN ->
                         "/com/kjb04/exchange/login/login.fxml";
                 case REGISTER ->
