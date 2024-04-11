@@ -42,11 +42,23 @@ def handle_send_message():
         db.session.add(new_message)
         db.session.commit()
 
-        return jsonify(message_schema.dump(new_message)), 201
+        # Fetch sender and recipient usernames
+        sender_username = User.query.get(sender_id).user_name
+        recipient_username = recipient.user_name
+
+        response_data = {
+            'added_date': new_message.added_date,
+            'content': new_message.content,
+            'sender_username': sender_username,
+            'recipient_username': recipient_username
+        }
+
+        return jsonify(response_data), 201
 
     except Exception as e:
         print(e)
         return jsonify({'error': 'Internal server error.'}), 500
+
 
 @chat_bp.route('/api/chat/<string:username>', methods=['GET'])
 def get_user_messages(username):
@@ -66,7 +78,19 @@ def get_user_messages(username):
 
         user_messages = Message.query.filter((Message.sender_id == user.id) | (Message.recipient_id == user.id)).all()
 
-        return jsonify(messages_schema.dump(user_messages)), 200
+        formatted_messages = []
+        for message in user_messages:
+            sender_username = User.query.get(message.sender_id).user_name
+            recipient_username = User.query.get(message.recipient_id).user_name
+            formatted_message = {
+                'added_date': message.added_date,
+                'content': message.content,
+                'sender_username': sender_username,
+                'recipient_username': recipient_username
+            }
+            formatted_messages.append(formatted_message)
+
+        return jsonify(formatted_messages), 200
 
     except Exception as e:
         print(e)
