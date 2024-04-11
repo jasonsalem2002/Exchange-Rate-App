@@ -44,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     response.body()?.token?.let { token ->
                         Authentication.saveToken(token)
+                        Authentication.saveUsername(usernameEditText?.text.toString())
                         onLoginCompleted()
                     } ?: Snackbar.make(loginButton as View, "Login failed. Please try again.", Snackbar.LENGTH_LONG).show()
                 } else {

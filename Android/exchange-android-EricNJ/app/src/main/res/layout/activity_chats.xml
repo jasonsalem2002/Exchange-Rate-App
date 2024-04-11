@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Light_Grey"
+    tools:context=".ChatsActivity">
+
+    <!--edit text for searching our currency-->
+    <EditText
+        android:id="@+id/idEdtCurrency"
+        android:layout_width="403dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:focusable="auto"
+        android:hint="Search Person"
+        android:textColor="@color/Vibrant_Blue"
+        android:textColorHint="@color/Vibrant_Blue"
+        android:textSize="20sp" />
+
+    <!--recycler view for displaying the list of currencies-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/idRVcurrency"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/idEdtCurrency"
+        tools:listitem="@layout/item_users" />
+
+
+
+</RelativeLayout>

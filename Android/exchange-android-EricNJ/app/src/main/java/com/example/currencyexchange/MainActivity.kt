@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         } else if (item.itemId == R.id.logout) {
             Authentication.clearToken()
+            Authentication.clearUsername()
             setMenu()
         }
         return true

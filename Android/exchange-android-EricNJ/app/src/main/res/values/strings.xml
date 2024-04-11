@@ -8,4 +8,5 @@
     <string name="add_offer">Add Offer</string>
     <string name="refresh" />
     <string name="refresh_offers" />
+    <string name="user_name">User Name</string>
 </resources>

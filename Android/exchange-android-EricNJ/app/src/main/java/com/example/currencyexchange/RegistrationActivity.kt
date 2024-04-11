@@ -59,6 +59,7 @@ class RegistrationActivity : AppCompatActivity() {
                             Snackbar.LENGTH_LONG
                         )
                             .show()
+                        Authentication.saveUsername(user.username!!)
                         response.body()?.token?.let {
                             Authentication.saveToken(it) }
                         onCompleted()
