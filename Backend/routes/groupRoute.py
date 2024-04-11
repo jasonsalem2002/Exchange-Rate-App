@@ -114,3 +114,12 @@ def get_group_messages(group_name):
 
     except Exception as e:
         return jsonify({'error': 'Internal server error.'}), 500
+    
+@group_bp.route('/groups', methods=['GET'])
+def get_group_names():
+    try:
+        groups = Group.query.all()
+        group_names = [group.name for group in groups]
+        return jsonify(group_names), 200
+    except Exception as e:
+        return jsonify({'error': 'Internal server error.'}), 500
