@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_marshmallow import Marshmallow
@@ -40,6 +40,11 @@ def create_app():
     app.register_blueprint(chat_bp)
     app.register_blueprint(usernames_bp)
     app.register_blueprint(group_bp)
+
+    @app.before_request
+    def block_options():
+        if request.method == 'OPTIONS':
+            return jsonify({'error': 'Method Not Allowed'}), 405
 
     return app
 
