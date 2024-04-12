@@ -1,9 +1,16 @@
 from ..app import db
 from datetime import datetime
 
+group_members = db.Table('group_members',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id'), primary_key=True)
+)
+
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
+
+    members = db.relationship('User', secondary=group_members, backref=db.backref('groups_joined', lazy='dynamic'))
 
 class GroupMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)

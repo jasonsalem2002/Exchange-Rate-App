@@ -70,6 +70,9 @@ def send_group_message(group_name):
         if not sender:
             return jsonify({'error': 'Sender not found.'}), 404
 
+        if sender not in group.members:
+            return jsonify({'error': 'You are not a member of this group.'}), 403
+
         new_message = GroupMessage(group_id=group.id, sender_id=sender.id, content=content)
         db.session.add(new_message)
         db.session.commit()
@@ -97,6 +100,15 @@ def get_group_messages(group_name):
         if not group:
             return jsonify({'error': 'Group not found.'}), 404
 
+        sender_id = decode_token(token)
+        sender = User.query.get(sender_id)
+        if not sender:
+            return jsonify({'error': 'Sender not found.'}), 404
+
+        # Check if the sender is a member of the group
+        if sender not in group.members:
+            return jsonify({'error': 'You are not a member of this group. YOU ARE YEHYA'}), 403
+
         group_messages = GroupMessage.query.filter_by(group_id=group.id).all()
 
         formatted_messages = []
@@ -121,5 +133,77 @@ def get_group_names():
         groups = Group.query.all()
         group_names = [group.name for group in groups]
         return jsonify(group_names), 200
+    except Exception as e:
+        return jsonify({'error': 'Internal server error.'}), 500
+
+@group_bp.route('/group/<string:group_name>/join', methods=['POST'])
+def join_group(group_name):
+    try:
+        token = extract_auth_token(request)
+        if not token:
+            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+
+        user_id = decode_token(token)
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found.'}), 404
+
+        group = Group.query.filter_by(name=group_name).first()
+        if not group:
+            return jsonify({'error': 'Group not found.'}), 404
+
+        # Add user to the group
+        if user not in group.members:
+            group.members.append(user)
+            db.session.commit()
+
+        return jsonify({'message': 'User joined the group successfully.'}), 200
+
+    except Exception as e:
+        return jsonify({'error': 'Internal server error.'}), 500
+
+@group_bp.route('/group/<string:group_name>/leave', methods=['POST'])
+def leave_group(group_name):
+    try:
+        token = extract_auth_token(request)
+        if not token:
+            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+
+        user_id = decode_token(token)
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found.'}), 404
+
+        group = Group.query.filter_by(name=group_name).first()
+        if not group:
+            return jsonify({'error': 'Group not found.'}), 404
+
+        # Remove user from the group
+        if user in group.members:
+            group.members.remove(user)
+            db.session.commit()
+
+        return jsonify({'message': 'User left the group successfully.'}), 200
+
+    except Exception as e:
+        return jsonify({'error': 'Internal server error.'}), 500
+
+@group_bp.route('/my-groups', methods=['GET'])
+def get_my_groups():
+    try:
+        token = extract_auth_token(request)
+        if not token:
+            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+
+        sender_id = decode_token(token)
+        sender = User.query.get(sender_id)
+        if not sender:
+            return jsonify({'error': 'Sender not found.'}), 404
+
+        my_groups = sender.groups_joined.all()
+
+        group_names = [group.name for group in my_groups]
+        return jsonify(group_names), 200
+
     except Exception as e:
         return jsonify({'error': 'Internal server error.'}), 500
