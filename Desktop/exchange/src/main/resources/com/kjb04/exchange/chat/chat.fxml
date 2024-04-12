@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.collections.FXCollections?>
 <BorderPane fx:id="borderPane" maxHeight="720.0" maxWidth="1040.0" prefHeight="620.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kjb04.exchange.chat.Chat">
     <center>
         <VBox>
@@ -20,7 +21,7 @@
                         <Font name="SansSerif Regular" size="16.0"/>
                     </font>
                 </TextArea>
-                <Button fx:id="buttonSend" alignment="CENTER" onAction="#sendMessage" prefHeight="20.0" prefWidth="100.0"
+                <Button fx:id="sendMessageButton" alignment="CENTER" onAction="#sendMessage" prefHeight="20.0" prefWidth="100.0"
                         scaleShape="false" text="Send" textAlignment="CENTER" HBox.hgrow="NEVER"/>
             </HBox>
         </VBox>
@@ -33,9 +34,12 @@
         </VBox>
     </left>
     <top>
-        <BorderPane style="-fx-background-color: #c5c5c5;" BorderPane.alignment="CENTER">
+        <HBox prefHeight="80.0" style="-fx-background-color: #c5c5c5; -fx-padding: 10px;"
+              BorderPane.alignment="CENTER" alignment="BOTTOM_LEFT" >
 <!--            TODO: add new chat-->
-        </BorderPane>
+            <ComboBox fx:id="newChatComboBox" prefHeight="30.0" prefWidth="100.0"
+                      promptText="New Chat" stylesheets="@./chat.css" onAction="#createNewChat"/>
+        </HBox>
     </top>
 
 </BorderPane>

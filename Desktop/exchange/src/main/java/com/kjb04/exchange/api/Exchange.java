@@ -32,4 +32,6 @@ public interface Exchange {
     @GET("/chat/{sender_username}")
     Call<List<Message>> getMessages(@Header("Authorization") String authorization,
                                     @Path("sender_username") String senderUsername);
+    @GET("/usernames")
+    Call<List<String>> getUsernames(@Header("Authorization") String authorization);
 }
