@@ -41,10 +41,10 @@ def create_app():
     app.register_blueprint(usernames_bp)
     app.register_blueprint(group_bp)
 
-    @app.before_request
-    def block_options():
-        if request.method == 'OPTIONS':
-            return jsonify({'error': 'Method Not Allowed'}), 405
+    # @app.before_request
+    # def block_options():
+    #     if request.method == 'OPTIONS':
+    #         return jsonify({'error': 'Method Not Allowed'}), 405
 
     return app
 
