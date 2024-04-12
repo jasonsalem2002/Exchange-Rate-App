@@ -153,7 +153,8 @@ public class Chat implements Initializable {
 
             Map<String, VBox> userBoxes = new HashMap<>();
 
-            for (Message msg : messageList) {
+            for (int i = messageList.size()-1; i >=0 ; i--) {
+                Message msg = messageList.get(i);
                 String recipient = msg.getRecipientUsername();
                 String sender = msg.getSenderUsername();
                 String username;
@@ -171,19 +172,19 @@ public class Chat implements Initializable {
                     username = sender;
                 }
 
-                VBox hbox = userBoxes.get(username);
-                if (hbox == null) {
-                    hbox = new VBox();
-                    //hbox.setPrefHeight(50);
-                    hbox.getChildren().add(new Label(username));
-                    hbox.getChildren().add(new Label(msg.getContent()));
-                    hbox.getChildren().add(new Label(msg.getAddedDate()));
-                    hbox.setOnMouseClicked(event -> displayChat(username));
-                    userBoxes.put(username, hbox);
-                    preview.getItems().add(hbox);
+                VBox vbox = userBoxes.get(username);
+                if (vbox == null) {
+                    vbox = new VBox();
+                    //vbox.setPrefHeight(50);
+                    vbox.getChildren().add(new Label(username));
+                    vbox.getChildren().add(new Label(msg.getContent()));
+                    vbox.getChildren().add(new Label(msg.getAddedDate()));
+                    vbox.setOnMouseClicked(event -> displayChat(username));
+                    userBoxes.put(username, vbox);
+                    preview.getItems().add(vbox);
                 } else {
-                    hbox.getChildren().get(1).setAccessibleText(msg.getContent()); //check/////////////
-                    hbox.getChildren().get(2).setAccessibleText(msg.getAddedDate());
+                    vbox.getChildren().get(1).setAccessibleText(msg.getContent()); //check/////////////
+                    vbox.getChildren().get(2).setAccessibleText(msg.getAddedDate());
                 }
             }
             displayChat(selectedUsername);
