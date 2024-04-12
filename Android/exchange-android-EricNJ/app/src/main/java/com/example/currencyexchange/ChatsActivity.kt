@@ -1,11 +1,12 @@
-package com.example.currencyexchange
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.currencyexchange.R
+import com.example.currencyexchange.UserWithLastMessage
+import com.example.currencyexchange.UsersRVAdapter
 import com.example.currencyexchange.api.Authentication
 import com.example.currencyexchange.api.ExchangeService
 import com.example.currencyexchange.api.model.Message
@@ -13,7 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ChatsActivity : AppCompatActivity() {
+class ChatsActivity : AppCompatActivity(), UsersRVAdapter.OnUserClickListener {
     private lateinit var usersRecyclerView: RecyclerView
     private lateinit var usersAdapter: UsersRVAdapter
     private var usersWithLastMessage: MutableList<UserWithLastMessage> = mutableListOf()
@@ -26,14 +27,18 @@ class ChatsActivity : AppCompatActivity() {
         usersRecyclerView = findViewById(R.id.idRVcurrency)
         usersRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        usersAdapter = UsersRVAdapter(usersWithLastMessage)
+        usersAdapter = UsersRVAdapter(usersWithLastMessage,this)
         usersRecyclerView.adapter = usersAdapter
 
         fetchchat()
     }
 
 
-
+    override fun onUserClicked(user: UserWithLastMessage) {
+        Toast.makeText(this, "Clicked on user: ${user.username}", Toast.LENGTH_SHORT).show()
+        // Here you can start a new Activity or Fragment to show chat details
+        // Intent example is provided in the previous messages
+    }
 
     private fun fetchchat() {
 
@@ -86,7 +91,6 @@ class ChatsActivity : AppCompatActivity() {
             usersRecyclerView.adapter?.notifyDataSetChanged()
         }
 
-        usersAdapter = UsersRVAdapter(usersWithLastMessage)
+        usersAdapter = UsersRVAdapter(usersWithLastMessage,this)
         usersRecyclerView.adapter = usersAdapter}
-    }
-
+}
