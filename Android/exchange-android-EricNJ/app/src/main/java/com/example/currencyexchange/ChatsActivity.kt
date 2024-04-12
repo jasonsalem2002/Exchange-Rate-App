@@ -1,12 +1,15 @@
+package com.example.currencyexchange
+
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.currencyexchange.R
-import com.example.currencyexchange.UserWithLastMessage
-import com.example.currencyexchange.UsersRVAdapter
 import com.example.currencyexchange.api.Authentication
 import com.example.currencyexchange.api.ExchangeService
 import com.example.currencyexchange.api.model.Message
@@ -23,7 +26,14 @@ class ChatsActivity : AppCompatActivity(), UsersRVAdapter.OnUserClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chats)
-
+        val backButton: ImageView = findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            finish()
+        }
+        val addButton: ImageView = findViewById(R.id.addButton)
+        addButton.setOnClickListener {
+            fetchUsernamesAndShowDropdown()
+        }
         usersRecyclerView = findViewById(R.id.idRVcurrency)
         usersRecyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -33,12 +43,18 @@ class ChatsActivity : AppCompatActivity(), UsersRVAdapter.OnUserClickListener {
         fetchchat()
     }
 
+    override fun onResume() {
+        super.onResume()
+        fetchchat()
+    }
 
     override fun onUserClicked(user: UserWithLastMessage) {
         Toast.makeText(this, "Clicked on user: ${user.username}", Toast.LENGTH_SHORT).show()
-        // Here you can start a new Activity or Fragment to show chat details
-        // Intent example is provided in the previous messages
+        val intent = Intent(this, Convo::class.java)
+        intent.putExtra("username", user.username)
+        startActivity(intent)
     }
+
 
     private fun fetchchat() {
 
@@ -63,14 +79,10 @@ class ChatsActivity : AppCompatActivity(), UsersRVAdapter.OnUserClickListener {
         runOnUiThread {
             val seenUsers = HashMap<String, UserWithLastMessage>()
 
-            for (message in messages) {
+            for (message in messages.reversed()){
                 val recipient = message.recepient_Username
                 val sender = message.senderUsername
-                Log.e("recepient",message.recepient_Username.toString())
-                Log.e("sender",message.senderUsername.toString())
                 val currentUsername = Authentication.getUsername()
-                Log.e("currentUsername",currentUsername.toString())
-
                 val username = when {
                     recipient != currentUsername -> recipient
                     else -> sender
@@ -82,9 +94,9 @@ class ChatsActivity : AppCompatActivity(), UsersRVAdapter.OnUserClickListener {
                     timestamp = message.timestamp ?: "Unknown time"
 
                 )
-
+                if(seenUsers[username]==null){
                 seenUsers[username ?: "Unknown"] = newMessage
-            }
+            }}
 
             usersWithLastMessage.clear()
             usersWithLastMessage.addAll(seenUsers.values)
@@ -92,5 +104,43 @@ class ChatsActivity : AppCompatActivity(), UsersRVAdapter.OnUserClickListener {
         }
 
         usersAdapter = UsersRVAdapter(usersWithLastMessage,this)
-        usersRecyclerView.adapter = usersAdapter}
+        usersRecyclerView.adapter = usersAdapter
+    }
+
+
+    private fun fetchUsernamesAndShowDropdown() {
+        Authentication.getToken()?.let { token ->
+            ExchangeService.exchangeApi().getusernames("Bearer $token")
+                .enqueue(object : Callback<List<String>> {
+                    override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
+                        if (response.isSuccessful) {
+                            response.body()?.let { usernames ->
+                                showUsernamesDropdown(usernames)
+                            }
+                        } else {
+                            Toast.makeText(this@ChatsActivity, "Failed to fetch usernames.", Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<String>>, t: Throwable) {
+                        Toast.makeText(this@ChatsActivity, "Error fetching usernames: ${t.message}", Toast.LENGTH_LONG).show()
+                    }
+                })
+        }
+    }
+
+    private fun showUsernamesDropdown(usernames: List<String>) {
+        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, usernames)
+        AlertDialog.Builder(this)
+            .setTitle("Select User")
+            .setAdapter(arrayAdapter) { dialog, which ->
+                val selectedUser = usernames[which]
+                val intent = Intent(this, Convo::class.java).apply {
+                    putExtra("username", selectedUser)
+                }
+                startActivity(intent)
+                Toast.makeText(this@ChatsActivity, "Selected: $selectedUser", Toast.LENGTH_SHORT).show()
+            }
+            .show()
+    }
 }

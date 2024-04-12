@@ -54,6 +54,8 @@ object ExchangeService {
         fun getusernames(@Header("Authorization") authorization: String): Call<List<String>>
         @GET("chat/{sender_username}")
         fun getmessages(@Header("Authorization") authorization: String,@Path("sender_username") senderUsername:String?): Call<List<Message>>
-
+        @POST("chat")
+        fun addChat(@Body message: Message,
+                           @Header("Authorization") authorization: String?): Call<Any>
     }
 }

@@ -9,4 +9,8 @@
     <string name="refresh" />
     <string name="refresh_offers" />
     <string name="user_name">User Name</string>
+    <string name="back_button" />
+    <string name="profile_icon" />
+    <string name="write_message" />
+    <string name="send">Send</string>
 </resources>
