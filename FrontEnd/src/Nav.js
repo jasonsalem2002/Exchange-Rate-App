@@ -52,6 +52,8 @@ const {registerRejected}= User()
     </AppBar>
     
 
+
+
     {/* xs screen */}
 
     <AppBar position="static" sx={{display:{xs:'flex',md:'none'}}}>
@@ -72,7 +74,6 @@ const {registerRejected}= User()
         </Box>
       </Toolbar>
     </AppBar>
-
 
     <UserCredentialsDialog open={authState===States.USER_CREATION} title={"Register"} onSubmit={createUser} onClose={()=>{setAuthState(States.PENDING)}} submitText={"Register"} />
     <UserCredentialsDialog open={authState===States.USER_LOG_IN} title={"Login"} onSubmit={login} onClose={()=>{setAuthState(States.PENDING)}} submitText={"Login"} />

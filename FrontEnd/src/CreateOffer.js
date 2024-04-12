@@ -13,38 +13,33 @@ import { DataGrid } from '@mui/x-data-grid';
 function CreateOffer(fetchOffers) {
 
    const [dialogOpen, setDialogOpen] = useState(false);
-   const [transactionType,setTransactionType]= useState();
+   const [transactionType,setTransactionType]= useState(false);
 
    const [amountRequested,setAmountRequested]=  useState();
   const [amountToTrade,setAmountToTrade]= useState();
 
-  const {SERVER_URL}= useState();
-  const {userToken}= useState();
+  const {SERVER_URL}= User();
+  const {userToken}= User();
+
   function addOffer() {
-  
-    var amount_requested = JSON.stringify(parseFloat(amountRequested));
-    var lbp_amount = JSON.stringify(parseFloat(amountToTrade));
-    var usdToLbp=transactionType
-  
-    fetch(`${SERVER_URL}/api/transaction`, {
+    setDialogOpen(false)
+    fetch(`${SERVER_URL}/api/offers`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userToken}`,
       },
       body: JSON.stringify({
-        "amount_requested": amountRequested,
-        "amount_to_trade": amountToTrade,
+        "amount_requested": parseFloat(amountRequested),
+        "amount_to_trade": parseFloat(amountToTrade),
         "usd_to_lbp": transactionType
       })
     })
+
     .then(response => {
       return response.json();
     })
   }  
-  
-
-
 
    return(
    <div>
@@ -77,14 +72,14 @@ function CreateOffer(fetchOffers) {
             </Box>
 
             <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
-            <Select className='formField' defaultValue="usd-to-lbp" sx={{width:'50%', borderRadius:'5%'}} id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(1)}
-              else{setTransactionType(0)}}} >
+            <Select className='formField' defaultValue="usd-to-lbp" sx={{width:'50%', borderRadius:'5%'}} id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(true)}
+              else{setTransactionType(false)}}} >
                 <MenuItem value="usd-to-lbp" >USD to LBP</MenuItem>
                 <MenuItem value="lbp-to-usd">LBP to USD</MenuItem>
                </Select>
             </Box>
 
-            <Button onClick={()=> addOffer()} style={{width:'80px',padding:'8px',backgroundColor:'#0093d5'}} variant="contained" color="primary" type="submit">
+            <Button onClick={addOffer} style={{width:'80px',padding:'8px',backgroundColor:'#0093d5'}} variant="contained" color="primary" >
               Add
             </Button>
 
@@ -95,3 +90,6 @@ function CreateOffer(fetchOffers) {
 }
 
 export default CreateOffer;
+
+
+

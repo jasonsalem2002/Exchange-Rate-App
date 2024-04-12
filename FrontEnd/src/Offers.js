@@ -48,18 +48,20 @@ function Offers() {
     .then((offers) => setOffers(offers));
 }, [SERVER_URL, userToken,markComplete]);
 
+useEffect(fetchOffers,[])
 
 
+// useEffect(() => {
+//   if (userToken) {
+//       fetchOffers();
+//   }
+// }, [fetchOffers, userToken]);
 
-
-useEffect(() => {
-  if (userToken) {
-      fetchOffers();
-  }
-}, [fetchOffers, userToken]);
 
     const [selectedRow, setSelectedRow] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+
+    
     const handleRowClick = (params) => {
         setSelectedRow(params.row);
         setDialogOpen(true);
@@ -93,7 +95,7 @@ useEffect(() => {
             />
              </Box>
 
-             {/* <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+             <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
 
         <DialogActions sx={{display:'flex',flexDirection:'column'}}>
           <Button onClick={markComplete} >
@@ -103,7 +105,7 @@ useEffect(() => {
             Reject
           </Button>
         </DialogActions>
-      </Dialog>  */}
+      </Dialog> 
     </div>
   );
 }

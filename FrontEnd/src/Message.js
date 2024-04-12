@@ -9,14 +9,11 @@ import { User } from './UserContext';
 import DrawerNav from './DrawerNav';
 import './Message.css'
 
-function Message(cName, message) {
 
-   
-
+function Message({ cName, message }) {
   return (
-
     <Box className={cName}>
-        <Typography className='messageText'>{message}</Typography>    
+      <Typography className='messageText'>{message}</Typography>    
     </Box>
   );
 }

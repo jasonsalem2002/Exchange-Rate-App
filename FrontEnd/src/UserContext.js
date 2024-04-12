@@ -19,12 +19,14 @@ export function UserProvider({ children }) {
     const [registerRejected, setRegisterState] = useState(false);
     const [userTransactions, setUserTransactions] = useState([]);
     const [authState, setAuthState] = useState(States.PENDING);
-    const [SERVER_URL, setServerUrl] = useState("http://192.168.31.85:4820");
+    const [SERVER_URL, setServerUrl] = useState("https://scorpion-glowing-guppy.ngrok-free.app");
     let [buyUsdRate, setBuyUsdRate] = useState(null);
     let [sellUsdRate, setSellUsdRate] = useState(null);
-    const [userId,setUserId]=useState(0)
+    const [userName,setUserName]=useState('');
+
+
     function fetchRates() {
-        fetch(`${SERVER_URL}/api/exchangeRate`)
+        fetch(`${SERVER_URL}/exchangeRate`)
         .then(response => {
         return response.json();
       })
@@ -36,8 +38,18 @@ export function UserProvider({ children }) {
         });
        }
 
+       useEffect(() => {
+        const storedUserName = localStorage.getItem('username');
+        if (storedUserName) {
+           
+            setUserName(storedUserName);
+        }
+    }, []);
+
     const login = useCallback((username, password) => {
-        return fetch(`${SERVER_URL}/api/authentication`, {
+
+        localStorage.setItem('username',username)
+        return fetch(`${SERVER_URL}/authentication`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -47,9 +59,9 @@ export function UserProvider({ children }) {
                 password: password
             }),
         })
+        
         .then((response) => {
 
-    
             if (response.status === 403|| response.status===404 || response.status === 400) {
                 setLoginState(true);  
                 throw new Error("Unauthorized");
@@ -76,8 +88,13 @@ export function UserProvider({ children }) {
         
     }, [SERVER_URL]);
     
+
     const createUser = useCallback((username, password) => {
-        return fetch(`${SERVER_URL}/api/user`, {
+
+        localStorage.setItem('username',(username))
+        return
+    
+        fetch(`${SERVER_URL}/user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -102,8 +119,9 @@ export function UserProvider({ children }) {
         });
     }, [SERVER_URL, login]);
 
+
     const fetchUserTransactions = useCallback(() => {
-        fetch(`${SERVER_URL}/api/transaction`, {
+        fetch(`${SERVER_URL}/transaction`, {
             method:'GET',
             headers: {
                 Authorization: `Bearer ${userToken}`,
@@ -113,11 +131,15 @@ export function UserProvider({ children }) {
         .then((transactions) => setUserTransactions(transactions));
     }, [SERVER_URL, userToken]);
 
-    useEffect(() => {
-        if (userToken) {
-            fetchUserTransactions();
-        }
-    }, [fetchUserTransactions, userToken]);
+
+
+
+
+    // useEffect(() => {
+    //     if (userToken) {
+    //         fetchUserTransactions();
+    //     }
+    // }, [fetchUserTransactions, userToken]);
 
     const logout = useCallback(() => {
         clearUserToken();
@@ -125,7 +147,7 @@ export function UserProvider({ children }) {
     }, []);
 
     return (
-        <UserContext.Provider value={{ logout, authState, setAuthState, saveUserToken, States, login, createUser, userToken, fetchUserTransactions, SERVER_URL, loginRejected, setLoginState, setUserToken, setUserTransactions,registerRejected,setRegisterState,buyUsdRate,sellUsdRate,fetchRates,userId }}>
+        <UserContext.Provider value={{ logout, authState, setAuthState, saveUserToken, States, login, createUser, userToken, fetchUserTransactions, SERVER_URL, loginRejected, setLoginState, setUserToken, setUserTransactions,registerRejected,setRegisterState,buyUsdRate,sellUsdRate,fetchRates,userName,setUserName }}>
             {children}
         </UserContext.Provider>
     );

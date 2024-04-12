@@ -19,7 +19,7 @@ function Home() {
  
  let [lbpInput, setLbpInput] = useState("");
  let [usdInput, setUsdInput] = useState("");
- let [transactionType, setTransactionType] = useState(0);
+ let [transactionType, setTransactionType] = useState(false);
  let [rateResult, setrateResult] = useState("");
  let [amountInput, setAmountInput] = useState("");
 
@@ -50,7 +50,7 @@ const {userTransactions}= User()
   var usdToLbp=transactionType
   
 
-  fetch(`${SERVER_URL}/api/transaction`, {
+  fetch(`${SERVER_URL}/transaction`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -80,9 +80,9 @@ const {userTransactions}= User()
 
     <ChatDrawer/>
     
-    <RatesSideBar/>
+
    <div className="wrapper">
-       
+      
         <Box className='header'>
         <Typography className='headerText' variant="h4">Record Transaction</Typography>
         </Box>
@@ -90,8 +90,8 @@ const {userTransactions}= User()
     
               <TextField  className='formField' label="LBP Amount" type="number" value={lbpInput} onChange={e =>setLbpInput(e.target.value)}/>
               <TextField className='formField' label="USD Amount" type="number" value={usdInput} onChange={e =>setUsdInput(e.target.value)}/> 
-              <Select className='formField' defaultValue={"usd-to-lbp"} id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(1)}
-              else{setTransactionType(0)}}} >
+              <Select className='formField' defaultValue={"usd-to-lbp"} id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(true)}
+              else{setTransactionType(false)}}} >
 
                   <MenuItem value="usd-to-lbp" >USD to LBP</MenuItem>
                   <MenuItem value="lbp-to-usd">LBP to USD</MenuItem>

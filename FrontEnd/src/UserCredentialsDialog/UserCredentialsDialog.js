@@ -4,9 +4,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import React, { useState } from "react";
 import "./UserCredentialsDialog.css";
-// Component that presents a dialog to collect credentials from the user
+import { User } from '../UserContext';
+
 export default function UserCredentialsDialog({open,onSubmit,onClose,title,submitText}) {
- let [username, setUsername] = useState("");
+const {userName}=User();
+const {setUserName}= User()
  let [password, setPassword] = useState("");
  
  return (
@@ -18,8 +20,8 @@ export default function UserCredentialsDialog({open,onSubmit,onClose,title,submi
  fullWidth
  label="Username"
  type="text"
- value={username}
- onChange={({ target: { value } }) => setUsername(value)}
+ value={userName}
+ onChange={({ target: { value } }) => setUserName(value)}
  />
  </div>
  <div className="form-item">
@@ -34,7 +36,7 @@ export default function UserCredentialsDialog({open,onSubmit,onClose,title,submi
  <Button
  color="primary"
  variant="contained"
- onClick={() => onSubmit(username, password)}>{submitText} </Button>
+ onClick={() => onSubmit(userName, password)}>{submitText} </Button>
  </div>
  </Dialog>
  );
