@@ -72,3 +72,23 @@ def get_all_offers():
 
     except Exception as e:
         return jsonify({'error': 'Internal server error.'}), 500
+
+
+@offers_bp.route('/get_accepted_offers', methods=['GET'])
+def get_accepted_offers():
+    try:
+        token = extract_auth_token(request)
+        user_id = decode_token(token)
+
+        if not token:
+            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+        
+        complete_offers = Offer.query.filter_by(mark_as='complete').all()
+        seruialized_offers = [offer_schema.dump(offer) for offer in complete_offers]
+        for offer in seruialized_offers:
+            offer.pop('mark_as')
+            
+        return jsonify(seruialized_offers), 200
+    
+    except Exception as e:
+        return jsonify({'error': 'Internal server error.'}), 500

@@ -20,4 +20,5 @@ def get_all_usernames():
         return jsonify(usernames), 200
 
     except Exception as e:
+        print(e)
         return jsonify({'error': 'Internal server error.'}), 500
