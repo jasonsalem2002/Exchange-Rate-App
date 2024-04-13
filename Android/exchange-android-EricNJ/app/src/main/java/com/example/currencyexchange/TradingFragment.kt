@@ -1,5 +1,6 @@
 package com.example.currencyexchange
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -57,11 +58,24 @@ class TradingFragment : Fragment() {
         adapter = TradingFragment.TradingAdapter(layoutInflater, offers!!)
         listview?.adapter = adapter
 
-        listview?.onItemClickListener =AdapterView.OnItemClickListener { parent, view, position, id ->
-
+        listview?.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             val offer = offers?.get(position)
             if (offer != null) {
-                offer.id?.let { acceptOffer(it) }
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Select an Action")
+                    .setMessage("Choose to accept the offer or start a chat.")
+                    .setPositiveButton("Accept") { dialog, _ ->
+                        offer.id?.let { acceptOffer(it) }
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Chat") { dialog, _ ->
+                        val intent = Intent(activity, Convo::class.java).apply {
+                         //   putExtra("username", offer.)
+                        }
+                        startActivity(intent)
+                        dialog.dismiss()
+                    }
+                    .show()
             }
         }
         return view
@@ -175,7 +189,6 @@ class TradingFragment : Fragment() {
     private fun acceptOffer(offerid: Int) {
         ExchangeService.exchangeApi().acceptOffer(offerid, if (Authentication.getToken() != null) "Bearer ${Authentication.getToken()}" else null).enqueue(object :
             Callback<Any> {
-
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
                 if (response.isSuccessful) {
                     Snackbar.make(fab as View, "Trade Accepted!", Snackbar.LENGTH_LONG).show()

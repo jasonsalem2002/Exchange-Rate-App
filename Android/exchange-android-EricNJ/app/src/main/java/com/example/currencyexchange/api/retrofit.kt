@@ -1,6 +1,7 @@
 package com.example.currencyexchange.api
 
 import com.example.currencyexchange.api.model.ExchangeRates
+import com.example.currencyexchange.api.model.GroupMessage
 import com.example.currencyexchange.api.model.Message
 import com.example.currencyexchange.api.model.Offer
 import com.example.currencyexchange.api.model.Token
@@ -55,7 +56,23 @@ object ExchangeService {
         @GET("chat/{sender_username}")
         fun getmessages(@Header("Authorization") authorization: String,@Path("sender_username") senderUsername:String?): Call<List<Message>>
         @POST("chat")
-        fun addChat(@Body message: Message,
-                           @Header("Authorization") authorization: String?): Call<Any>
+        fun addChat(@Body message: Message,@Header("Authorization") authorization: String?): Call<Any>
+
+        @POST("group")
+        fun createGroup(@Body message: Message?, @Header("Authorization") authorization: String?): Call<Any?>?
+
+        @GET("group/{group_name}/messages")
+        fun getGroupMessages(@Header("Authorization") authorization: String?, @Path("group_name") groupName: String?): Call<List<GroupMessage>>
+        @GET("groups")
+        fun getGroupNames(@Header("Authorization") authorization: String): Call<List<String>>
+        @GET("my-groups")
+        fun getMyGroupNames(@Header("Authorization") authorization: String): Call<List<String>>
+        @POST("group/{group_name}/messages")
+        fun sendGroupMessage(@Body message: GroupMessage?, @Header("Authorization") authorization: String?, @Path("group_name") groupName: String?): Call<Any?>?
+
+        @POST("group/{group_name}/join")
+        fun joinGroup(@Header("Authorization") authorization: String?, @Path("group_name") groupName: String?): Call<Any>
+
+
     }
 }
