@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
-
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -28,8 +27,8 @@
             android:layout_height="40dp"
             android:layout_toRightOf="@id/backButton"
             android:src="@drawable/ic_user"
-             android:contentDescription="@string/profile_icon"
-            />
+            android:contentDescription="@string/profile_icon"
+            android:layout_marginStart="10dp"/>
 
         <TextView
             android:id="@+id/usernameTextView"
@@ -37,10 +36,21 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/profileIcon"
             android:layout_centerVertical="true"
-
             android:text="Username"
             android:textSize="18sp"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:layout_marginStart="10dp"/>
+
+        <Button
+            android:id="@+id/leaveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leave"
+            android:textColor="@color/black"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:backgroundTint="@color/Light_Grey"
+            android:padding="8dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -57,7 +67,7 @@
             android:layout_toStartOf="@id/sendButton"
             android:layout_alignParentStart="true"
             android:hint="@string/write_message"
-             />
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/sendButton"

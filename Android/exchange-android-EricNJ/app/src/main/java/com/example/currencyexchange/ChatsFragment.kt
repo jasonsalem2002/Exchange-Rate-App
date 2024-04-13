@@ -23,6 +23,7 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
     private lateinit var usersRecyclerView: RecyclerView
     private lateinit var usersAdapter: UsersRVAdapter
     private var usersWithLastMessage: MutableList<UserWithLastMessage> = mutableListOf()
+    private var myusers:MutableList<String> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,6 +64,7 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
     }
 
     private fun fetchchat() {
+        myusers.clear()
         Authentication.getToken()?.let { token ->
             val senderUsername = Authentication.getUsername()
             ExchangeService.exchangeApi().getmessages("Bearer $token", senderUsername)
@@ -95,6 +97,7 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
                     lastMessage = message.content ?: "No message",
                     timestamp = message.timestamp ?: "Unknown time"
                 )
+                myusers.add(newMessage.username)
                 if(seenUsers[username]==null){
                     seenUsers[username ?: "Unknown"] = newMessage
                 }}
@@ -112,7 +115,8 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
                     override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
                         if (response.isSuccessful) {
                             response.body()?.let { usernames ->
-                                showUsernamesDropdown(usernames)
+                                val filteredUsernames = usernames.filterNot { myusers.contains(it) }
+                                showUsernamesDropdown(filteredUsernames)
                             }
                         } else {
                             Toast.makeText(context, "Failed to fetch usernames.", Toast.LENGTH_LONG).show()
@@ -129,7 +133,7 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
     private fun showUsernamesDropdown(usernames: List<String>) {
         val arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, usernames)
         AlertDialog.Builder(requireContext())
-            .setTitle("Select User")
+            .setTitle("Chat with a User")
             .setAdapter(arrayAdapter) { dialog, which ->
                 val selectedUser = usernames[which]
                 val intent = Intent(activity, Convo::class.java).apply {

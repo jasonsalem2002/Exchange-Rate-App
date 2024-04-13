@@ -13,7 +13,6 @@
     <string name="profile_icon" />
     <string name="write_message" />
     <string name="send">Send</string>
-    <string name="title_activity_group_convo'">GroupConvo'</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

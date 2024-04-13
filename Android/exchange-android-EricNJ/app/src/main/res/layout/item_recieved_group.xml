@@ -2,9 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:gravity="start"
     android:padding="8dp">
+
+    <TextView
+        android:id="@+id/txtSenderName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/Vibrant_Blue"
+        android:text="Sender's Name"
+        android:layout_marginStart="16dp"
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -18,8 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="Hello! This is a received message."
-            android:layout_margin="8dp" />
+            android:text="Hello! This is a received message." />
 
         <TextView
             android:id="@+id/txtMessageTime"

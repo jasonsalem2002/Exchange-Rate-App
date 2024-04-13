@@ -16,10 +16,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".GroupConvo&apos;"
-            android:exported="false"
-            android:label="@string/title_activity_group_convo&apos;"
-            android:theme="@style/Theme.CurrencyExchange" />
+            android:name=".Myoffers"
+            android:exported="false" />
+        <activity
+            android:name=".GroupConvo"
+            android:exported="false" />
         <activity
             android:name=".Convo"
             android:exported="false" />

@@ -7,9 +7,7 @@
     android:background="@color/Light_Grey"
     tools:context=".ChatsActivity">
 
-    <!-- Back Button ImageView -->
 
-    <!-- EditText for Searching -->
     <ImageView
         android:id="@+id/backButton"
         android:layout_width="wrap_content"

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.BaseAdapter
+import android.widget.Button
 import android.widget.ListView
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -33,7 +34,7 @@ class TradingFragment : Fragment() {
     private var tradingDialog: View? = null
     private var listview: ListView? = null
     private var offers: ArrayList<Offer>? = ArrayList()
-    private var adapter: TradingFragment.TradingAdapter? = null
+    private var adapter: TradingAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fetchoffers()
@@ -54,8 +55,14 @@ class TradingFragment : Fragment() {
             adapter?.notifyDataSetChanged()
             fetchoffers()
         }
+        var viewmyoffersbutton: Button =view.findViewById(R.id.button_view_my_offers)
+        viewmyoffersbutton.setOnClickListener {
+            var intent90=Intent(requireContext(),Myoffers::class.java)
+            startActivity(intent90)
+        }
+
         listview = view.findViewById(R.id.listview1)
-        adapter = TradingFragment.TradingAdapter(layoutInflater, offers!!)
+        adapter = TradingAdapter(layoutInflater, offers!!)
         listview?.adapter = adapter
 
         listview?.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->

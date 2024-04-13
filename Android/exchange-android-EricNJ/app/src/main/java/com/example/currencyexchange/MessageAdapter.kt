@@ -39,6 +39,7 @@ class MessageAdapter(private val messages: List<Message>, private val currentUse
         fun bind(message: Message) {
             val textView: TextView = view.findViewById(if (viewType == VIEW_TYPE_SENT) R.id.txtSentMessage else R.id.txtReceivedMessage)
             textView.text = message.content
+
         }
     }
 }

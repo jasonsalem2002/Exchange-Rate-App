@@ -67,11 +67,13 @@ object ExchangeService {
         fun getGroupNames(@Header("Authorization") authorization: String): Call<List<String>>
         @GET("my-groups")
         fun getMyGroupNames(@Header("Authorization") authorization: String): Call<List<String>>
-        @POST("group/{group_name}/messages")
-        fun sendGroupMessage(@Body message: GroupMessage?, @Header("Authorization") authorization: String?, @Path("group_name") groupName: String?): Call<Any?>?
-
+        @POST("group/{group_name}/message")
+        fun sendGroupMessage(@Body message: GroupMessage?, @Header("Authorization") authorization: String?, @Path("group_name") groupName: String?): Call<Any>
         @POST("group/{group_name}/join")
         fun joinGroup(@Header("Authorization") authorization: String?, @Path("group_name") groupName: String?): Call<Any>
+        @POST("group/{group_name}/leave")
+        fun leaveGroup(@Header("Authorization") authorization: String?, @Path("group_name") groupName: String?): Call<Any>
+
 
 
     }

@@ -3,15 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="end">
+    android:gravity="end"
+    android:padding="8dp">
 
-    <TextView
-        android:id="@+id/txtSentMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_sent_message"
-        android:padding="10dp"
-        android:textColor="#FFFFFF"
-        android:text="Hello! This is a sent message."
-        android:layout_margin="8dp" />
-</LinearLayout>
+<LinearLayout
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:orientation="vertical"
+android:background="@drawable/ic_sent_message"
+    android:padding="10dp">
+
+<TextView
+android:id="@+id/txtSentMessage"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:textColor="#FFFFFF"
+    android:text="Hello! This is a sent message." />
+
+<TextView
+android:id="@+id/txtMessageTime"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:textColor="#FFFFFF"
+    android:text="10:30 PM"
+    android:layout_gravity="end" />
+    </LinearLayout>
+    </LinearLayout>

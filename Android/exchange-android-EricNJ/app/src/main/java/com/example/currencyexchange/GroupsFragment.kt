@@ -1,5 +1,6 @@
 package com.example.currencyexchange
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,6 +33,7 @@ class GroupsFragment : Fragment() {
     private var userGroupList: List<String> = listOf()
     private var userGroupListdropdown: List<String> = listOf()
     val dateFormatter = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
+    private var mygroups:MutableList<String> = mutableListOf()
 
     private var groupsWithLastMessage: MutableList<GroupWithLastMessage> = mutableListOf()
 
@@ -62,16 +64,18 @@ class GroupsFragment : Fragment() {
         fetchGroups()
     }
     private fun onGroupClicked(group: GroupWithLastMessage) {
-        Toast.makeText(context, "Clicked on: ${group.groupname}", Toast.LENGTH_SHORT).show()
-        // Here, you can handle navigation or other actions like showing group details
+        val intent3 = Intent(activity, GroupConvo::class.java)
+        intent3.putExtra("groupname", group.groupname)
+        startActivity(intent3)
     }
 
     private fun fetchGroups() {
+        mygroups.clear()
         ExchangeService.exchangeApi().getMyGroupNames("Bearer ${Authentication.getToken()}")
             .enqueue(object : Callback<List<String>> {
                 override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
                     userGroupList = response.body() ?: emptyList()
-                    Log.e("number of my group",userGroupList.size.toString())
+                    mygroups= response.body() as MutableList<String>
                     displayGroupsPreview()
                     groupsRecyclerView.adapter?.notifyDataSetChanged()
 
@@ -158,7 +162,9 @@ class GroupsFragment : Fragment() {
                 override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
                     userGroupListdropdown = response.body() ?: emptyList()
                     if (userGroupListdropdown.isNotEmpty()) {
-                        displayDropdown(userGroupListdropdown)
+                        response.body()?.let { groupnames ->
+                        val filteredGroupnames = groupnames.filterNot { mygroups.contains(it) }
+                        displayDropdown(userGroupListdropdown)}
                     } else {
                         Toast.makeText(requireContext(), "No groups available to join.", Toast.LENGTH_SHORT).show()
                     }
