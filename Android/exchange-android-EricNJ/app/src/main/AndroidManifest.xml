@@ -16,6 +16,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Calculator"
+            android:exported="false" />
+        <activity
             android:name=".Myoffers"
             android:exported="false" />
         <activity

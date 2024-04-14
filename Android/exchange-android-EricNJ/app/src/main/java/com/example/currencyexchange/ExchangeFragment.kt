@@ -29,13 +29,8 @@ import retrofit2.Response
 class ExchangeFragment : Fragment() {
     private var buyUsdTextView: TextView? = null
     private var fab: FloatingActionButton? = null
-
     private var sellUsdTextView: TextView? = null
     private var transactionDialog: View? = null
-    private lateinit var etAmount: EditText
-    private lateinit var tvConvertedAmount: TextView
-    private lateinit var rgConversionDirection: RadioGroup
-    private lateinit var btnConvert: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fetchrates()
@@ -59,48 +54,18 @@ class ExchangeFragment : Fragment() {
         fab?.setOnClickListener { view ->
             showDialog()
         }
+        var calcbutton:Button=view.findViewById(R.id.buttonforcalculator)
+        calcbutton.setOnClickListener {
+            Log.e("sellll",sellUsdTextView.toString())
+            Log.e("buyyy",buyUsdTextView.toString())
+            var intentcalc=Intent(requireContext(),Calculator::class.java)
+            intentcalc.putExtra("sell", sellUsdTextView?.text.toString())
+            intentcalc.putExtra("buy",buyUsdTextView?.text.toString())
+
+            startActivity(intentcalc)
+        }
         return view
     }
-    /*
-    private fun setupConversionUI(view: View) {
-        etAmount = view.findViewById(R.id.etAmount)
-        tvConvertedAmount = view.findViewById(R.id.tvConvertedAmount)
-        rgConversionDirection = view.findViewById(R.id.rgConversionDirection)
-        btnConvert = view.findViewById(R.id.btnConvert)
-
-        btnConvert.setOnClickListener {
-            convertCurrency()
-        }
-    }
-
-    private fun convertCurrency() {
-        val amount = etAmount.text.toString().toDoubleOrNull()
-        val sellRate = sellUsdTextView?.text.toString().toDoubleOrNull()
-        val buyRate = buyUsdTextView?.text.toString().toDoubleOrNull()
-
-        if (amount == null || amount <= 0) {
-            tvConvertedAmount.text = "Please enter a valid, positive amount"
-            return
-        }
-
-        if (sellRate == null  || buyRate == null ) {
-            tvConvertedAmount.text = "Exchange rates are not available. Please try again later."
-            return
-        }
-        val convertedAmount = when (rgConversionDirection.checkedRadioButtonId) {
-            R.id.rbUsdToLbp -> amount * sellRate
-            R.id.rbLbpToUsd -> amount / buyRate
-            else -> null
-        }
-
-        if (convertedAmount != null) {
-            tvConvertedAmount.text = "Calculated:" +String.format("%.2f", convertedAmount)
-        } else {
-            tvConvertedAmount.text = "Please select a conversion type" +
-                    "."
-        }
-    }*/
-
     fun fetchrates(){
         ExchangeService.exchangeApi().getExchangeRates().enqueue(object :
             Callback<ExchangeRates> {
@@ -159,16 +124,11 @@ class ExchangeFragment : Fragment() {
                         this.usdToLbp = usdToLbp
                     }
                     addTransaction(transaction)
-
-
                 } catch (e: NumberFormatException) {
                     errorMessage = "Please enter a valid number."
                 } catch (e: IllegalArgumentException) {
                     errorMessage = e.message
                 }
-
-
-
                 errorMessage?.let {
                     Snackbar.make(fab!!, it, Snackbar.LENGTH_LONG).show()
                 }
