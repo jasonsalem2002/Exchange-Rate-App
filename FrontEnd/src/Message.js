@@ -10,11 +10,9 @@ import DrawerNav from './DrawerNav';
 import './Message.css'
 
 
-function Message({ cName, message }) {
+function Message({ cName, message, sent }) {
   return (
-    <Box className={cName}>
-      <Typography className='messageText'>{message}</Typography>    
-    </Box>
+      <Typography className={cName}>{message}</Typography>    
   );
 }
 

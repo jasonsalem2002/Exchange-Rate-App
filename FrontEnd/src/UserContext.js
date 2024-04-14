@@ -23,8 +23,9 @@ export function UserProvider({ children }) {
     let [buyUsdRate, setBuyUsdRate] = useState(null);
     let [sellUsdRate, setSellUsdRate] = useState(null);
     const [userName,setUserName]=useState('');
-
-
+    const [messages, setMessages] = useState([]);
+    const[usernames,setUserNames]=useState([])
+   
     function fetchRates() {
         fetch(`${SERVER_URL}/exchangeRate`)
         .then(response => {
@@ -46,6 +47,7 @@ export function UserProvider({ children }) {
         }
     }, []);
 
+
     const login = useCallback((username, password) => {
 
         localStorage.setItem('username',username)
@@ -53,6 +55,7 @@ export function UserProvider({ children }) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+            
             },
             body: JSON.stringify({
                 user_name: username,
@@ -69,15 +72,14 @@ export function UserProvider({ children }) {
 
             else
             {
-                console.log(response.json)
+            
                 return response.json();
             }
     })
 
     .catch((error) => {
         console.error("Login failed:", error.message);
-        // Optionally, handle the error here or set additional state to inform the UI about the login failure
-        throw error; // re-throw the error to propagate it to the next .catch() block
+        throw error; 
     })
 
         .then((body) => {
@@ -92,9 +94,7 @@ export function UserProvider({ children }) {
     const createUser = useCallback((username, password) => {
 
         localStorage.setItem('username',(username))
-        return
-    
-        fetch(`${SERVER_URL}/user`, {
+        return fetch(`${SERVER_URL}/user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export function UserProvider({ children }) {
     }, [SERVER_URL, login]);
 
 
-    const fetchUserTransactions = useCallback(() => {
+    const fetchUserTransactions =() => {
         fetch(`${SERVER_URL}/transaction`, {
             method:'GET',
             headers: {
@@ -129,7 +129,7 @@ export function UserProvider({ children }) {
         })
         .then((response) => response.json())
         .then((transactions) => setUserTransactions(transactions));
-    }, [SERVER_URL, userToken]);
+    };
 
 
 
@@ -141,13 +141,42 @@ export function UserProvider({ children }) {
     //     }
     // }, [fetchUserTransactions, userToken]);
 
+
     const logout = useCallback(() => {
         clearUserToken();
         setUserToken(null);
     }, []);
 
+
+    const fetchUsernames = () => {
+        const username = localStorage.getItem('username')
+        console.log(username)
+        fetch(`${SERVER_URL}/usernames`, {
+            method:'GET',
+            headers: {
+                Authorization: `Bearer ${userToken}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((usernames) => {setUserNames(usernames);
+        
+      });
+    }
+    
+      const fetchMessages = () => {
+        const username = localStorage.getItem('username')
+        fetch(`${SERVER_URL}/chat/${username}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        })
+          .then((response) =>  response.json())
+          .then((messages) => setMessages((messages)));
+      }
+
     return (
-        <UserContext.Provider value={{ logout, authState, setAuthState, saveUserToken, States, login, createUser, userToken, fetchUserTransactions, SERVER_URL, loginRejected, setLoginState, setUserToken, setUserTransactions,registerRejected,setRegisterState,buyUsdRate,sellUsdRate,fetchRates,userName,setUserName }}>
+        <UserContext.Provider value={{ fetchMessages,fetchUsernames,usernames,messages,logout, authState, setAuthState, saveUserToken, States, login, createUser, userToken, fetchUserTransactions, userTransactions,SERVER_URL, loginRejected, setLoginState, setUserToken, setUserTransactions,registerRejected,setRegisterState,buyUsdRate,sellUsdRate,fetchRates,userName,setUserName }}>
             {children}
         </UserContext.Provider>
     );

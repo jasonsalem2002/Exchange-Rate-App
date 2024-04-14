@@ -45,8 +45,8 @@ const {userTransactions}= User()
  
  function addItem() {
   
-  var usd_amount = JSON.stringify(parseFloat(usdInput));
-  var lbp_amount = JSON.stringify(parseFloat(lbpInput));
+  var usd_amount = parseFloat(usdInput);
+  var lbp_amount = parseFloat(lbpInput);
   var usdToLbp=transactionType
   
 
@@ -67,7 +67,9 @@ const {userTransactions}= User()
   })
 }
 
+const {fetchUserTransactions}= User()
 
+useEffect(fetchUserTransactions,[])
 
   return (
     <div style={{}}>
@@ -107,9 +109,12 @@ const {userTransactions}= User()
         </body>
         {userToken && (
         <div className="wrapper">
-          <Typography variant="h4">Your Transactions</Typography>
+          <Box className='header'>
+            <Typography className='headerText' variant="h4">Your Transactions</Typography>
+          </Box>
           {userTransactions  && (
             <DataGrid
+              
               columns={[
                 { field: 'id', headerName: 'ID' },
                 { field: 'usd_amount', headerName: 'USD Amount' },

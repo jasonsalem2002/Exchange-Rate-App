@@ -23,7 +23,7 @@ function Offers() {
 
   const markComplete = () => {
     setDialogOpen(false);
-    fetch(`${SERVER_URL}/api/accept_offer/${selectedRow.id}`, {
+    fetch(`${SERVER_URL}/accept_offer/${selectedRow.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ function Offers() {
   };
 
   const fetchOffers = useCallback(() => {
-    fetch(`${SERVER_URL}/api/offers`, {
+    fetch(`${SERVER_URL}/offers`, {
         method:'GET',
         headers: {
             Authorization: `Bearer ${userToken}`,
