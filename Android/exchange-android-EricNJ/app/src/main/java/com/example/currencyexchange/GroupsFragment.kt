@@ -97,10 +97,7 @@ class GroupsFragment : Fragment() {
 
 
     fun displayGroupsPreview() {
-        // Clear the list at the start to avoid old data persisting.
         groupsWithLastMessage.clear()
-
-        // Initialize a counter to track completed fetch operations.
         var fetchCount = 0
         val totalRequests = userGroupList.size
 
@@ -164,7 +161,7 @@ class GroupsFragment : Fragment() {
                     if (userGroupListdropdown.isNotEmpty()) {
                         response.body()?.let { groupnames ->
                         val filteredGroupnames = groupnames.filterNot { mygroups.contains(it) }
-                        displayDropdown(userGroupListdropdown)}
+                        displayDropdown(filteredGroupnames)}
                     } else {
                         Toast.makeText(requireContext(), "No groups available to join.", Toast.LENGTH_SHORT).show()
                     }
@@ -183,7 +180,6 @@ class GroupsFragment : Fragment() {
             .setAdapter(arrayAdapter) { dialog, which ->
                 val selectedGroup = groups[which]
                 Toast.makeText(requireContext(), "Selected: $selectedGroup", Toast.LENGTH_LONG).show()
-               // Log.e("hellloooo",selectedGroup)
                 ExchangeService.exchangeApi().joinGroup(if (Authentication.getToken() != null) "Bearer ${Authentication.getToken()}" else null, selectedGroup ).enqueue(object : Callback<Any> {
 
                     override fun onResponse(call: Call<Any>, response: Response<Any>) {
@@ -198,7 +194,7 @@ class GroupsFragment : Fragment() {
                         Toast.makeText(requireContext(), "Could not join group", Toast.LENGTH_LONG).show()
                     }
                 })
-            // Optionally, perform additional actions here, such as joining the selected group
+                fetchGroups()
             }
             .show()
     }

@@ -63,6 +63,12 @@ class GroupMessageAdapter(private val groupmessages: List<GroupMessage>) :
                 if (viewType == VIEW_TYPE_SENT) R.id.txtMessageTime else R.id.txtMessageTime  // Assuming same ID in both layouts
             )
             timeTextView.text = message.addedDate?.let { formatCustomDateString(it) }
+            var sender: TextView? =null
+            if (viewType == VIEW_TYPE_RECEIVED){ sender=view.findViewById(R.id.txtSenderName)}
+            if (sender != null) {
+                sender.text = message.senderUsername
+            }
+
         }
 
     }

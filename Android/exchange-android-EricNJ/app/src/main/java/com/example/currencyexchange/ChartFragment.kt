@@ -16,61 +16,56 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 class ChartFragment : Fragment() {
 
-    private lateinit var linechart1: LineChart
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    private lateinit var lineChart: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_chart, container, false)
-        linechart1 = view.findViewById(R.id.chart1)
-        val description = Description().apply {
-            text = "Exchange Rate"
-            setPosition(150f, 15f)
-        }
-        linechart1.apply {
-            setDescription(description)
-            axisRight.isEnabled = false // Disables right Y-Axis
-        }
-
-        val xValues = listOf("One", "Two", "Three", "Four")
-        linechart1.xAxis.apply {
-            position = XAxis.XAxisPosition.BOTTOM
-            valueFormatter = IndexAxisValueFormatter(xValues)
-            labelCount = 4
-            textSize=15f
-            granularity = 1f
-        }
-
-        linechart1.axisLeft.apply {
-            axisMinimum = 88f
-            axisMaximum = 90f
-            axisLineWidth = 2f
-            textSize=15f
-            // axisLineColor = Color.BLACK
-            labelCount = 10
-        }
-
-        val revenueComp1 = arrayListOf(88f, 89f, 90f, 88.6f)
-        val entries1 = revenueComp1.mapIndexed { index, value ->
-            Entry(index.toFloat(), value)
-        }
-
-        val dataSet = LineDataSet(entries1, "Revenue").apply {
-            //color = Color.BLUE
-            //valueTextColor = Color.BLACK
-            lineWidth = 2f
-        }
-
-        linechart1.data = LineData(dataSet)
-        linechart1.invalidate() // Refreshes the chart
-
+        lineChart = view.findViewById(R.id.chart1)
+        setupChart()
+        fetchDataFromBackend()
         return view
     }
 
+    private fun setupChart() {
+        val description = Description().apply {
+            text = "Exchange Rate Trend"
+            setPosition(150f, 15f)
+        }
+        lineChart.apply {
+            this.description = description
+            axisRight.isEnabled = false
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.textSize = 15f
+            axisLeft.apply {
+                axisMinimum = 88f
+                axisMaximum = 90f
+                axisLineWidth = 2f
+                textSize = 15f
+                labelCount = 10
+            }
+        }
+    }
 
+    private fun fetchDataFromBackend() {
+        // Simulate fetching data from the backend
+        val exampleData = listOf(88f, 89f, 90f, 88.6f)
+        val reversedData = exampleData.reversed() // This correctly reverses and stores the result
+        displayChartData(reversedData)
+    }
+
+    private fun displayChartData(data: List<Float>) {
+        val entries = data.mapIndexed { index, value ->
+            Entry(index.toFloat(), value)
+        }
+
+        val dataSet = LineDataSet(entries, "Exchange Rate").apply {
+            lineWidth = 2f
+        }
+
+        lineChart.data = LineData(dataSet)
+        lineChart.invalidate() // Refreshes the chart
+    }
 }

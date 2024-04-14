@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/Light_Grey"
     tools:context=".TradingFragment">
-
     <LinearLayout
         android:id="@+id/button_bar"
         android:layout_width="match_parent"
@@ -14,7 +13,7 @@
         android:orientation="horizontal"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:gravity="end|center_vertical"
+        android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -23,10 +22,10 @@
             android:id="@+id/fab_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="@string/refresh_offers"
             android:src="@drawable/ic_refresh"
-            app:fabSize="normal" />
+            app:fabSize="normal"
+            android:contentDescription="@string/refresh_offers"
+            android:layout_marginEnd="16dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -43,8 +42,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="View My Offers"
-            android:layout_marginEnd="24dp" />
+            android:layout_marginEnd="16dp" />
+
+        <Switch
+            android:id="@+id/switch_trade_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="LBP to USD"
+            android:textOn="USD to LBP"
+            android:checked="true" />
     </LinearLayout>
+
 
     <ListView
         android:id="@+id/listview1"

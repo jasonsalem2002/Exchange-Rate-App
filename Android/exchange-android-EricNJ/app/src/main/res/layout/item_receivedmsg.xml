@@ -18,8 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="Hello! This is a received message."
-            android:layout_margin="8dp" />
+            android:text="Hello! This is a received message." />
 
         <TextView
             android:id="@+id/txtMessageTime"

@@ -14,6 +14,7 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import com.example.currencyexchange.api.Authentication
@@ -35,6 +36,7 @@ class TradingFragment : Fragment() {
     private var listview: ListView? = null
     private var offers: ArrayList<Offer>? = ArrayList()
     private var adapter: TradingAdapter? = null
+    private var switchTradeDirection: Switch? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fetchoffers()
@@ -59,6 +61,11 @@ class TradingFragment : Fragment() {
         viewmyoffersbutton.setOnClickListener {
             var intent90=Intent(requireContext(),Myoffers::class.java)
             startActivity(intent90)
+        }
+        switchTradeDirection = view.findViewById(R.id.switch_trade_direction)
+
+        switchTradeDirection?.setOnCheckedChangeListener { _, isChecked ->
+            filterOffers(isChecked)
         }
 
         listview = view.findViewById(R.id.listview1)
@@ -90,7 +97,7 @@ class TradingFragment : Fragment() {
 
     class TradingAdapter(
         private val inflater: LayoutInflater,
-        private val dataSource: List<Offer>
+        var dataSource: List<Offer>
     ) : BaseAdapter() {
         override fun getView(position: Int, convertView: View?, parent:
         ViewGroup?): View {
@@ -114,7 +121,14 @@ class TradingFragment : Fragment() {
             return dataSource.size
         }
 
-    }private fun fetchoffers() {
+    }
+    private fun filterOffers(usdToLbp: Boolean) {
+        adapter?.let {
+            it.dataSource = offers?.filter { offer -> offer.usdToLbp == usdToLbp } ?: listOf()
+            it.notifyDataSetChanged()
+        }
+    }
+    private fun fetchoffers() {
         if (Authentication.getToken() != null) {
             ExchangeService.exchangeApi()
                 .getOffers("Bearer ${Authentication.getToken()}")
