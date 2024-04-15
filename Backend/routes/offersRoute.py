@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from ..app import db
 from ..utils.util import extract_auth_token, decode_token
 from ..models.Offer import Offer
+from ..models.User import User
 from ..schemas.offerSchema import offer_schema
 import jwt
 
@@ -64,13 +65,20 @@ def get_all_offers():
 
         incomplete_offers = Offer.query.filter_by(mark_as='incomplete').all()
         
-        serialized_offers = [offer_schema.dump(offer) for offer in incomplete_offers]
-        for offer in serialized_offers:
-            offer.pop('mark_as')
+        serialized_offers = []
+        for offer in incomplete_offers:
+            user = User.query.get(offer.user_id)
+            if user:
+                serialized_offer = offer_schema.dump(offer)
+                serialized_offer['username'] = user.user_name
+                serialized_offer.pop('user_id')
+                serialized_offer.pop('mark_as')
+                serialized_offers.append(serialized_offer)
 
         return jsonify(serialized_offers), 200
 
     except Exception as e:
+        print(e)
         return jsonify({'error': 'Internal server error.'}), 500
 
 

@@ -16,7 +16,7 @@ def create_app():
     db.init_app(app)
     ma.init_app(app)
     bcrypt.init_app(app)
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": "*"}})
     migrate = Migrate(app, db)
 
     from Backend.routes.authenticationRoute import auth_bp
