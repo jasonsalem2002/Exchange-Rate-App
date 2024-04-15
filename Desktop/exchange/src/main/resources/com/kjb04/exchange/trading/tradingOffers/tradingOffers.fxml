@@ -14,6 +14,22 @@
     <VBox alignment="CENTER" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <Button fx:id="tradingRefreshButton" styleClass="btn"
                 text="REFRESH" onAction="#refreshOffers" />
+        <HBox spacing="10">
+            <HBox spacing="10">
+                <Button fx:id="selectAllOffersButton" styleClass="btn" text="All Offers" onAction="#selectAllOffers" />
+                <Button fx:id="selectPendingButton" styleClass="btn" text="Your Pending Offers" onAction="#selectPending" />
+                <Button fx:id="selectAcceptedButton" styleClass="btn" text="Your Accepted Offers" onAction="#selectAccepted" />
+            </HBox>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <HBox fx:id="allOffersDirectionBox" spacing="10">  <!-- Inner HBox for radio buttons -->
+                <RadioButton text="Buy USD">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="transactionType"/>
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton text="Sell USD " toggleGroup="$transactionType"/>
+            </HBox>
+        </HBox>
         <TableView
                 fx:id="tableView"
                 AnchorPane.bottomAnchor="4"
@@ -22,7 +38,6 @@
                 AnchorPane.topAnchor="4">
             <columns>
                 <TableColumn text="Accept" fx:id="buttonColumn" />
-
                 <TableColumn text="Offer ID" fx:id="offerID"
                              prefWidth="150"/>
                 <TableColumn text="Transaction Type" fx:id="usdToLbp"

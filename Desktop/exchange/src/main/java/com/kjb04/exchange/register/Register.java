@@ -9,6 +9,7 @@ import com.kjb04.exchange.api.model.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,7 +17,7 @@ import retrofit2.Response;
 
 public class Register implements PageCompleter {
     public TextField usernameTextField;
-    public TextField passwordTextField;
+    public PasswordField passwordField;
     private OnPageCompleteListener onPageCompleteListener;
 
     public void setOnPageCompleteListener(OnPageCompleteListener onPageCompleteListener) {
@@ -24,7 +25,7 @@ public class Register implements PageCompleter {
     }
     public void register(ActionEvent actionEvent) {
         User user = new User(usernameTextField.getText(),
-                passwordTextField.getText());
+                passwordField.getText());
         ExchangeService.exchangeApi().addUser(user).enqueue(new
         Callback<User>() {
             @Override

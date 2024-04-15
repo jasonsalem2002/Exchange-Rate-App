@@ -1,5 +1,6 @@
 package com.kjb04.exchange.api;
 
+import com.google.gson.JsonObject;
 import com.kjb04.exchange.api.model.*;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -34,4 +35,24 @@ public interface Exchange {
                                     @Path("sender_username") String senderUsername);
     @GET("/usernames")
     Call<List<String>> getUsernames(@Header("Authorization") String authorization);
+    @POST("/group")
+    Call<Object> createGroup(@Body JsonObject group,
+                             @Header("Authorization") String authorization);
+    @GET("/group/{group_name}/messages")
+    Call<List<GroupMessage>> getGroupMessages(@Header("Authorization") String authorization,
+                                    @Path("group_name") String groupName);
+    @GET("/groups")
+    Call<List<String>> getGroupNames(@Header("Authorization") String authorization);
+    @GET("/my-groups")
+    Call<List<String>> getUserGroups(@Header("Authorization") String authorization);
+    @POST("/group/{group_name}/message")
+    Call<Object> sendGroupMessage(@Body GroupMessage message,
+                             @Header("Authorization") String authorization,
+                             @Path("group_name") String groupName);
+    @POST("/group/{group_name}/join")
+    Call<Object> joinGroup(@Header("Authorization") String authorization,
+                                  @Path("group_name") String groupName);
+    @POST("/group/{group_name}/leave")
+    Call<Object> leaveGroup(@Header("Authorization") String authorization,
+                                  @Path("group_name") String groupName);
 }

@@ -1,6 +1,9 @@
 package com.kjb04.exchange.api.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.kjb04.exchange.DateParser;
+
+import java.util.Date;
 
 public class Offer {
     @SerializedName("usd_to_lbp")
@@ -11,10 +14,10 @@ public class Offer {
     public Float amountToTrade;
     @SerializedName("id")
     public Integer id;
-    @SerializedName("user_id")
-    public Integer userId;
+    @SerializedName("username")
+    public String username;
     @SerializedName("added_date")
-    public String addedDate;
+    private String addedDate;
 
     public Boolean getUsdToLbp() {
         return usdToLbp;
@@ -25,10 +28,10 @@ public class Offer {
     public Float getAmountRequested() {
         return amountRequested;
     }
-    public String getAddedDate() {
-        return addedDate;
+    public Date getAddedDate() {
+        return DateParser.convertStringToDate(addedDate);
     }
-    public Integer getUserId() { return userId; }
+    public String getUsername() { return username; }
 
     public Integer getId() {
         return id;

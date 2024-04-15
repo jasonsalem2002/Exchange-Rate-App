@@ -1,6 +1,9 @@
 package com.kjb04.exchange.api.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.kjb04.exchange.DateParser;
+
+import java.util.Date;
 
 public class Message {
     @SerializedName("msg_id")
@@ -25,8 +28,8 @@ public class Message {
         return recipientUsername;
     }
     public String getContent() { return content; }
-    public String getAddedDate() {
-        return addedDate;
+    public Date getAddedDate() {
+        return DateParser.convertStringToDate(addedDate);
     }
 
 
