@@ -11,14 +11,21 @@ def accept_offer(offer_id):
         token = extract_auth_token(request)
         user_id = decode_token(token)
         
-        offer = Offer.query.filter_by(id=offer_id, user_id=user_id).first()
+        if not token:
+            print('no token')
+            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+
+        offer = Offer.query.filter_by(id=offer_id).first()
         if not offer:
             return jsonify({'error': 'Offer not found or unauthorized'}), 404
 
+        if user_id == offer.user_id:
+            return jsonify({'error': 'Unauthorized, cannot accept your own offer'}), 403
+        
         offer.mark_as = 'complete'
         db.session.commit()
-
         return jsonify({'message': 'Offer accepted successfully'}), 200
 
     except Exception as e:
+        print(e)
         return jsonify({'error': 'Internal server error.'}), 500
