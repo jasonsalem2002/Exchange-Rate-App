@@ -360,7 +360,7 @@ public class Chat implements Initializable {
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Chat failed");
-                        alert.setContentText("Failed to send message.");
+                        alert.setContentText("Failed to send group message.");
                         alert.showAndWait();
                     });
                 }
@@ -584,7 +584,7 @@ public class Chat implements Initializable {
                 Platform.runLater(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Chat failed");
-                    alert.setContentText("Failed to send message.");
+                    alert.setContentText("Failed to join group.");
                     alert.showAndWait();
                 });
             }
@@ -614,7 +614,7 @@ public class Chat implements Initializable {
                         Platform.runLater(() -> {
                             Alert alert = new Alert(Alert.AlertType.ERROR);
                             alert.setTitle("Chat failed");
-                            alert.setContentText("Failed to send message.");
+                            alert.setContentText("Failed to leave group.");
                             alert.showAndWait();
                         });
                     }

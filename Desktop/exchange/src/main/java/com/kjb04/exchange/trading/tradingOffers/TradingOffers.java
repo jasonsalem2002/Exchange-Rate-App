@@ -18,6 +18,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.net.URL;
+import java.nio.channels.SelectableChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -28,7 +29,7 @@ public class TradingOffers implements Initializable {
     public TableColumn usdToLbp;
     public TableColumn amountToTrade;
     public TableColumn amountRequested;
-    public TableColumn rate;
+    public TableColumn<Offer,Float> rate;
     public TableColumn addedDate;
     public TableView tableView;
     public HBox allOffersDirectionBox;
@@ -45,15 +46,12 @@ public class TradingOffers implements Initializable {
     }
 
     private void acceptOffer(Offer o) {
-
-        String userToken = Authentication.getInstance().getToken();
-        String authHeader = userToken != null ? "Bearer " + userToken : null;
-        ExchangeService.exchangeApi().acceptOffer(
-                authHeader, o.getId()).enqueue(new Callback<Object>() {
+        ExchangeService.exchangeApi().acceptOffer("Bearer " + Authentication.getInstance().getToken(), o.getId())
+                .enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object>
                     response) {
-
+                selectAllOffers();
             }
 
             @Override
@@ -67,58 +65,15 @@ public class TradingOffers implements Initializable {
             }
         });
     }
-
-
-//    public void initButtonColumn() {
-//        //buttonColumn.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-//
-//        Callback<TableColumn<Offer, String>> cellFactory
-//                = //
-//                new Callback<TableColumn<Offer, String>>() {
-//                    @Override
-//                    public void onResponse(Call<TableColumn<Offer, String>> call, Response<TableColumn<Offer, String>> response) {
-//                            final TableCell<Offer, String> cell = new TableCell<Offer, String>() {
-//
-//                                final Button btn = new Button("Just Do It");
-//
-//                                @Override
-//                                public void updateItem(String item, boolean empty) {
-//                                    super.updateItem(item, empty);
-//                                    if (empty) {
-//                                        setGraphic(null);
-//                                        setText(null);
-//                                    } else {
-//                                        btn.setOnAction(event -> {
-//                                            Offer offer = getTableView().getItems().get(getIndex());
-//                                        });
-//                                        setGraphic(btn);
-//                                        setText(null);
-//                                    }
-//                                }
-//                            };
-//
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<TableColumn<Offer, String>> call, Throwable throwable) {
-//
-//                    }
-//
-//
-//                };
-//        buttonColumn.setCellValueFactory((javafx.util.Callback<TableColumn.CellDataFeatures, ObservableValue>) cellFactory);
-//
-//    }
-
-
+    
     private List<Offer> filterOffers(List<Offer> offers, String type) {
         String username = Authentication.getInstance().getUsername();
         return switch (type) {
             case "USD_TO_LBP" -> offers.stream()
-                    .filter(offer -> (!offer.getUsername().equals(username) && offer.usdToLbp.equals(true)))
+                    .filter(offer -> (!offer.getUsername().equals(username) && offer.getUsdToLbp().equals(true)))
                     .toList();
             case "LBP_TO_USD" -> offers.stream()
-                    .filter(offer -> (!offer.getUsername().equals(username) && offer.usdToLbp.equals(false)))
+                    .filter(offer -> (!offer.getUsername().equals(username) && !offer.getUsdToLbp()))
                     .toList();
             case "PENDING" -> offers.stream()
                     .filter(offer -> (offer.getUsername().equals(username)))
@@ -130,6 +85,7 @@ public class TradingOffers implements Initializable {
     }
 
     public void selectAllOffers() {
+        tableView.getItems().clear();
         buttonColumn.setVisible(true);
         allOffersDirectionBox.setVisible(true);
 //        buttonColumn.setCellValueFactory(new     TODO
@@ -154,46 +110,41 @@ public class TradingOffers implements Initializable {
                                            Response<List<Offer>> response) {
                         RadioButton radioButton = (RadioButton) transactionType.getSelectedToggle();
                         List<Offer> offers = new ArrayList<Offer>();
-                        if (radioButton.getText().equals("USD TO LBP")) {
+                        if (radioButton.getText().equals("Buy USD")) {
                             offers = filterOffers(response.body(),"USD_TO_LBP");
                         }
-                        else if (radioButton.getText().equals("LBP TO USD")) {
+                        else if (radioButton.getText().equals("Sell USD ")) {
                             offers = filterOffers(response.body(),"LBP_TO_USD");
                         }
                         tableView.getItems().setAll(offers);
 
-                        List<Offer> finalOffers = offers;
                         rate.setCellValueFactory(cellData -> {
-                            List<Float> rates = new ArrayList<Float>();
-                            for (Offer o : finalOffers) {
-                                Float amountOffered = o.getAmountToTrade();
-                                Float amountRequested = o.getAmountRequested();
-                                rates.add(amountOffered * amountRequested);
+                            Offer offer = cellData.getValue(); // Get the Offer instance for the current row
+                            Float amountOffered = offer.getAmountToTrade();
+                            Float amountRequested = offer.getAmountRequested();
+                            if (offer.getUsdToLbp()) {
+                                return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
                             }
-                            return new ReadOnlyObjectWrapper<>(rates);
+                            else {
+                                return new ReadOnlyObjectWrapper<>(amountRequested * amountOffered);
+                            }
                         });
 
-//                    buttonColumn.setCellFactory(cellData -> {
-//                        List<Button> rates = new ArrayList<Button>();
-//                        for (Offer o : response.body()) {
-//                            Button btn = new Button("Accept");;
-//                            btn.setOnAction(event -> {
-//                                acceptOffer(o);
-//                            });
-//                            rates.add(btn);
-//                        }
-//                        return new ReadOnlyObjectWrapper<>(rates);
-//                    });
-                        buttonColumn.setCellFactory(col -> new TableCell<Offer, Offer>() {
+                        buttonColumn.setCellFactory(col -> new TableCell<Offer, Void>() {
                             private final Button btn = new Button("Accept");
-
+                            {
+                                btn.setOnAction(event -> {
+                                    Offer offer = getTableView().getItems().get(getIndex());
+                                    acceptOffer(offer);
+                                });
+                            }
                             @Override
-                            protected void updateItem(Offer offer, boolean empty) {
-                                super.updateItem(offer, empty);
-                                if (empty || offer == null) {
+                            protected void updateItem(Void item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
                                     setGraphic(null);
-                                } else {
-                                    btn.setOnAction(event -> acceptOffer(offer));
+                                }
+                                else {
                                     setGraphic(btn);
                                 }
                             }
@@ -208,6 +159,7 @@ public class TradingOffers implements Initializable {
     }
 
     public void selectPending() {
+        tableView.getItems().clear();
         buttonColumn.setVisible(false);  // Toggle visibility
         allOffersDirectionBox.setVisible(false);
 
@@ -233,15 +185,12 @@ public class TradingOffers implements Initializable {
                         tableView.getItems().setAll(offers);
 
                         rate.setCellValueFactory(cellData -> {
-                            List<Float> rates = new ArrayList<Float>();
-                            for (Offer o : offers) {
-                                Float amountOffered = o.getAmountToTrade();
-                                Float amountRequested = o.getAmountRequested();
-                                rates.add(amountOffered * amountRequested);
-                            }
-                            return new ReadOnlyObjectWrapper<>(rates);
+                            Offer offer = cellData.getValue(); // Get the Offer instance for the current row
+                            Float amountOffered = offer.getAmountToTrade();
+                            Float amountRequested = offer.getAmountRequested();
+                            Float calculatedRate = amountOffered * amountRequested; // Calculate the rate for this specific offer
+                            return new ReadOnlyObjectWrapper<>(calculatedRate);
                         });
-
                     }
                     @Override
                     public void onFailure(Call<List<Offer>> call,
@@ -252,6 +201,7 @@ public class TradingOffers implements Initializable {
     }
 
     public void selectAccepted() {
+        tableView.getItems().clear();
         buttonColumn.setVisible(false);  // Toggle visibility
         allOffersDirectionBox.setVisible(false);
 
@@ -277,15 +227,12 @@ public class TradingOffers implements Initializable {
                         tableView.getItems().setAll(offers);
 
                         rate.setCellValueFactory(cellData -> {
-                            List<Float> rates = new ArrayList<Float>();
-                            for (Offer o : offers) {
-                                Float amountOffered = o.getAmountToTrade();
-                                Float amountRequested = o.getAmountRequested();
-                                rates.add(amountOffered * amountRequested);
-                            }
-                            return new ReadOnlyObjectWrapper<>(rates);
+                            Offer offer = cellData.getValue(); // Get the Offer instance for the current row
+                            Float amountOffered = offer.getAmountToTrade();
+                            Float amountRequested = offer.getAmountRequested();
+                            Float calculatedRate = amountOffered * amountRequested; // Calculate the rate for this specific offer
+                            return new ReadOnlyObjectWrapper<>(calculatedRate);
                         });
-
                     }
                     @Override
                     public void onFailure(Call<List<Offer>> call,

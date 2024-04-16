@@ -28,9 +28,13 @@ public class Offer {
     public Float getAmountRequested() {
         return amountRequested;
     }
-    public Date getAddedDate() {
-        return DateParser.convertStringToDate(addedDate);
+    public String getAddedDate() {
+        return addedDate;
     }
+//    public Date getAddedDate() {
+//        return DateParser.convertStringToDate(addedDate);
+//    }
+
     public String getUsername() { return username; }
 
     public Integer getId() {

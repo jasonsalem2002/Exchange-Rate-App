@@ -22,12 +22,12 @@
             </HBox>
             <Pane HBox.hgrow="ALWAYS"/>
             <HBox fx:id="allOffersDirectionBox" spacing="10">  <!-- Inner HBox for radio buttons -->
-                <RadioButton text="Buy USD">
+                <RadioButton text="Buy USD" onAction="#selectAllOffers">
                     <toggleGroup>
                         <ToggleGroup fx:id="transactionType"/>
                     </toggleGroup>
                 </RadioButton>
-                <RadioButton text="Sell USD " toggleGroup="$transactionType"/>
+                <RadioButton text="Sell USD " toggleGroup="$transactionType" onAction="#selectAllOffers"/>
             </HBox>
         </HBox>
         <TableView
@@ -39,7 +39,7 @@
             <columns>
                 <TableColumn text="Accept" fx:id="buttonColumn" />
                 <TableColumn text="Offer ID" fx:id="offerID"
-                             prefWidth="150"/>
+                             prefWidth="50"/>
                 <TableColumn text="Transaction Type" fx:id="usdToLbp"
                              prefWidth="150"/>
                 <TableColumn text="Amount Offered" fx:id="amountToTrade"
