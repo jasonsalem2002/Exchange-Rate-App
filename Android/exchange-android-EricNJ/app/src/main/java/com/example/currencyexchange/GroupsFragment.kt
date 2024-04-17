@@ -1,21 +1,21 @@
 package com.example.currencyexchange
-
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyexchange.api.Authentication
 import com.example.currencyexchange.api.ExchangeService
+import com.example.currencyexchange.api.model.Group
 import com.example.currencyexchange.api.model.GroupMessage
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,14 +42,20 @@ class GroupsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view:View= inflater.inflate(R.layout.fragment_groups, container, false)
-        val addButton: ImageView = view.findViewById(R.id.addButton)
-        addButton.setOnClickListener {
+        val joinButton: Button = view.findViewById(R.id.joinbutton)
+        joinButton.setOnClickListener {
             showUsernamesDropdown()
         }
         val backButton: ImageView = view.findViewById(R.id.backButton)
         backButton.setOnClickListener {
             requireActivity().finish()
         }
+        val addButton:ImageView=view.findViewById(R.id.addButton)
+        addButton.setOnClickListener {
+                showGroupNameDialog()
+        }
+
+
         groupsRecyclerView = view.findViewById(R.id.idRVcurrency)
         groupsAdapter = GroupsRVAdapter(requireContext(), groupsWithLastMessage, this::onGroupClicked)
         groupsRecyclerView.adapter = groupsAdapter
@@ -210,7 +216,52 @@ class GroupsFragment : Fragment() {
                 Date(0)  // Return an early default date if any exception occurs
             }
         }
+    fun showGroupNameDialog() {
+        // Inflate the custom layout
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_creategroup ,null)
+        val editText = dialogView.findViewById<EditText>(R.id.editGroupName)
 
+        // Build the dialog
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Set Group Name")
+            .setView(dialogView) // Set the custom layout
+            .setPositiveButton("Submit") { dialog, which ->
+                // Handle the submission
+                val groupName = editText.text.toString()
+                if (groupName.isNotEmpty()) {
+                    createGroupName(groupName)
+                    Toast.makeText(requireContext(), "Group name set", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel") { dialog, which ->
+                dialog.cancel()
+            }
+            .create()
 
+        dialog.show()
     }
+
+    fun createGroupName(name: String) {
+        var grp=Group().apply {
+            this.grpname = name
+        }
+        ExchangeService.exchangeApi().createGroup(grp, if (Authentication.getToken() != null) "Bearer ${Authentication.getToken()}" else null).enqueue(object : Callback<Any> {
+
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Created Group", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to Create Group", Toast.LENGTH_LONG).show()
+                }
+            }
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                Toast.makeText(requireContext(), "Could not creaet group", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
+
+}
 

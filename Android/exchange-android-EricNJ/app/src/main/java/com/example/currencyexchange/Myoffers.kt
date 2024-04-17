@@ -66,7 +66,7 @@ class TradingAdapter(
 }private fun fetchoffers() {
     if (Authentication.getToken() != null) {
         ExchangeService.exchangeApi()
-            .getOffers("Bearer ${Authentication.getToken()}")
+            .getacceptedoffers("Bearer ${Authentication.getToken()}")
             .enqueue(object : Callback<List<Offer>> {
                 override fun onFailure(call: Call<List<Offer>>, t: Throwable) {
                     Toast.makeText(this@Myoffers,"Failed to fetch offers.", Toast.LENGTH_LONG).show()

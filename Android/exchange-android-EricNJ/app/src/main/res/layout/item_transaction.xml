@@ -3,39 +3,46 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     android:orientation="vertical">
+
     <TextView
         android:id="@+id/txtView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="20sp"
+        android:text="Offer ID"
+        android:layout_marginBottom="16dp"/>
 
-        android:layout_marginBottom="8dp"/>
     <TextView
         android:id="@+id/tvTransactionDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginBottom="8dp"/>
+        android:textSize="20sp"
+        android:text="Transaction Date"
+        android:layout_marginBottom="16dp"/>
 
     <TextView
         android:id="@+id/tvUsdAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginBottom="8dp"/>
+        android:textSize="18sp"
+        android:text="USD Amount"
+        android:layout_marginBottom="16dp"/>
 
     <TextView
         android:id="@+id/tvLbpAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginBottom="8dp"/>
+        android:textSize="18sp"
+        android:text="LBP Amount"
+        android:layout_marginBottom="16dp"/>
 
     <TextView
         android:id="@+id/tvExchangeDirection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_marginBottom="8dp"/>
-    </LinearLayout>
+        android:textSize="16sp"
+        android:text="Exchange Direction"
+        android:layout_marginBottom="16dp"/>
+</LinearLayout>

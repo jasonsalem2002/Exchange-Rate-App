@@ -2,6 +2,7 @@ package com.example.currencyexchange
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,7 +84,8 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
 
     private fun fetchUsersAndLastMessages(messages: List<Message>) {
         activity?.runOnUiThread {
-            val seenUsers = HashMap<String, UserWithLastMessage>()
+            val seenUsers = LinkedHashMap<String, UserWithLastMessage>()
+
             for (message in messages.reversed()) {
                 val recipient = message.recepient_Username
                 val sender = message.senderUsername
@@ -97,13 +99,21 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
                     lastMessage = message.content ?: "No message",
                     timestamp = message.timestamp ?: "Unknown time"
                 )
-                myusers.add(newMessage.username)
-                if(seenUsers[username]==null){
+                if( seenUsers[username ?: "Unknown"]==null){
                     seenUsers[username ?: "Unknown"] = newMessage
-                }}
+                    Log.e("forrrrrrr",username.toString())
+                }
 
+                }
             usersWithLastMessage.clear()
-            usersWithLastMessage.addAll(seenUsers.values)
+            for (lstmsg in seenUsers.values) {
+                usersWithLastMessage.add(lstmsg)
+                Log.e("finally",lstmsg.username)
+            }
+
+
+            myusers.addAll(seenUsers.keys)
+            Authentication.getUsername()?.let { myusers.add(it) }
             usersRecyclerView.adapter?.notifyDataSetChanged()
         }
     }

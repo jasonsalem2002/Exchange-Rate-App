@@ -92,6 +92,8 @@ class MainActivity : AppCompatActivity() {
             Authentication.clearToken()
             Authentication.clearUsername()
             setMenu()
+            val intent3 = Intent(this, MainActivity::class.java)
+            startActivity(intent3)
         }
         return true
     }

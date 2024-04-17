@@ -124,6 +124,7 @@ class ExchangeFragment : Fragment() {
                         this.usdToLbp = usdToLbp
                     }
                     addTransaction(transaction)
+                    fetchrates()
                 } catch (e: NumberFormatException) {
                     errorMessage = "Please enter a valid number."
                 } catch (e: IllegalArgumentException) {

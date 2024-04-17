@@ -18,7 +18,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_back"
-            android:contentDescription="@string/back_button"
             android:clickable="true"
             android:focusable="true" />
 
@@ -28,7 +27,6 @@
             android:layout_height="40dp"
             android:layout_toRightOf="@id/backButton"
             android:src="@drawable/ic_user"
-             android:contentDescription="@string/profile_icon"
             />
 
         <TextView
@@ -56,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/sendButton"
             android:layout_alignParentStart="true"
-            android:hint="@string/write_message"
+            android:hint="Message"
              />
 
         <Button

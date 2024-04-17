@@ -7,6 +7,7 @@
     android:background="@color/Light_Grey"
     tools:context=".ChatsActivity">
 
+
     <ImageView
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
@@ -19,27 +20,29 @@
 
     <EditText
         android:id="@+id/idEdtCurrency"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_toStartOf="@+id/addButton"
-        android:layout_toEndOf="@+id/backButton"
+        android:layout_width="211dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="35dp"
         android:layout_marginBottom="8dp"
+        android:layout_toStartOf="@+id/addButton"
+        android:layout_toEndOf="@+id/backButton"
         android:focusable="auto"
-        android:hint="Search Group"
+        android:hint="Search Person"
         android:textColor="@color/Vibrant_Blue"
         android:textColorHint="@color/Vibrant_Blue"
         android:textSize="20sp" />
+
     <ImageView
         android:id="@+id/addButton"
-        android:layout_width="44dp"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="37dp"
+
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="9dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="113dp"
         android:src="@drawable/ic_add" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -48,4 +51,14 @@
         android:layout_height="match_parent"
         android:layout_below="@id/idEdtCurrency"
         tools:listitem="@layout/item_users" />
+
+    <Button
+        android:id="@+id/joinbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="59dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="4dp"
+        android:text="Join" />
 </RelativeLayout>

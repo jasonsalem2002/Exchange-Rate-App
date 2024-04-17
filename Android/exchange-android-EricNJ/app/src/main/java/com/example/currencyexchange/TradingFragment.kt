@@ -51,19 +51,22 @@ class TradingFragment : Fragment() {
         fab?.setOnClickListener { view ->
             showDialog()
         }
+
         fabrefresh=view.findViewById(R.id.fab_refresh)
         fabrefresh?.setOnClickListener {
             offers?.clear()
             adapter?.notifyDataSetChanged()
             fetchoffers()
         }
+
+
         var viewmyoffersbutton: Button =view.findViewById(R.id.button_view_my_offers)
         viewmyoffersbutton.setOnClickListener {
             var intent90=Intent(requireContext(),Myoffers::class.java)
             startActivity(intent90)
         }
-        switchTradeDirection = view.findViewById(R.id.switch_trade_direction)
 
+        switchTradeDirection = view.findViewById(R.id.switch_trade_direction)
         switchTradeDirection?.setOnCheckedChangeListener { _, isChecked ->
             filterOffers(isChecked)
         }
@@ -73,18 +76,18 @@ class TradingFragment : Fragment() {
         listview?.adapter = adapter
 
         listview?.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            val offer = offers?.get(position)
-            if (offer != null) {
+            val offer = adapter?.getItem(position) as? Offer // Use adapter's getItem method to ensure correct data
+            offer?.let {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Select an Action")
                     .setMessage("Choose to accept the offer or start a chat.")
                     .setPositiveButton("Accept") { dialog, _ ->
-                        offer.id?.let { acceptOffer(it) }
+                        it.id?.let { offerId -> acceptOffer(offerId) }
                         dialog.dismiss()
                     }
                     .setNegativeButton("Chat") { dialog, _ ->
                         val intent = Intent(activity, Convo::class.java).apply {
-                         //   putExtra("username", offer.)
+                            putExtra("username", it.user) // Assuming you want to pass the offer ID to the chat activity
                         }
                         startActivity(intent)
                         dialog.dismiss()
@@ -92,6 +95,7 @@ class TradingFragment : Fragment() {
                     .show()
             }
         }
+
         return view
     }
 
@@ -103,7 +107,7 @@ class TradingFragment : Fragment() {
         ViewGroup?): View {
             val view:View=inflater.inflate(R.layout.item_trading,
                 parent, false)
-            view.findViewById<TextView>(R.id.txtView1).text = dataSource[position].id.toString()
+            view.findViewById<TextView>(R.id.txtView1).text = dataSource[position].user.toString()
             view.findViewById<TextView>(R.id.tvTransactionDate).text =  dataSource[position].addedDate
             view.findViewById<TextView>(R.id.tvUsdAmount).text = "USD: ${ dataSource[position].amountrequested}"
             view.findViewById<TextView>(R.id.tvLbpAmount).text = "LBP: ${ dataSource[position].amounttotrade}"
@@ -144,8 +148,12 @@ class TradingFragment : Fragment() {
                             Toast.makeText(requireContext(), "No offers found.", Toast.LENGTH_LONG).show()
                         }
                         else{
+                            offers?.clear()
                             offers?.addAll(response.body()!!)
                             adapter?.notifyDataSetChanged()
+                            switchTradeDirection?.isChecked?.let {
+                                filterOffers(it)
+                            }
                         }}
                 })
         }
@@ -208,6 +216,7 @@ class TradingFragment : Fragment() {
             .show()
     }
     private fun acceptOffer(offerid: Int) {
+        Log.e("IDDDDDDDDDDDDDDDDDDDDDD",offerid.toString())
         ExchangeService.exchangeApi().acceptOffer(offerid, if (Authentication.getToken() != null) "Bearer ${Authentication.getToken()}" else null).enqueue(object :
             Callback<Any> {
             override fun onResponse(call: Call<Any>, response: Response<Any>) {

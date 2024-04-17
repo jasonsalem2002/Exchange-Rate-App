@@ -1,6 +1,7 @@
 package com.example.currencyexchange.api
 
 import com.example.currencyexchange.api.model.ExchangeRates
+import com.example.currencyexchange.api.model.Group
 import com.example.currencyexchange.api.model.GroupMessage
 import com.example.currencyexchange.api.model.Message
 import com.example.currencyexchange.api.model.Offer
@@ -19,7 +20,7 @@ import retrofit2.http.Path
 
 
 object ExchangeService {
-    private const val API_URL: String = "https://scorpion-glowing-guppy.ngrok-free.app/"
+    private const val API_URL: String = "https://jason.hydra-polaris.ts.net/"
     fun exchangeApi(): Exchange {
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl(API_URL)
@@ -48,7 +49,8 @@ object ExchangeService {
                 Call<List<Offer>>
         @POST("offers")
         fun addoffer(@Body offer: Offer, @Header("Authorization") authorization: String?): Call<Any>
-
+        @GET("get_accepted_offers")
+        fun getacceptedoffers(@Header("Authorization") authorization: String?): Call<List<Offer>>
         @PUT("accept_offer/{offer_id}")
         fun acceptOffer(@Path("offer_id") offerId: Int, @Header("Authorization") authorization: String?): Call<Any>
         @GET("usernames")
@@ -57,10 +59,8 @@ object ExchangeService {
         fun getmessages(@Header("Authorization") authorization: String,@Path("sender_username") senderUsername:String?): Call<List<Message>>
         @POST("chat")
         fun addChat(@Body message: Message,@Header("Authorization") authorization: String?): Call<Any>
-
         @POST("group")
-        fun createGroup(@Body message: Message?, @Header("Authorization") authorization: String?): Call<Any?>?
-
+        fun createGroup(@Body groupName: Group?, @Header("Authorization") authorization: String?): Call<Any>
         @GET("group/{group_name}/messages")
         fun getGroupMessages(@Header("Authorization") authorization: String?, @Path("group_name") groupName: String?): Call<List<GroupMessage>>
         @GET("groups")

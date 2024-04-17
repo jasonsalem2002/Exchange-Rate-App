@@ -101,13 +101,13 @@
 
     <Button
         android:id="@+id/Chatbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chats"
+        android:layout_width="141dp"
+        android:layout_height="50dp"
         android:backgroundTint="@color/Vibrant_Blue"
+        android:text="Chats"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.119"
+        app:layout_constraintHorizontal_bias="0.125"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.386" />
