@@ -51,11 +51,20 @@ def create_group():
         db.session.add(new_group)
         db.session.commit()
 
+        creator_id = decode_result
+        creator = User.query.get(creator_id)
+        if not creator:
+            return jsonify({'error': 'Creator not found.'}), 404
+
+        new_group.members.append(creator)
+        db.session.commit()
+
         group_schema = GroupSchema()
         return jsonify(group_schema.dump(new_group)), 201
 
     except Exception as e:
         return jsonify({'error': 'Internal server error.'}), 500
+
 
 @group_bp.route('/group/<string:group_name>/message', methods=['POST'])
 def send_group_message(group_name):
@@ -88,7 +97,7 @@ def send_group_message(group_name):
 
         response_data = {
             'group_name': group.name,
-            'added_date': new_message.added_date.strftime('%Y-%m-%d %H:%M:%S'),
+            'added_date': new_message.added_date,
             'sender_username': sender.user_name,
             'content': new_message.content
         }
@@ -124,7 +133,7 @@ def get_group_messages(group_name):
             sender = User.query.get(message.sender_id)
             formatted_message = {
                 'group_name': group.name,
-                'added_date': message.added_date.strftime('%Y-%m-%d %H:%M:%S'),
+                'added_date': message.added_date,
                 'sender_username': sender.user_name,
                 'content': message.content
             }

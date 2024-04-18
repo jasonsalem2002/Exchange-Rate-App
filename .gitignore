@@ -26,3 +26,5 @@ yarn-debug.log*
 yarn-error.log*
 Backend/convert.py
 kingkareem.csv
+Transaction_Generator_Script_Updated.py
+Transaction_Generator_Script.py

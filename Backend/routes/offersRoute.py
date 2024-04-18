@@ -84,17 +84,25 @@ def get_all_offers():
 def get_accepted_offers():
     try:
         token = extract_auth_token(request)
-        user_id = decode_token(token)
-
         if not token:
             return jsonify({'error': 'Unauthorized, no token was provided'}), 403
         
-        complete_offers = Offer.query.filter_by(mark_as='complete').all()
-        seruialized_offers = [offer_schema.dump(offer) for offer in complete_offers]
-        for offer in seruialized_offers:
-            offer.pop('mark_as')
-            
-        return jsonify(seruialized_offers), 200
+        user_id = decode_token(token)
+        if not user_id:
+            return jsonify({'error': 'Unauthorized, invalid token'}), 403
+        
+        complete_offers = Offer.query.filter_by(user_id=user_id, mark_as='complete').all()
+        serialized_offers = []
+        for offer in complete_offers:
+            user = User.query.get(offer.user_id)
+            if user:
+                serialized_offer = offer_schema.dump(offer)
+                serialized_offer.pop('user_id')
+                serialized_offer.pop('mark_as')
+                serialized_offer['username'] = user.user_name
+                serialized_offers.append(serialized_offer)
+
+        return jsonify(serialized_offers), 200
     
     except Exception as e:
         return jsonify({'error': 'Internal server error.'}), 500
