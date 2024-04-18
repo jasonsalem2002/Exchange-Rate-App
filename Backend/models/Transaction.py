@@ -1,35 +1,20 @@
 from ..app import db
 import datetime
 
+
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usd_amount = db.Column(db.Float)
     lbp_amount = db.Column(db.Float)
     usd_to_lbp = db.Column(db.Boolean)
     added_date = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
 
     def __init__(self, usd_amount, lbp_amount, usd_to_lbp, user_id):
-        super(Transaction, self).__init__(usd_amount=usd_amount, lbp_amount=lbp_amount, usd_to_lbp=usd_to_lbp, user_id=user_id, added_date=datetime.datetime.now())
-
-# from ..app import db
-# import datetime
-
-# class Transaction(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     usd_amount = db.Column(db.Float)
-#     lbp_amount = db.Column(db.Float)
-#     usd_to_lbp = db.Column(db.Boolean)
-#     added_date = db.Column(db.DateTime)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-
-#     def __init__(self, usd_amount, lbp_amount, usd_to_lbp, user_id, date=None):
-#         if date is None:
-#             date = datetime.datetime.now()
-#         super(Transaction, self).__init__(
-#             usd_amount=usd_amount,
-#             lbp_amount=lbp_amount,
-#             usd_to_lbp=usd_to_lbp,
-#             user_id=user_id,
-#             added_date=date
-#         )
+        super(Transaction, self).__init__(
+            usd_amount=usd_amount,
+            lbp_amount=lbp_amount,
+            usd_to_lbp=usd_to_lbp,
+            user_id=user_id,
+            added_date=datetime.datetime.now(),
+        )

@@ -1,9 +1,10 @@
 from ..app import db
 from datetime import datetime
 
+
 class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     amount_requested = db.Column(db.Float)
     amount_to_trade = db.Column(db.Float)
     usd_to_lbp = db.Column(db.Boolean)
@@ -16,4 +17,3 @@ class Offer(db.Model):
         self.amount_to_trade = amount_to_trade
         self.usd_to_lbp = usd_to_lbp
         self.mark_as = mark_as
-        
