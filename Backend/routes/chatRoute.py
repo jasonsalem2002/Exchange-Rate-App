@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 from ..app import db
 from ..models.Message import Message
-from ..schemas.messageSchema import message_schema, messages_schema
 from ..models.User import User
 from ..utils.util import extract_auth_token, decode_token
 import jwt
@@ -46,7 +45,7 @@ def handle_send_message():
         recipient_username = recipient.user_name
 
         response_data = {
-            'added_date': new_message.added_date,
+            'added_date': new_message.added_date.strftime('%Y-%m-%d %H:%M:%S'),
             'content': new_message.content,
             'sender_username': sender_username,
             'recipient_username': recipient_username
@@ -81,7 +80,7 @@ def get_user_messages(username):
             sender_username = User.query.get(message.sender_id).user_name
             recipient_username = User.query.get(message.recipient_id).user_name
             formatted_message = {
-                'added_date': message.added_date,
+                'added_date': message.added_date.strftime('%Y-%m-%d %H:%M:%S'),
                 'content': message.content,
                 'sender_username': sender_username,
                 'recipient_username': recipient_username

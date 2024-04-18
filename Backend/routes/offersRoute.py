@@ -74,7 +74,6 @@ def get_all_offers():
                 serialized_offer.pop('user_id')
                 serialized_offer.pop('mark_as')
                 serialized_offers.append(serialized_offer)
-        
         return jsonify(serialized_offers), 200
 
     except Exception as e:

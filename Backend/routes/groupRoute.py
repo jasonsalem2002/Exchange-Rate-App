@@ -1,11 +1,9 @@
 from flask import Blueprint, request, jsonify
 from ..app import db
 from ..models.Group import Group, GroupMessage
-from ..schemas.groupSchema import GroupSchema, GroupMessageSchema
-from ..schemas.messageSchema import message_schema, messages_schema
+from ..schemas.groupSchema import GroupSchema
 from ..models.User import User
 from ..utils.util import extract_auth_token, decode_token
-import jwt
 
 group_bp = Blueprint('group_bp', __name__)
 
@@ -79,7 +77,7 @@ def send_group_message(group_name):
 
         response_data = {
             'group_name': group.name,
-            'added_date': new_message.added_date,
+            'added_date': new_message.added_date.strftime('%Y-%m-%d %H:%M:%S'),
             'sender_username': sender.user_name,
             'content': new_message.content
         }
@@ -105,9 +103,8 @@ def get_group_messages(group_name):
         if not sender:
             return jsonify({'error': 'Sender not found.'}), 404
 
-        # Check if the sender is a member of the group
         if sender not in group.members:
-            return jsonify({'error': 'You are not a member of this group. YOU ARE YEHYA'}), 403
+            return jsonify({'error': 'You are not a member of this group.'}), 403
 
         group_messages = GroupMessage.query.filter_by(group_id=group.id).all()
 
@@ -116,7 +113,7 @@ def get_group_messages(group_name):
             sender = User.query.get(message.sender_id)
             formatted_message = {
                 'group_name': group.name,
-                'added_date': message.added_date,
+                'added_date': message.added_date.strftime('%Y-%m-%d %H:%M:%S'),
                 'sender_username': sender.user_name,
                 'content': message.content
             }
@@ -152,7 +149,6 @@ def join_group(group_name):
         if not group:
             return jsonify({'error': 'Group not found.'}), 404
 
-        # Add user to the group
         if user not in group.members:
             group.members.append(user)
             db.session.commit()
@@ -178,7 +174,6 @@ def leave_group(group_name):
         if not group:
             return jsonify({'error': 'Group not found.'}), 404
 
-        # Remove user from the group
         if user in group.members:
             group.members.remove(user)
             db.session.commit()
