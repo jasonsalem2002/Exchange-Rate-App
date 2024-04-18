@@ -5,13 +5,52 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import android.widget.Filter
+import android.widget.Filterable
 
 class UsersRVAdapter(
-    private val usersWithMessages: List<UserWithLastMessage>,
+    private val usersWithMessages: MutableList<UserWithLastMessage>,
     private val clickListener: OnUserClickListener
-) : RecyclerView.Adapter<UsersRVAdapter.UserViewHolder>() {
-    interface OnUserClickListener {
-        fun onUserClicked(user: UserWithLastMessage)
+) : RecyclerView.Adapter<UsersRVAdapter.UserViewHolder>(), Filterable {
+
+    // Filtered list initialization
+    private var usersWithMessagesFiltered: MutableList<UserWithLastMessage> = usersWithMessages
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_users, parent, false)
+        return UserViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        holder.bind(usersWithMessagesFiltered[position], clickListener)
+    }
+
+    override fun getItemCount(): Int = usersWithMessagesFiltered.size
+
+    // Implementing the Filterable interface
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                usersWithMessagesFiltered = if (charSearch.isEmpty()) {
+                    usersWithMessages
+                } else {
+                    val resultList = usersWithMessages.filter {
+                        it.username.contains(charSearch, ignoreCase = true)
+                    }.toMutableList()
+                    resultList
+                }
+
+                val filterResults = FilterResults()
+                filterResults.values = usersWithMessagesFiltered
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                usersWithMessagesFiltered = results?.values as MutableList<UserWithLastMessage>
+                notifyDataSetChanged()
+            }
+        }
     }
 
     class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -27,14 +66,8 @@ class UsersRVAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_users, parent, false)
-        return UserViewHolder(view)
+    interface OnUserClickListener {
+        fun onUserClicked(user: UserWithLastMessage)
     }
-
-    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        holder.bind(usersWithMessages[position], clickListener)
-    }
-
-    override fun getItemCount(): Int = usersWithMessages.size
 }
+

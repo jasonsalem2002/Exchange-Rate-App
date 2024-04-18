@@ -1,6 +1,8 @@
 package com.example.currencyexchange
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +34,6 @@ class GroupsFragment : Fragment() {
     var groupMessageMap: MutableMap<String, List<GroupMessage>> = mutableMapOf()
     private var userGroupList: List<String> = listOf()
     private var userGroupListdropdown: List<String> = listOf()
-    val dateFormatter = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
     private var mygroups:MutableList<String> = mutableListOf()
 
     private var groupsWithLastMessage: MutableList<GroupWithLastMessage> = mutableListOf()
@@ -54,7 +55,16 @@ class GroupsFragment : Fragment() {
         addButton.setOnClickListener {
                 showGroupNameDialog()
         }
+        val editText: EditText = view.findViewById(R.id.grpsearch)
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                groupsAdapter.filter.filter(s)
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         groupsRecyclerView = view.findViewById(R.id.idRVcurrency)
         groupsAdapter = GroupsRVAdapter(requireContext(), groupsWithLastMessage, this::onGroupClicked)

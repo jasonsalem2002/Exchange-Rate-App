@@ -2,11 +2,14 @@ package com.example.currencyexchange
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -26,6 +29,7 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
     private var usersWithLastMessage: MutableList<UserWithLastMessage> = mutableListOf()
     private var myusers:MutableList<String> = mutableListOf()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,6 +45,18 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
         addButton.setOnClickListener {
             fetchUsernamesAndShowDropdown()
         }
+        val editText: EditText = view.findViewById(R.id.idEdtCurrency)
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                usersAdapter.filter.filter(s)
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
 
         usersRecyclerView = view.findViewById(R.id.idRVcurrency)
         usersRecyclerView.layoutManager = LinearLayoutManager(context)

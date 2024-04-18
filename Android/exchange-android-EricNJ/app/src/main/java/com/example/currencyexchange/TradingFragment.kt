@@ -37,6 +37,8 @@ class TradingFragment : Fragment() {
     private var offers: ArrayList<Offer>? = ArrayList()
     private var adapter: TradingAdapter? = null
     private var switchTradeDirection: Switch? = null
+    private lateinit var toggle:TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fetchoffers()
@@ -51,7 +53,7 @@ class TradingFragment : Fragment() {
         fab?.setOnClickListener { view ->
             showDialog()
         }
-
+        toggle=view.findViewById(R.id.toggletext)
         fabrefresh=view.findViewById(R.id.fab_refresh)
         fabrefresh?.setOnClickListener {
             offers?.clear()
@@ -127,8 +129,15 @@ class TradingFragment : Fragment() {
 
     }
     private fun filterOffers(usdToLbp: Boolean) {
+        if(usdToLbp){
+            toggle.text="Usd to Lbp"
+        }
+        else{
+            toggle.text="Lbp to Usd"
+        }
         adapter?.let {
-            it.dataSource = offers?.filter { offer -> offer.usdToLbp == usdToLbp } ?: listOf()
+            it.dataSource = offers?.filter { offer -> offer.usdToLbp == usdToLbp && offer.user != Authentication.getUsername() } ?: listOf()
+
             it.notifyDataSetChanged()
         }
     }

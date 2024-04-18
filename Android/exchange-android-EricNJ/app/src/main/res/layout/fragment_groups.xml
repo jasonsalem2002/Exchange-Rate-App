@@ -19,7 +19,7 @@
         android:src="@drawable/ic_back" />
 
     <EditText
-        android:id="@+id/idEdtCurrency"
+        android:id="@+id/grpsearch"
         android:layout_width="211dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -29,7 +29,7 @@
         android:layout_toStartOf="@+id/addButton"
         android:layout_toEndOf="@+id/backButton"
         android:focusable="auto"
-        android:hint="Search Person"
+        android:hint="Search Group"
         android:textColor="@color/Vibrant_Blue"
         android:textColorHint="@color/Vibrant_Blue"
         android:textSize="20sp" />
@@ -49,7 +49,7 @@
         android:id="@+id/idRVcurrency"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/idEdtCurrency"
+        android:layout_below="@id/grpsearch"
         tools:listitem="@layout/item_users" />
 
     <Button

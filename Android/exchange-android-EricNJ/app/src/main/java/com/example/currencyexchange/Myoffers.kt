@@ -45,7 +45,7 @@ class TradingAdapter(
     ViewGroup?): View {
         val view: View =inflater.inflate(R.layout.item_trading,
             parent, false)
-        view.findViewById<TextView>(R.id.txtView1).text = dataSource[position].id.toString()
+        view.findViewById<TextView>(R.id.txtView1).text = dataSource[position].user.toString()
         view.findViewById<TextView>(R.id.tvTransactionDate).text =  dataSource[position].addedDate
         view.findViewById<TextView>(R.id.tvUsdAmount).text = "USD: ${ dataSource[position].amountrequested}"
         view.findViewById<TextView>(R.id.tvLbpAmount).text = "LBP: ${ dataSource[position].amounttotrade}"
