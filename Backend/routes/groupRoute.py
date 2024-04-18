@@ -13,12 +13,23 @@ def get_user_id(username):
         return user.id
     return None
 
+def authenticate_request():
+    token = extract_auth_token(request)
+    if not token:
+        return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+
+    decode_result = decode_token(token)
+    if not decode_result:
+        return jsonify({'error': 'Invalid token'}), 403
+
+    return decode_result
+
 @group_bp.route('/group', methods=['POST'])
 def create_group():
     try:
-        token = extract_auth_token(request)
-        if not token:
-            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+        decode_result = authenticate_request()
+        if isinstance(decode_result, tuple):
+            return decode_result
 
         data = request.json
         if not data or 'name' not in data:
@@ -49,9 +60,9 @@ def create_group():
 @group_bp.route('/group/<string:group_name>/message', methods=['POST'])
 def send_group_message(group_name):
     try:
-        token = extract_auth_token(request)
-        if not token:
-            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+        decode_result = authenticate_request()
+        if isinstance(decode_result, tuple):
+            return decode_result
 
         data = request.json
         if not data or 'content' not in data:
@@ -63,7 +74,7 @@ def send_group_message(group_name):
         if not group:
             return jsonify({'error': 'Group not found.'}), 404
 
-        sender_id = decode_token(token)
+        sender_id = decode_result
         sender = User.query.get(sender_id)
         if not sender:
             return jsonify({'error': 'Sender not found.'}), 404
@@ -90,15 +101,15 @@ def send_group_message(group_name):
 @group_bp.route('/group/<string:group_name>/messages', methods=['GET'])
 def get_group_messages(group_name):
     try:
-        token = extract_auth_token(request)
-        if not token:
-            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+        decode_result = authenticate_request()
+        if isinstance(decode_result, tuple):
+            return decode_result
 
         group = Group.query.filter_by(name=group_name).first()
         if not group:
             return jsonify({'error': 'Group not found.'}), 404
 
-        sender_id = decode_token(token)
+        sender_id = decode_result
         sender = User.query.get(sender_id)
         if not sender:
             return jsonify({'error': 'Sender not found.'}), 404
@@ -123,10 +134,14 @@ def get_group_messages(group_name):
 
     except Exception as e:
         return jsonify({'error': 'Internal server error.'}), 500
-    
+
 @group_bp.route('/groups', methods=['GET'])
 def get_group_names():
     try:
+        decode_result = authenticate_request()
+        if isinstance(decode_result, tuple):
+            return decode_result
+
         groups = Group.query.all()
         group_names = [group.name for group in groups]
         return jsonify(group_names), 200
@@ -136,11 +151,11 @@ def get_group_names():
 @group_bp.route('/group/<string:group_name>/join', methods=['POST'])
 def join_group(group_name):
     try:
-        token = extract_auth_token(request)
-        if not token:
-            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+        decode_result = authenticate_request()
+        if isinstance(decode_result, tuple):
+            return decode_result
 
-        user_id = decode_token(token)
+        user_id = decode_result
         user = User.query.get(user_id)
         if not user:
             return jsonify({'error': 'User not found.'}), 404
@@ -161,11 +176,11 @@ def join_group(group_name):
 @group_bp.route('/group/<string:group_name>/leave', methods=['POST'])
 def leave_group(group_name):
     try:
-        token = extract_auth_token(request)
-        if not token:
-            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+        decode_result = authenticate_request()
+        if isinstance(decode_result, tuple):
+            return decode_result
 
-        user_id = decode_token(token)
+        user_id = decode_result
         user = User.query.get(user_id)
         if not user:
             return jsonify({'error': 'User not found.'}), 404
@@ -186,11 +201,11 @@ def leave_group(group_name):
 @group_bp.route('/my-groups', methods=['GET'])
 def get_my_groups():
     try:
-        token = extract_auth_token(request)
-        if not token:
-            return jsonify({'error': 'Unauthorized, no token was provided'}), 403
+        decode_result = authenticate_request()
+        if isinstance(decode_result, tuple):
+            return decode_result
 
-        sender_id = decode_token(token)
+        sender_id = decode_result
         sender = User.query.get(sender_id)
         if not sender:
             return jsonify({'error': 'Sender not found.'}), 404
