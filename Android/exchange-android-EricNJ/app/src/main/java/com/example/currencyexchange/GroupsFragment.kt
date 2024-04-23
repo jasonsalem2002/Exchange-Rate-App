@@ -3,6 +3,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -122,24 +123,32 @@ class GroupsFragment : Fragment() {
             return
         }
 
+
         for (groupName in userGroupList) {
             fetchGroupMessages(groupName) { groupMessages ->
                 fetchCount++
-                // Process each group only if the fetch was successful.
-                groupMessages?.lastOrNull()?.let {
-                    val newMessage = GroupWithLastMessage(
+
+                val newMessage = groupMessages?.lastOrNull()?.let {
+                    // This block executes only if there is at least one message in the list
+                    GroupWithLastMessage(
                         groupname = groupName,
                         lastMessage = it.content ?: "No message",
                         timestamp = it.addedDate ?: "Unknown time"
                     )
+                } ?: GroupWithLastMessage(
+                    // This block executes if the list is null or empty
+                    groupname = groupName,
+                    lastMessage = "No Messages Yet",
+                    timestamp = ""  // Empty string for timestamp if no messages
+                )
 
-                    // Check if the new message is already in the list to avoid duplicates.
-                    synchronized(groupsWithLastMessage) {
+
+                synchronized(groupsWithLastMessage) {
                         if (!groupsWithLastMessage.any { message -> message.groupname == newMessage.groupname }) {
                             groupsWithLastMessage.add(newMessage)
                         }
                     }
-                }
+
 
                 // Update RecyclerView only after all requests have completed.
                 if (fetchCount == totalRequests) {
@@ -200,7 +209,7 @@ class GroupsFragment : Fragment() {
 
                     override fun onResponse(call: Call<Any>, response: Response<Any>) {
                         if (response.isSuccessful) {
-                            Toast.makeText(requireContext(), "Joined Group", Toast.LENGTH_LONG).show()
+                            fetchGroups()
 
                         } else {
                             Toast.makeText(requireContext(), "Failed to Join group", Toast.LENGTH_LONG).show()
@@ -240,6 +249,7 @@ class GroupsFragment : Fragment() {
                 val groupName = editText.text.toString()
                 if (groupName.isNotEmpty()) {
                     createGroupName(groupName)
+                    fetchGroups()
                     Toast.makeText(requireContext(), "Group name set", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(requireContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show()

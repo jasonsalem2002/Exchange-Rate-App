@@ -58,13 +58,13 @@ class GroupsRVAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val group = groups[position]
+        val group = filteredGroups[position]
         holder.groupName.text = group.groupname
         holder.lastMessage.text = group.lastMessage
         holder.timestamp.text = group.timestamp
     }
 
-    override fun getItemCount(): Int = groups.size
+    override fun getItemCount(): Int = filteredGroups.size
 
 
 }
