@@ -1,12 +1,71 @@
 .root {
     -fx-background-color: whitesmoke;
 }
-.header {
-    -fx-font-size: 24;
-}
 .value-label {
     -fx-font-size: 20;
 }
 .value {
     -fx-font-size: 18;
+}
+
+/* General styles for the GridPane layout */
+.grid-pane {
+    -fx-padding: 20;
+    -fx-alignment: center;
+}
+
+/* Header label styles */
+.header {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding: 10;
+}
+.sub-header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+/* Styles for labels showing values and other information */
+.value-label, .value {
+    -fx-font-size: 16px;
+    -fx-text-fill: #666;
+}
+
+/* Styles for text fields */
+.text-field {
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #999;
+}
+
+/* Radio button styles */
+.radio-button {
+    -fx-font-size: 14px;
+    -fx-text-fill: #444;
+}
+
+/* Button styles */
+.button {
+    -fx-background-color: #D4AF57;
+    -fx-background-radius: 8,7,6;
+    -fx-background-insets: 0,1,2;
+    -fx-text-fill: black;
+    /*-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 3, 0.5, 0, 1);*/
+    -fx-font-size: 14px;
+    /*-fx-min-width: 25px;*/
+    /*-fx-padding: 2 4 2 4;*/
+    /*-fx-pref-height: 100;*/
+}
+
+/* Separator styles */
+.separator {
+    -fx-border-color: transparent transparent #ccc transparent;
+    -fx-border-width: 1;
+    -fx-max-height: 2;
+}
+
+/* Enhance focus on text fields and buttons */
+.text-field:focused, .button:focused {
+    -fx-border-color: #2072f3;
+    -fx-background-color: #e8f0fe;
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.kjb04.exchange.graph.Graph"
+            prefHeight="400.0" prefWidth="600.0" style="-fx-padding: 10px">
+    <VBox>
+        <LineChart fx:id="lineChart">
+            <xAxis>
+                <NumberAxis fx:id="xAxis" label="X Axis"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="yAxis" label="Y Axis"/>
+            </yAxis>
+        </LineChart>
+        <HBox>
+            <VBox>
+                <Label text="Start Date" />
+                <DatePicker fx:id="startDatePicker"/>
+            </VBox>
+            <VBox>
+                <Label text="End Date" />
+                <DatePicker fx:id="endDatePicker"/>
+            </VBox>
+            <VBox>
+                <ComboBox fx:id="granularityComboBox" prefHeight="30.0" prefWidth="120.0"
+                          promptText="Granularity"/>
+            </VBox>
+            <Button fx:id="graphButton" onAction="#graph" text="Generate" />
+        </HBox>
+    </VBox>
+</AnchorPane>

@@ -15,28 +15,28 @@
           prefHeight="200.0" prefWidth="600.0" >
 
     <HBox GridPane.rowIndex="3" GridPane.columnIndex="0">
-        <RadioButton text="Buy USD ">
+        <RadioButton text="Buy USD" onAction="#buySelected">
             <toggleGroup>
                 <ToggleGroup fx:id="transactionType"/>
             </toggleGroup>
         </RadioButton>
-        <RadioButton text="Sell USD"
+        <RadioButton text="Sell USD" onAction="#sellSelected"
                      toggleGroup="$transactionType"/>
     </HBox>
     <Label styleClass="value-label"
            fx:id="tradeAmountLabel" text="Amount to Trade"
            GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-    <TextField fx:id="tradeAmountTextField"
+    <TextField fx:id="tradeAmountTextField" onKeyTyped="#displayRate"
                GridPane.columnIndex="0" GridPane.rowIndex="5"/>
     <Label styleClass="value-label"
            fx:id="tradeAmountReqLabel" text="Amount Requested"
            GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-    <TextField fx:id="tradeAmountReqTextField"
+    <TextField fx:id="tradeAmountReqTextField" onKeyTyped="#displayRate"
                GridPane.columnIndex="0" GridPane.rowIndex="7"/>
     <Label styleClass="value-label"
-           fx:id="tradeRateLabel" text="ExchangeRate"
+           fx:id="tradeRateLabel" text="Exchange Rate"
            GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-    <TextField fx:id="tradeRateTextField"
+    <Label fx:id="tradeRateTextField"
                GridPane.columnIndex="0" GridPane.rowIndex="9"/>
     <Button text="Submit" onAction="#submitOffer"
             GridPane.columnIndex="0" GridPane.rowIndex="10" GridPane.columnSpan="2" GridPane.halignment="CENTER"/>

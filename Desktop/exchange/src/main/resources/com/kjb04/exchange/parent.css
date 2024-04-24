@@ -16,8 +16,8 @@
 .top-header {
     -fx-pref-height: 50px;
     -fx-pref-width: Infinity;
-    -fx-padding: 0 0 0 40px;
-    -fx-font-size: 24px;
+    /*-fx-padding: 0 0 0 40px;*/
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-background-color: #D4AF57;
 }

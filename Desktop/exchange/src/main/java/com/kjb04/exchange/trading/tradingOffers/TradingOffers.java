@@ -78,7 +78,6 @@ public class TradingOffers implements Initializable {
             case "PENDING" -> offers.stream()
                     .filter(offer -> (offer.getUsername().equals(username)))
                     .toList();
-            case "ACCEPTED" -> null;    // TODO
             default -> null;
         };
 
@@ -88,8 +87,6 @@ public class TradingOffers implements Initializable {
         tableView.getItems().clear();
         buttonColumn.setVisible(true);
         allOffersDirectionBox.setVisible(true);
-//        buttonColumn.setCellValueFactory(new     TODO
-//                PropertyValueFactory<Offer, Button>("id"));
 
         offerID.setCellValueFactory(new
                 PropertyValueFactory<Offer, Integer>("id"));
@@ -160,7 +157,7 @@ public class TradingOffers implements Initializable {
 
     public void selectPending() {
         tableView.getItems().clear();
-        buttonColumn.setVisible(false);  // Toggle visibility
+        buttonColumn.setVisible(false);
         allOffersDirectionBox.setVisible(false);
 
 
@@ -188,8 +185,12 @@ public class TradingOffers implements Initializable {
                             Offer offer = cellData.getValue(); // Get the Offer instance for the current row
                             Float amountOffered = offer.getAmountToTrade();
                             Float amountRequested = offer.getAmountRequested();
-                            Float calculatedRate = amountOffered * amountRequested; // Calculate the rate for this specific offer
-                            return new ReadOnlyObjectWrapper<>(calculatedRate);
+                            if (offer.getUsdToLbp()) {
+                                return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
+                            }
+                            else {
+                                return new ReadOnlyObjectWrapper<>(amountOffered / amountRequested);
+                            }
                         });
                     }
                     @Override
@@ -202,9 +203,9 @@ public class TradingOffers implements Initializable {
 
     public void selectAccepted() {
         tableView.getItems().clear();
-        buttonColumn.setVisible(false);  // Toggle visibility
+        buttonColumn.setVisible(false);
         allOffersDirectionBox.setVisible(false);
-
+        addedDate.setVisible(false);
 
         offerID.setCellValueFactory(new
                 PropertyValueFactory<Offer, Integer>("id"));
@@ -214,24 +215,25 @@ public class TradingOffers implements Initializable {
                 PropertyValueFactory<Offer, Float>("amountToTrade"));
         amountRequested.setCellValueFactory(new
                 PropertyValueFactory<Offer, Float>("amountRequested"));
-        addedDate.setCellValueFactory(new
-                PropertyValueFactory<Offer, String>("addedDate"));
 
-        ExchangeService.exchangeApi().getOffers("Bearer " +
+        ExchangeService.exchangeApi().getAcceptedOffers("Bearer " +
                         Authentication.getInstance().getToken())
                 .enqueue(new Callback<List<Offer>>() {
                     @Override
                     public void onResponse(Call<List<Offer>> call,
                                            Response<List<Offer>> response) {
-                        List<Offer> offers = filterOffers(response.body(),"PENDING");
-                        tableView.getItems().setAll(offers);
+                        tableView.getItems().setAll(response.body());
 
                         rate.setCellValueFactory(cellData -> {
                             Offer offer = cellData.getValue(); // Get the Offer instance for the current row
                             Float amountOffered = offer.getAmountToTrade();
                             Float amountRequested = offer.getAmountRequested();
-                            Float calculatedRate = amountOffered * amountRequested; // Calculate the rate for this specific offer
-                            return new ReadOnlyObjectWrapper<>(calculatedRate);
+                            if (offer.getUsdToLbp()) {
+                                return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
+                            }
+                            else {
+                                return new ReadOnlyObjectWrapper<>(amountRequested * amountOffered);
+                            }
                         });
                     }
                     @Override

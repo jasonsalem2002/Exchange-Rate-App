@@ -6,6 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface Exchange {
     @POST("/user")
@@ -25,8 +26,12 @@ public interface Exchange {
                                 @Header("Authorization") String authorization);
     @GET("/offers")
     Call<List<Offer>> getOffers(@Header("Authorization") String authorization);
+
     @PUT("/accept_offer/{offer_id}")
     Call<Object> acceptOffer(@Header("Authorization") String authorization, @Path("offer_id") Integer offerId);
+    @GET("/get_accepted_offers")
+    Call<List<Offer>> getAcceptedOffers(@Header("Authorization") String authorization);
+
     @POST("/chat")
     Call<Object> sendMessage(@Body Message message,
                           @Header("Authorization") String authorization);
@@ -55,4 +60,10 @@ public interface Exchange {
     @POST("/group/{group_name}/leave")
     Call<Object> leaveGroup(@Header("Authorization") String authorization,
                                   @Path("group_name") String groupName);
+    @GET("/average_exchange_rate")
+    Call<List<Map<String,Float>>> getAvgRates(@Header("Authorization") String authorization,
+                                              @Path("start_date") String startDate,
+                                              @Path("end_date") String endDate,
+                                              @Path("granularity") String granularity
+                                     );
 }

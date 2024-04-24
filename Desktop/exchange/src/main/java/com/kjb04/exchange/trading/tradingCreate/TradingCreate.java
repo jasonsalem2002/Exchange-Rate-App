@@ -8,11 +8,10 @@ import com.kjb04.exchange.api.model.Offer;
 import com.kjb04.exchange.api.model.Token;
 import com.kjb04.exchange.api.model.User;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,8 +21,11 @@ public class TradingCreate implements PageCompleter {
     public ToggleGroup transactionType;
     public TextField tradeAmountTextField;
     public TextField tradeAmountReqTextField;
-    public TextField tradeRateTextField;
+    public Label tradeRateTextField;
     private OnPageCompleteListener onPageCompleteListener;
+    public Label tradeAmountReqLabel;
+    public Label tradeAmountLabel;
+
     @Override
     public void setOnPageCompleteListener(OnPageCompleteListener onPageCompleteListener) {
         this.onPageCompleteListener = onPageCompleteListener;
@@ -31,11 +33,26 @@ public class TradingCreate implements PageCompleter {
 
     public void submitOffer(ActionEvent actionEvent) {
         RadioButton radioButton = (RadioButton) transactionType.getSelectedToggle();
-        Float tradeAmount = Float.parseFloat(tradeAmountTextField.getText());
-        Float tradeAmountReq = Float.parseFloat(tradeAmountReqTextField.getText());
+        Float amountOffered;
+        Float amountRequested;
+        try {
+            amountOffered = Float.parseFloat(tradeAmountTextField.getText());
+            amountRequested = Float.parseFloat(tradeAmountReqTextField.getText());
+        } catch (NumberFormatException e) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Conversion Failed");
+                alert.setContentText("Amount must be a number >= 0.");
+                alert.showAndWait();
+            });
+            tradeAmountTextField.setText("");
+            tradeAmountReqTextField.setText("");
+            return;
+        }
+
         Offer offer = new Offer(
-                tradeAmountReq,
-                tradeAmount,
+                amountRequested,
+                amountOffered,
                 radioButton.getText().equals("Sell USD")
         );
         String userToken = Authentication.getInstance().getToken();
@@ -63,4 +80,38 @@ public class TradingCreate implements PageCompleter {
 
     }
 
+    public void buySelected() {
+        tradeAmountReqLabel.setText("Amount Requested (USD)");
+        tradeAmountLabel.setText("Amount to Trade (LBP)");
+        displayRate();
+    }
+    public void sellSelected() {
+        tradeAmountReqLabel.setText("Amount Requested (LBP)");
+        tradeAmountLabel.setText("Amount to Trade (USD)");
+        displayRate();
+    }
+
+    public void displayRate() {
+        if (tradeAmountTextField.getText() == null || tradeAmountTextField.getText().isEmpty()
+                || tradeAmountReqTextField.getText() == null || tradeAmountReqTextField.getText().isEmpty()) {
+            return;
+        }
+        Float amountOffered;
+        Float amountRequested;
+        try {
+            amountOffered = Float.parseFloat(tradeAmountTextField.getText());
+            amountRequested = Float.parseFloat(tradeAmountReqTextField.getText());
+        } catch (NumberFormatException e) {
+            return;
+        }
+        Float rate;
+        RadioButton radioButton = (RadioButton) transactionType.getSelectedToggle();
+        if (radioButton.getText().equals("Sell USD")) {
+            rate = amountRequested / amountOffered;
+        }
+        else {
+            rate = amountOffered / amountRequested;
+        }
+        tradeRateTextField.setText(rate.toString());
+    }
 }
