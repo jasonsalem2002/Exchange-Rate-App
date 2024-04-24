@@ -35,3 +35,6 @@ csvCleaner.py
 dateConverter.py
 Backend/files/data.csv
 Backend/files/Predict.py
+Backend/files/testPrediction.py
+LSTM_Exchange_Rate_Predictor.pth
+scaler.joblib
