@@ -1,5 +1,4 @@
 Backend/config.py
-createT.py
 
 # frontend:
 FrontEnd/node_modules/*
@@ -25,16 +24,3 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 Backend/convert.py
-kingkareem.csv
-Transaction_Generator_Script_Updated.py
-Transaction_Generator_Script.py
-updated_dates.csv
-normalized_output.csv
-output.csv
-csvCleaner.py
-dateConverter.py
-Backend/files/data.csv
-Backend/files/Predict.py
-Backend/files/testPrediction.py
-LSTM_Exchange_Rate_Predictor.pth
-scaler.joblib

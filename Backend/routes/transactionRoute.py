@@ -13,6 +13,7 @@ transaction_bp = Blueprint("transaction_bp", __name__)
 def create_transaction():
     try:
         data = request.json
+        print(data)
         if not data or not isinstance(data, dict):
             return jsonify({"error": "Invalid data format. JSON object expected."}), 400
 
@@ -21,7 +22,7 @@ def create_transaction():
         usd_to_lbp = data.get("usd_to_lbp")
 
         # if usd_amount is None or lbp_amount is None or usd_to_lbp is None or transaction_date is None:
-        if not all([usd_amount, lbp_amount, usd_to_lbp]):
+        if not all([usd_amount, lbp_amount]) and usd_to_lbp is None:
             return jsonify({"error": "Transaction data is incomplete."}), 400
 
         if not all(
@@ -60,7 +61,6 @@ def create_transaction():
 
         db.session.add(new_transaction)
         db.session.commit()
-
         return jsonify(transaction_schema.dump(new_transaction)), 201
 
     except Exception as e:
