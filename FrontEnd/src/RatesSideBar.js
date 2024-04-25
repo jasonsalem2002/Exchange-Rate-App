@@ -35,8 +35,7 @@ function RatesSideBar() {
 
   return (
     <div>
-    
-        
+           
 <Drawer sx={{color:'white', height:'700px'}}  anchor="right" open={isOpen} onClose= {() => setIsOpen(false)}>
 
 <Stack  sx={{width:'50vw' ,display:'flex', bgcolor:'#00000',height:'100%'}}>

@@ -7,17 +7,22 @@ import UserCredentialsDialog from './UserCredentialsDialog/UserCredentialsDialog
 import { getUserToken,saveUserToken, clearUserToken } from "./localstorage";
 import { User } from './UserContext';
 import DrawerNav from './DrawerNav';
-import './Message.css'
+import './GroupMessage.css'
 
 
-function Message({ cName, content,addedDate, sent }) {
+function GroupMessage({ cName, sender,content,addedDate, sent }) {
   return (
-
+   
+    
       <Box className={cName}>
+      <Typography id='sender'>{sender}</Typography>
       <Typography className={cName+'Text'}>{content}</Typography>
       <Typography>{addedDate}</Typography>
       </Box>
+     
   );
 }
 
-export default Message;
+
+
+export default GroupMessage;

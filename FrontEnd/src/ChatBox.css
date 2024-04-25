@@ -1,0 +1,26 @@
+#user,#group,#lmessage,#date
+{
+    color:black;
+    display: flex;
+    flex-direction: row;
+    font-size: inherit;
+    flex-wrap: wrap;
+    max-width: 40%;
+}
+
+#lmessage
+{
+word-break: break-word;
+}
+
+.message {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.message.full {
+    white-space: initial;
+    word-break: break-word;
+}

@@ -81,7 +81,7 @@ useEffect(fetchUserTransactions,[])
     <Nav/>
 
     <ChatDrawer/>
-    
+    <RatesSideBar/>
 
    <div className="wrapper">
       

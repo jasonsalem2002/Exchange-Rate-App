@@ -35,6 +35,8 @@ body
     border: 0px solid #0093d5;
     border-radius: 5%;
     margin-bottom: 1%;
+    margin-top: 2%;
+    padding: auto;
 }
 
 
@@ -69,6 +71,9 @@ body
 
 .headerText
 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     font-weight: bold;
     padding-left:5%;
      color:white;

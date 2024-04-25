@@ -11,7 +11,7 @@ import Person2Icon from '@mui/icons-material/Person2';
 
 
 
-function UserChatBox({ username, lastMessage,openUserChat }) {
+function GroupChatBox({ group, lastMessage,openGroupChat }) {
   
   const truncateText = (text, maxLength) => {
     if (text.length > maxLength) {
@@ -21,7 +21,7 @@ function UserChatBox({ username, lastMessage,openUserChat }) {
 };
 
   return (
-    <Box onClick={()=>{openUserChat(username)}} sx={{height:'100px',display:'flex',flexDirection:'row',justifyContent:'space-around',borderBottom:'2px solid lightGray'}}>
+    <Box onClick={()=>{openGroupChat(group)}} sx={{height:'100px',display:'flex',flexDirection:'row',justifyContent:'space-around',borderBottom:'2px solid lightGray'}}>
       <Box sx={{width:'20%',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}> 
         <IconButton sx={{height:'20%',width:'20%'}}><Person2Icon sx={{fontSize:'30px'}} /></IconButton>
       </Box>
@@ -29,7 +29,7 @@ function UserChatBox({ username, lastMessage,openUserChat }) {
         <Box sx={{height:'60%'}}>
         <Box sx={{height:'40%',width:'70%',display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
         <Box sx={{width:'30%'}}>
-            <Typography id='user'>{username}</Typography>  
+            <Typography id='group'>{group}</Typography>  
         </Box>  
         
           <Typography id='date'>{lastMessage.added_date}</Typography>
@@ -46,7 +46,7 @@ function UserChatBox({ username, lastMessage,openUserChat }) {
 
 
 
-export default UserChatBox;
+export default GroupChatBox;
 
 
 

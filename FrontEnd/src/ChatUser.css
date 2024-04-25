@@ -1,0 +1,20 @@
+#sendButton
+{
+    height:30%;
+    width:20%;
+}
+
+
+#sendField
+{
+    background-color: white;
+    border-radius: 5%;
+    border: 0;
+    height:40%;
+    width:60%;
+    padding-left: 2%;
+}
+
+#sendField:focus {
+    outline: none; 
+  }

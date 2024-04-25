@@ -23,7 +23,7 @@ function CreateOffer(fetchOffers) {
 
   function addOffer() {
     setDialogOpen(false)
-    fetch(`${SERVER_URL}/api/offers`, {
+    fetch(`${SERVER_URL}/offers`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,6 +39,10 @@ function CreateOffer(fetchOffers) {
     .then(response => {
       return response.json();
     })
+
+    .then(body => {
+      fetchOffers()
+    })
   }  
 
    return(
@@ -52,9 +56,11 @@ function CreateOffer(fetchOffers) {
             <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
             
             <TextField
+      
               className='formField'
               label="Amount Requested"
               name="amount_requested"
+              type="number"
               value={amountRequested}
               onChange={(e)=>{setAmountRequested(e.target.value)}}
             />
@@ -66,6 +72,7 @@ function CreateOffer(fetchOffers) {
              className='formField'
               label="Amount To Trade"
               name="amount_to_trade"
+              type="number"
               value={amountToTrade}
               onChange={(e)=>{setAmountToTrade(e.target.value)}}
             />

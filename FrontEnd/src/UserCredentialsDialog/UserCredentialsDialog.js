@@ -31,6 +31,9 @@ const {setUserName}= User()
  type="password"
  value={password}
  onChange={({ target: { value } }) => setPassword(value)}
+ onKeyPress={(event)=>{if (event.key === 'Enter') {
+    onSubmit(userName, password);
+  }}}
  />
  </div>
  <Button
@@ -41,4 +44,5 @@ const {setUserName}= User()
  </Dialog>
  );
 }
+
 

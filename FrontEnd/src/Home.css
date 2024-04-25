@@ -12,11 +12,6 @@ body {
   }
   
 
-  .nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-   }
 
   .wrapper,.calculator {
     margin-top: 50px;
@@ -73,22 +68,20 @@ body {
     }
   
     .wrapper form  input {
-    width: 400px;
+    
     }
    } 
 
 
    @media only screen and (max-width: 749px)  {
-    .wrapper,.table {
+    .wrapper {
     width: 75%;
     flex-wrap: wrap;
     }
   
     .wrapper form  input {
-    width: 400px;
+ 
     }
    } 
-
-
 
    

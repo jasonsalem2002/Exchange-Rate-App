@@ -33,6 +33,10 @@ function Offers() {
     .then(response => {
       return response.json();
     })
+
+    .then(body => {
+      fetchOffers()
+    })
   
   
   };
@@ -48,7 +52,7 @@ function Offers() {
     .then((offers) => setOffers(offers));
 }, [SERVER_URL, userToken,markComplete]);
 
-useEffect(fetchOffers,[])
+// useEffect(fetchOffers,[])
 
 
 // useEffect(() => {
@@ -83,7 +87,7 @@ useEffect(fetchOffers,[])
         <DataGrid sx={{marginTop:'5%',maxWidth:'100%'}}
               columns={[
                 { field: 'id', headerName: 'ID' },
-                { field: 'user_id', headerName: 'Username' },
+                { field: 'username', headerName: 'Username' },
                 { field: 'amount_requested', headerName: 'Amount Offered' },
                 { field: 'amount_to_trade', headerName: 'Amount Requested' },
                 { field: 'exchangeRate', headerName: 'Exchange Rate' },
