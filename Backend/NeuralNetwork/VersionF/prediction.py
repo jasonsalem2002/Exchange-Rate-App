@@ -1,67 +1,109 @@
-from keras.models import load_model
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.preprocessing.sequence import TimeseriesGenerator
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, LSTM
+import tensorflow as tf
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-data = pd.read_csv("Backend/NeuralNetwork/VersionF/output.csv")
+# Load the dataset
+df = pd.read_csv("Backend/NeuralNetwork/VersionF/output.csv")
+df['added_date'] = pd.to_datetime(df['added_date'])  # Convert added_date to datetime
 
-# Convert 'lbp_amount' to a numpy array
-exchange_rates = data['lbp_amount'].values.reshape(-1, 1)
+# Plot the dataset
+# plt.figure(figsize=(12, 6))
+# plt.plot(df['added_date'], df['lbp_amount'])
+# plt.title('Exchange Rate')
+# plt.xlabel('Date')
+# plt.ylabel('LBP Amount')
+# plt.show()
 
-# Scale the data
-scaler = MinMaxScaler(feature_range=(0, 1))
-exchange_rates_scaled = scaler.fit_transform(exchange_rates)
+# Prepare the data
+scaler = MinMaxScaler()
+scaled_data = scaler.fit_transform(df[['lbp_amount']])
 
-# Define the number of timesteps
-# For LSTM, we need to define the number of previous time steps to use for prediction
-# Here, let's use 30 days of previous data to predict the exchange rate for the next day
-timesteps = 30
+# Train-test split
+train_size = int(len(scaled_data) * 0.8)
+train = scaled_data[:train_size]
+test = scaled_data[train_size:]
 
-# Create sequences of data
-X, y = [], []
-for i in range(timesteps, len(exchange_rates_scaled)):
-    X.append(exchange_rates_scaled[i - timesteps:i, 0])
-    y.append(exchange_rates_scaled[i, 0])
+# Define generator
+n_input = 30  # Choose a suitable window size
+n_features = 1
+generator = TimeseriesGenerator(train, train, length=n_input, batch_size=16)
 
-# Convert lists to numpy arrays
-X, y = np.array(X), np.array(y)
+# Define model
+model = Sequential()
+model.add(LSTM(100, activation='relu', input_shape=(n_input, n_features)))
+model.add(Dense(1))
+model.compile(optimizer='adam', loss='mse')
 
-# Reshape X to be 3-dimensional (samples, timesteps, features)
-X = np.reshape(X, (X.shape[0], X.shape[1], 1))
+# Fit model
+history = model.fit(generator, epochs=1, verbose=1)
 
-# Split the dataset into training and testing sets (80% train, 20% test)
-split_index = int(len(X) * 0.8)
-X_train, X_test = X[:split_index], X[split_index:]
-y_train, y_test = y[:split_index], y[split_index:]
+# Plot loss curve
+# plt.plot(history.history['loss'])
+# plt.title('Model Loss')
+# plt.xlabel('Epoch')
+# plt.ylabel('Loss')
+# plt.show()
 
-# Load the saved model
-loaded_model = load_model("Backend/NeuralNetwork/VersionF/exchange_rate_lstm_model.h5")
+# Predictions
+test_generator = TimeseriesGenerator(test, test, length=n_input, batch_size=16)
+test_predictions = model.predict(test_generator)
 
-# Use the loaded model to make predictions
-predicted_scaled = loaded_model.predict(X_test)
+# Inverse transform predictions
+test_predictions_inverse = scaler.inverse_transform(test_predictions)
 
-# Inverse scaling to get the original scale of exchange rates
-predicted = scaler.inverse_transform(predicted_scaled)
+# Evaluate model
+mae = mean_absolute_error(df['lbp_amount'].iloc[train_size + n_input:], test_predictions_inverse)
+mse = mean_squared_error(df['lbp_amount'].iloc[train_size + n_input:], test_predictions_inverse)
+rmse = np.sqrt(mse)
 
-# Plot the actual vs. predicted exchange rates
-plt.figure(figsize=(12, 6))
-plt.plot(data.index[split_index + timesteps:], y_test, label='Actual Exchange Rate (LBP/USD)', color='blue')
-plt.plot(data.index[split_index + timesteps:], predicted, label='Predicted Exchange Rate (LBP/USD)', color='red')
-plt.title('Actual vs. Predicted Exchange Rate')
+print("Mean Absolute Error:", mae)
+print("Mean Squared Error:", mse)
+print("Root Mean Squared Error:", rmse)
+
+# Plot predictions
+plt.figure(figsize=(14, 5))
+plt.plot(df.index[train_size + n_input:], df['lbp_amount'][train_size + n_input:], label='True Values')
+plt.plot(df.index[train_size + n_input:], test_predictions_inverse, label='Predictions')
+plt.title('Exchange Rate Prediction')
 plt.xlabel('Date')
-plt.ylabel('Exchange Rate (LBP/USD)')
+plt.ylabel('LBP Amount')
 plt.legend()
-plt.grid(True)
 plt.show()
 
-# Convert the predicted_scaled array back to the original scale
-predicted = scaler.inverse_transform(predicted_scaled)
 
-# Create a DataFrame to display the actual and predicted exchange rates along with dates
-predicted_df = pd.DataFrame({'Date': data.index[split_index + timesteps:],
-                             'Actual Exchange Rate (LBP/USD)': y_test,
-                             'Predicted Exchange Rate (LBP/USD)': predicted.flatten()})
+# Define a function to predict exchange rate for a given date
+def predict_exchange_rate(model, scaler, df, target_date, n_input):
+    # Find the index of the target date in the dataframe
+    print(df['added_date'].min())  # Minimum date
+    print(df['added_date'].max())  # Maximum date
 
-# Display the DataFrame
-print(predicted_df)
+    target_index = df.index[df['added_date'] == target_date].tolist()[0]
+    
+    # Create the input data for prediction
+    input_data = df['lbp_amount'].values[target_index - n_input: target_index]
+    input_data = input_data.reshape((1, n_input, 1))  # Reshape for LSTM input
+    
+    # Scale the input data
+    input_data_scaled = scaler.transform(input_data)
+    
+    # Make the prediction
+    predicted_value = model.predict(input_data_scaled)
+    
+    # Inverse transform the prediction
+    predicted_value_inverse = scaler.inverse_transform(predicted_value)
+    
+    return predicted_value_inverse[0][0]
+
+# Define the target date for prediction
+target_date = pd.to_datetime('2021-10-06')  # Change this to your desired date
+
+# Predict exchange rate for the target date
+predicted_exchange_rate = predict_exchange_rate(model, scaler, df, target_date, n_input)
+
+print("Predicted Exchange Rate for", target_date, ":", predicted_exchange_rate)

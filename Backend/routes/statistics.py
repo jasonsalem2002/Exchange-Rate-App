@@ -25,7 +25,7 @@ def get_statistics():
         elif granularity == "weekly":
             max_start_date = end_date - datetime.timedelta(weeks=52)  
         elif granularity == "monthly":
-            max_start_date = end_date - datetime.timedelta(days=365)
+            max_start_date = end_date - datetime.timedelta(days=1096)
         else:
             max_start_date = None
 
@@ -109,7 +109,7 @@ def get_average_exchange_rate():
         elif granularity == "weekly":
             max_start_date = end_date - datetime.timedelta(weeks=52) 
         elif granularity == "monthly":
-            max_start_date = end_date - datetime.timedelta(days=365)
+            max_start_date = end_date - datetime.timedelta(days=1096)
         else:
             max_start_date = None
 
