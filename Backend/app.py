@@ -43,5 +43,7 @@ def create_app():
     app.register_blueprint(usernames_bp)
     app.register_blueprint(group_bp)
 
+    return app
+
 if __name__ == "__main__":
     app = create_app()
