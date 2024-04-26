@@ -127,3 +127,30 @@ def get_accepted_offers():
 
     except Exception as e:
         return jsonify({"error": "Internal server error."}), 500
+
+
+@offers_bp.route("/offers/<int:offer_id>", methods=["DELETE"])
+def delete_offer(offer_id):
+    try:
+        token = extract_auth_token(request)
+        if not token:
+            return jsonify({"error": "Unauthorized, no token was provided"}), 403
+
+        user_id = decode_token(token)
+        if not user_id:
+            return jsonify({"error": "Unauthorized, invalid token"}), 403
+
+        offer = Offer.query.filter_by(id=offer_id).first()
+        if not offer:
+            return jsonify({"error": "Offer not found."}), 404
+
+        if offer.user_id != user_id:
+            return jsonify({"error": "You are not authorized to delete this offer."}), 403
+
+        db.session.delete(offer)
+        db.session.commit()
+
+        return jsonify({"message": "Offer deleted successfully."}), 200
+
+    except Exception as e:
+        return jsonify({"error": "Internal server error."}), 500

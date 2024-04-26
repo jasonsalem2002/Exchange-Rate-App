@@ -32,7 +32,7 @@ test = scaled_data[train_size:]
 # Define generator
 n_input = 30  # Choose a suitable window size
 n_features = 1
-generator = TimeseriesGenerator(train, train, length=n_input, batch_size=64)
+generator = TimeseriesGenerator(train, train, length=n_input, batch_size=1)
 
 # Define model
 model = Sequential()
