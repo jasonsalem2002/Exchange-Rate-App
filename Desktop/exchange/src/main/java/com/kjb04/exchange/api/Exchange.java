@@ -31,6 +31,9 @@ public interface Exchange {
     Call<Object> acceptOffer(@Header("Authorization") String authorization, @Path("offer_id") Integer offerId);
     @GET("/get_accepted_offers")
     Call<List<Offer>> getAcceptedOffers(@Header("Authorization") String authorization);
+    @DELETE("/offers/{offer_id}")
+    Call<Object> deleteOffer(@Header("Authorization") String authorization,
+                          @Path("offer_id") Integer offerId);
 
     @POST("/chat")
     Call<Object> sendMessage(@Body Message message,
@@ -61,9 +64,9 @@ public interface Exchange {
     Call<Object> leaveGroup(@Header("Authorization") String authorization,
                                   @Path("group_name") String groupName);
     @GET("/average_exchange_rate")
-    Call<List<Map<String,Float>>> getAvgRates(@Header("Authorization") String authorization,
-                                              @Path("start_date") String startDate,
-                                              @Path("end_date") String endDate,
-                                              @Path("granularity") String granularity
+    Call<Map<String,Map<String, Float>>> getAvgRates(@Header("Authorization") String authorization,
+                                              @Query("start_date") String startDate,
+                                              @Query("end_date") String endDate,
+                                              @Query("granularity") String granularity
                                      );
 }

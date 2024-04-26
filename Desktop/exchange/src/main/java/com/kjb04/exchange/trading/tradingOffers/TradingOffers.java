@@ -1,5 +1,6 @@
 package com.kjb04.exchange.trading.tradingOffers;
 
+import com.kjb04.exchange.Alerts;
 import com.kjb04.exchange.Authentication;
 import com.kjb04.exchange.api.ExchangeService;
 import com.kjb04.exchange.api.model.Message;
@@ -17,6 +18,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.SelectableChannel;
 import java.util.ArrayList;
@@ -56,16 +58,28 @@ public class TradingOffers implements Initializable {
 
             @Override
             public void onFailure(Call<Object> call, Throwable throwable) {
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Transaction Failed");
-                    alert.setContentText("Failed to add transaction.");
-                    alert.showAndWait();
-                });
+                Alerts.showFailure("Accept Offer Failed", throwable);
             }
         });
     }
-    
+
+    private void deleteOffer(Offer o) {
+        ExchangeService.exchangeApi().deleteOffer("Bearer " + Authentication.getInstance().getToken(), o.getId())
+                .enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, Response<Object>
+                            response) {
+                        Alerts.showResponse(response);
+                        selectPending();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable throwable) {
+                        Alerts.showFailure("Delete Offer Failed", throwable);
+                    }
+                });
+    }
+
     private List<Offer> filterOffers(List<Offer> offers, String type) {
         String username = Authentication.getInstance().getUsername();
         return switch (type) {
@@ -157,7 +171,7 @@ public class TradingOffers implements Initializable {
 
     public void selectPending() {
         tableView.getItems().clear();
-        buttonColumn.setVisible(false);
+        buttonColumn.setVisible(true);
         allOffersDirectionBox.setVisible(false);
 
 
@@ -179,18 +193,40 @@ public class TradingOffers implements Initializable {
                     public void onResponse(Call<List<Offer>> call,
                                            Response<List<Offer>> response) {
                         List<Offer> offers = filterOffers(response.body(),"PENDING");
-                        tableView.getItems().setAll(offers);
+                        Platform.runLater(() -> {
+                            tableView.getItems().setAll(offers);
 
-                        rate.setCellValueFactory(cellData -> {
-                            Offer offer = cellData.getValue(); // Get the Offer instance for the current row
-                            Float amountOffered = offer.getAmountToTrade();
-                            Float amountRequested = offer.getAmountRequested();
-                            if (offer.getUsdToLbp()) {
-                                return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
-                            }
-                            else {
-                                return new ReadOnlyObjectWrapper<>(amountOffered / amountRequested);
-                            }
+                            rate.setCellValueFactory(cellData -> {
+                                Offer offer = cellData.getValue(); // Get the Offer instance for the current row
+                                Float amountOffered = offer.getAmountToTrade();
+                                Float amountRequested = offer.getAmountRequested();
+                                if (offer.getUsdToLbp()) {
+                                    return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
+                                } else {
+                                    return new ReadOnlyObjectWrapper<>(amountOffered / amountRequested);
+                                }
+                            });
+
+                            buttonColumn.setCellFactory(col -> new TableCell<Offer, Void>() {
+                                private final Button btn = new Button("Delete");
+
+                                {
+                                    btn.setOnAction(event -> {
+                                        Offer offer = getTableView().getItems().get(getIndex());
+                                        deleteOffer(offer);
+                                    });
+                                }
+
+                                @Override
+                                protected void updateItem(Void item, boolean empty) {
+                                    super.updateItem(item, empty);
+                                    if (empty) {
+                                        setGraphic(null);
+                                    } else {
+                                        setGraphic(btn);
+                                    }
+                                }
+                            });
                         });
                     }
                     @Override

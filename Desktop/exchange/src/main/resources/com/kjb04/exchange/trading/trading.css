@@ -1,10 +1,19 @@
-.header {
-    -fx-font-size: 24;
-}
-.subheader {
-    -fx-font-size: 18;
-}
 .btn {
     -fx-background-color: D4AF57;
     -fx-margin:3;
+}
+
+.tab-btn {
+    -fx-background-color: #007BB4;
+    -fx-margin: 0 0 10 0;
+    -fx-border-width: 1;
+    -fx-border-color: #007BB4 #007BB4 #007BB4 #000000;
+    -fx-pref-width: 100px;
+}
+#tradingOffersButton {
+    -fx-border-color: #007BB4 #000000 #007BB4 #007BB4;
+}
+
+Separator {
+    -fx-color: #005395;
 }

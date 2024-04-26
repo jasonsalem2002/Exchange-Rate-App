@@ -27,21 +27,36 @@
     -fx-text-fill: #333;
 }
 /* Styles for labels showing values and other information */
-.value-label, .value {
+.value-label{
     -fx-font-size: 16px;
-    -fx-text-fill: #666;
+    -fx-text-fill: #333;
+}
+.value {
+    -fx-font-size: 16px;
+    -fx-text-fill: #555;
 }
 
-/* Styles for text fields */
-.text-field {
-    -fx-font-size: 14px;
-    -fx-prompt-text-fill: #999;
-}
+
 
 /* Radio button styles */
+/* Normal state */
 .radio-button {
-    -fx-font-size: 14px;
-    -fx-text-fill: #444;
+    -fx-color: #005B94; /* Change dot color when pressed */
+    -fx-text-fill: #333;
+}
+/* Hover state */
+.radio-button:hover {
+    -fx-cursor: hand; /* Changes cursor to hand when hovering */
+    -fx-color: #005B94; /* Change dot color when pressed */
+}
+/* Pressed state */
+.radio-button:pressed {
+    -fx-color: #005B94; /* Change dot color when pressed */
+    /*-fx-text-fill: #ffffff; !* Text color change when pressed *!*/
+}
+.radio-button:selected .dot{
+    -fx-color: #005B94; /* Change dot color when pressed */
+    /*-fx-text-fill: #ffffff; !* Text color change when pressed *!*/
 }
 
 /* Button styles */
@@ -64,8 +79,5 @@
     -fx-max-height: 2;
 }
 
-/* Enhance focus on text fields and buttons */
-.text-field:focused, .button:focused {
-    -fx-border-color: #2072f3;
-    -fx-background-color: #e8f0fe;
-}
+
+

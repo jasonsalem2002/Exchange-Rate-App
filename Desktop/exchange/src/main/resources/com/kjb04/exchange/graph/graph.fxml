@@ -8,33 +8,33 @@
 
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.CategoryAxis?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.kjb04.exchange.graph.Graph"
             prefHeight="400.0" prefWidth="600.0" style="-fx-padding: 10px">
-    <VBox>
+    <VBox style="-fx-margin: 25 0 10 0">
         <LineChart fx:id="lineChart">
             <xAxis>
-                <NumberAxis fx:id="xAxis" label="X Axis"/>
+                <CategoryAxis fx:id="xAxis" label="X Axis"/>
             </xAxis>
             <yAxis>
                 <NumberAxis fx:id="yAxis" label="Y Axis"/>
             </yAxis>
         </LineChart>
-        <HBox>
+        <HBox style="-fx-padding:0 0 0 25" spacing="5" alignment="BOTTOM_CENTER">
+            <ComboBox fx:id="granularityComboBox" prefHeight="30.0" prefWidth="120.0"
+                      promptText="Granularity" onAction="#displayGranNote"/>
             <VBox>
                 <Label text="Start Date" />
-                <DatePicker fx:id="startDatePicker"/>
+                <DatePicker fx:id="startDatePicker" prefHeight="30.0"/>
             </VBox>
             <VBox>
                 <Label text="End Date" />
-                <DatePicker fx:id="endDatePicker"/>
+                <DatePicker fx:id="endDatePicker" prefHeight="30.0"/>
             </VBox>
-            <VBox>
-                <ComboBox fx:id="granularityComboBox" prefHeight="30.0" prefWidth="120.0"
-                          promptText="Granularity"/>
-            </VBox>
-            <Button fx:id="graphButton" onAction="#graph" text="Generate" />
+            <Button fx:id="graphButton" text="Generate" onAction="#graph" prefHeight="30.0"/>
         </HBox>
+        <Label fx:id="granNoteLabel" style="-fx-padding:3 0 0 25"/>
     </VBox>
 </AnchorPane>

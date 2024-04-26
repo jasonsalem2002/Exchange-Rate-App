@@ -3,7 +3,7 @@ package com.kjb04.exchange.api;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 public class ExchangeService {
-    static String API_URL = "https://jason.hydra-polaris.ts.net/";
+    static String API_URL = "https://salex.hydra-polaris.ts.net/";
 
     public static Exchange exchangeApi() {
         Retrofit retrofit = new Retrofit.Builder()

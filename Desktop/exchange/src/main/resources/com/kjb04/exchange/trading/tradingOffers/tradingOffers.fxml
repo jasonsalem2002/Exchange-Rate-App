@@ -37,7 +37,7 @@
                 AnchorPane.rightAnchor="4"
                 AnchorPane.topAnchor="4">
             <columns>
-                <TableColumn text="Accept" fx:id="buttonColumn" />
+                <TableColumn fx:id="buttonColumn" />
                 <TableColumn text="Offer ID" fx:id="offerID"
                              prefWidth="50"/>
                 <TableColumn text="Transaction Type" fx:id="usdToLbp"

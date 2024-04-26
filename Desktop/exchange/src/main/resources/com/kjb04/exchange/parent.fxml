@@ -21,7 +21,7 @@
                    text="LBP Rate App"
                    textAlignment="CENTER"
             />
-            <VBox spacing="5">
+            <VBox> <!--spacing="5"-->
                 <Button fx:id="exchangeRateButton" styleClass="nav-button" text="Exchange Rate" onAction="#ratesSelected"/>
                 <Button fx:id="transactionButton" styleClass="nav-button" text="Transactions" onAction="#transactionsSelected"/>
                 <Button fx:id="tradingButton" styleClass="nav-button" text="Trading" onAction="#tradingSelected"/>

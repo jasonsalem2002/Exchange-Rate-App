@@ -3,14 +3,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane fx:id="borderPane" maxHeight="720.0" maxWidth="1040.0" prefHeight="620.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kjb04.exchange.chat.Chat">
+<BorderPane fx:id="borderPane" maxHeight="720.0" maxWidth="1040.0" prefHeight="620.0" prefWidth="1040.0"
+            stylesheets="@chat.css"
+            xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kjb04.exchange.chat.Chat">
     <top>
         <HBox prefHeight="80.0" style="-fx-background-color: #c5c5c5; -fx-padding: 10px;"
               BorderPane.alignment="CENTER" alignment="CENTER_LEFT" spacing="10" >
             <VBox>
                 <Label fx:id="chatType" text="Private Chat" textAlignment="CENTER" style="-fx-font-size: 16px;" />
-                <ComboBox fx:id="newChatComboBox" prefHeight="30.0" prefWidth="120.0"
-                          promptText="New Chat" onAction="#comboBoxAction"/>
+                <ComboBox fx:id="joinGroupComboBox" prefHeight="30.0" prefWidth="120.0"
+                          promptText="New Chat" onAction="#joinGroup"/>
             </VBox>
             <Pane HBox.hgrow="ALWAYS"/>
             <Button fx:id="createGroupButton" alignment="CENTER" onAction="#revealCreateGroup" prefHeight="20.0" prefWidth="100.0"
@@ -50,9 +52,9 @@
         <VBox BorderPane.alignment="CENTER">
             <HBox>
                 <Button fx:id="privateSelectButton" alignment="CENTER" onAction="#selectPrivate" prefHeight="20.0" prefWidth="100.0"
-                        scaleShape="false" text="Private" textAlignment="CENTER" HBox.hgrow="NEVER"/>
+                        styleClass="tab-btn" scaleShape="false" text="Private" textAlignment="CENTER" HBox.hgrow="NEVER" />
                 <Button fx:id="groupSelectButton" alignment="CENTER" onAction="#selectGroup" prefHeight="20.0" prefWidth="100.0"
-                        scaleShape="false" text="Groups" textAlignment="CENTER" HBox.hgrow="NEVER"/>
+                        styleClass="tab-btn" scaleShape="false" text="Groups" textAlignment="CENTER" HBox.hgrow="NEVER"/>
             </HBox>
             <ListView fx:id="preview" prefHeight="700.0"
                       prefWidth="200.0" minWidth="80.0">

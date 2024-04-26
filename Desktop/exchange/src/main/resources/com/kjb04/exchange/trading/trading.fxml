@@ -17,21 +17,22 @@
             stylesheets="@trading.css"
             prefWidth="600.0">
     <top>
-        <VBox alignment="CENTER">
+        <VBox alignment="CENTER" style="-fx-padding: 10 0 25 0">
             <Label styleClass="header"
                    text="LBP-USD Trading"
                    textAlignment="CENTER"
             />
-            <Label styleClass="subheader"
+            <Label styleClass="subtitle"
                    text="Trade with other users online"
                    textAlignment="CENTER"
             />
             <HBox alignment="CENTER">
-                <Button fx:id="tradingOffersButton" styleClass="btn"
+                <Button fx:id="tradingOffersButton" styleClass="tab-btn"
                         text="View Offers" onAction="#tradingOffersSelected"/>
-                <Button fx:id="tradingCreateButton" styleClass="btn"
-                        text="Create Request" onAction="#tradingCreateSelected"/>
+                <Button fx:id="tradingCreateButton" styleClass="tab-btn"
+                        text="Create Offer" onAction="#tradingCreateSelected"/>
             </HBox>
+            <Separator />
         </VBox>
     </top>
 

@@ -39,7 +39,7 @@ public class Chat implements Initializable {
     public String selectedUsername;
     public String selectedGroup;
     public Label chatName;
-    public ComboBox newChatComboBox;
+    public ComboBox joinGroupComboBox;
     public TextArea messageBox;
     public ListView preview;
     public ListView chatPane;
@@ -65,7 +65,6 @@ public class Chat implements Initializable {
         chatName.setText("");
         leaveGroupButton.setVisible(false);
         createGroupButton.setVisible(false);
-        newChatComboBox.setValue("New Chat");
         fetchChat();
         fetchUsernames();
     }
@@ -76,7 +75,6 @@ public class Chat implements Initializable {
         chatName.setText("");
         leaveGroupButton.setVisible(false);
         createGroupButton.setVisible(true);
-        newChatComboBox.setValue("Join Group");
         Platform.runLater(() -> {
             fetchUserGroups();
             fetchGroups();
@@ -180,45 +178,27 @@ public class Chat implements Initializable {
 
     }
     private void initComboBox() {
-        if (chatType.getText().equals("Private Chat")) {
-            List<String> usernames = filterUsernames(usernameList);
-            Platform.runLater(() -> {
-                newChatComboBox.getItems().clear();
-                newChatComboBox.getItems().addAll(usernames);
-            });
+        if (groupList == null || groupList.isEmpty()) {
+            joinGroupComboBox.getItems().clear();
+            return;
         }
-        else if (chatType.getText().equals("Groups")) {
-            if (groupList == null || groupList.isEmpty()) {
-                newChatComboBox.getItems().clear();
-                return;
-            }
-            List<String> groups = filterGroups(groupList);
-            Platform.runLater(() -> {
-                newChatComboBox.getItems().clear();
-                newChatComboBox.getItems().addAll(groups);
-            });
-        }
-    }
-
-    public void comboBoxAction() {
-        if (chatType.getText().equals("Private Chat")) {
-            createNewChat();
-        }
-        else if (chatType.getText().equals("Groups")) {
-            joinGroup();
-        }
-    }
-
-
-    private void createNewChat() {
+        List<String> groups = filterGroups(groupList);
         Platform.runLater(() -> {
-            chatPane.getItems().clear();
-            if (newChatComboBox.getValue()!=null && usernameList.contains((String)newChatComboBox.getValue())) {
-                selectedUsername = (String) newChatComboBox.getValue();
-                chatName.setText(selectedUsername);
-            }
+            joinGroupComboBox.getItems().clear();
+            joinGroupComboBox.getItems().addAll(groups);
         });
     }
+
+
+//    private void createNewChat() {
+//        Platform.runLater(() -> {
+//            chatPane.getItems().clear();
+//            if (newChatComboBox.getValue()!=null && usernameList.contains((String)newChatComboBox.getValue())) {
+//                selectedUsername = (String) newChatComboBox.getValue();
+//                chatName.setText(selectedUsername);
+//            }
+//        });
+//    }
 
 
     private void displayPreview() {
@@ -318,14 +298,6 @@ public class Chat implements Initializable {
                 .filter(group -> (!userGroupList.contains(group)))
                 .toList();
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -559,10 +531,10 @@ public class Chat implements Initializable {
     }
 
     public void joinGroup() {
-        if (newChatComboBox.getValue()==null) {
+        if (joinGroupComboBox.getValue()==null) {
             return;
         }
-        String groupName = (String) newChatComboBox.getValue();
+        String groupName = (String) joinGroupComboBox.getValue();
 
         String userToken = Authentication.getInstance().getToken();
         String authHeader = userToken != null ? "Bearer " + userToken : null;

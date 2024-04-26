@@ -16,10 +16,27 @@
 .top-header {
     -fx-pref-height: 50px;
     -fx-pref-width: Infinity;
-    /*-fx-padding: 0 0 0 40px;*/
+    -fx-padding: 5px;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-background-color: #D4AF57;
+}
+
+/* Header label styles */
+.header {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding: 10;
+}
+.sub-header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+.subtitle {
+    -fx-font-size: 16px;
+    -fx-padding: 5px;
 }
 
 .nav-container {
@@ -30,14 +47,49 @@
     -fx-border-color: #006BA4;
     -fx-alignment: top-center;
     -fx-spacing: 10px;
-    -fx-padding: 15px 0 15px 0;
+    -fx-padding: 0;
 }
 .nav-button {
     -fx-pref-width: inherit;
-    -fx-start-margin: 10px;
-    -fx-border-width: 0px;
-    -fx-background-color: #c5c5c5;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #999;
+    -fx-border-color: #ffffff;
+    -fx-background-color: #ffffff;
+    -fx-border-width: 2 0 2 0;
+    -fx-margin: 0;
     /*-fx-padding: 0;*/
-
+}
+.nav-button:hover {
+    -fx-background-color: #cddcff;
+}
+.nav-button:selected {
+    -fx-color: #0063A5;
 }
 
+.text-field {
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #999;
+    -fx-border-color: #0063A5;
+    -fx-background-color: #ffffff;
+}
+/* Enhance focus on text fields and buttons */
+.text-field:focused {
+    -fx-border-color: #0063A5;
+    -fx-background-color: #eaf2ff;
+}
+
+/*button {*/
+/*    -fx-font-size: 14px;*/
+/*    -fx-prompt-text-fill: #999;*/
+/*    -fx-border-color: #0063A5;*/
+/*    -fx-background-color: #ffffff;*/
+/*    -fx-border-width: 1 0 1 0;*/
+/*}*/
+/*button:focused {*/
+/*    -fx-border-color: #0063A5;*/
+/*    -fx-background-color: #eaf2ff;*/
+/*}*/
+
+Separator {
+
+}
