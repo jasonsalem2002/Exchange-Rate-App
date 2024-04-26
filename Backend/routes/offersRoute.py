@@ -93,6 +93,7 @@ def get_all_offers():
                 serialized_offer.pop("user_id")
                 serialized_offer.pop("mark_as")
                 serialized_offers.append(serialized_offer)
+        print(serialized_offers)
         return jsonify(serialized_offers), 200
 
     except Exception as e:
@@ -154,3 +155,4 @@ def delete_offer(offer_id):
 
     except Exception as e:
         return jsonify({"error": "Internal server error."}), 500
+

@@ -178,3 +178,111 @@ def get_average_exchange_rate():
     except Exception as e:
         print(e)
         return jsonify({"error": "Internal server error."}), 500
+
+
+@statistics_bp.route("/highest_transaction_today", methods=["GET"])
+def get_highest_transaction_today():
+    try:
+        today = datetime.date.today()
+        start_of_day = datetime.datetime.combine(today, datetime.time.min)
+        end_of_day = datetime.datetime.combine(today, datetime.time.max)
+
+        highest_transaction = Transaction.query.filter(
+            Transaction.added_date >= start_of_day,
+            Transaction.added_date <= end_of_day
+        ).order_by(Transaction.usd_amount.desc()).first()
+
+        if not highest_transaction:
+            return jsonify({"error": "No transactions found for today."}), 404
+
+        response = {
+            "highest_transaction": {
+                "usd_amount": highest_transaction.usd_amount,
+                "lbp_amount": highest_transaction.lbp_amount,
+                "usd_to_lbp": highest_transaction.usd_to_lbp,
+            }
+        }
+
+        return jsonify(response), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "Internal server error."}), 500
+
+
+@statistics_bp.route("/volume_of_transactions", methods=["GET"])
+def get_volume_of_transactions():
+    try:
+        start_date = request.args.get("start_date")
+        end_date = request.args.get("end_date")
+
+        if not start_date or not end_date:
+            return jsonify({"error": "Start date and end date are required."}), 400
+
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+
+        usd_volume = db.session.query(db.func.sum(Transaction.usd_amount)).filter(
+            Transaction.usd_to_lbp == True,
+            Transaction.added_date >= start_date,
+            Transaction.added_date <= end_date
+        ).scalar() or 0
+
+        lbp_volume = db.session.query(db.func.sum(Transaction.lbp_amount)).filter(
+            Transaction.usd_to_lbp == False,
+            Transaction.added_date >= start_date,
+            Transaction.added_date <= end_date
+        ).scalar() or 0
+
+        response = {
+            "usd_volume": int(usd_volume),
+            "lbp_volume": int(lbp_volume)
+        }
+
+        return jsonify(response), 200
+
+    except ValueError:
+        return jsonify({"error": "Invalid date format. Please use YYYY-MM-DD."}), 400
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "Internal server error."}), 500
+
+
+@statistics_bp.route("/largest_transaction_amount", methods=["GET"])
+def get_largest_transaction_amount():
+    try:
+        start_date = request.args.get("start_date")
+        end_date = request.args.get("end_date")
+
+        if not start_date or not end_date:
+            return jsonify({"error": "Start date and end date are required."}), 400
+
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+
+        largest_transaction = Transaction.query.filter(
+            Transaction.added_date >= start_date,
+            Transaction.added_date <= end_date
+        ).order_by(Transaction.usd_amount.desc()).first()
+
+        if not largest_transaction:
+            return jsonify({"error": "No transactions found for the specified period."}), 404
+
+        response = {
+            "largest_transaction": {
+                "usd_amount": largest_transaction.usd_amount,
+                "lbp_amount": largest_transaction.lbp_amount,
+                "usd_to_lbp": largest_transaction.usd_to_lbp,
+                "added_date": largest_transaction.added_date.strftime("%Y-%m-%d %H:%M:%S")
+            }
+        }
+
+        return jsonify(response), 200
+
+    except ValueError:
+        return jsonify({"error": "Invalid date format. Please use YYYY-MM-DD."}), 400
+
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "Internal server error."}), 500
