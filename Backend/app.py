@@ -31,6 +31,7 @@ def create_app():
     from Backend.routes.chatRoute import chat_bp
     from Backend.routes.usernameRoute import usernames_bp
     from Backend.routes.groupRoute import group_bp
+    from Backend.routes.predictedExchangeRate import predicted_exchange_rate_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(exchange_rate_bp)
@@ -42,6 +43,7 @@ def create_app():
     app.register_blueprint(chat_bp)
     app.register_blueprint(usernames_bp)
     app.register_blueprint(group_bp)
+    app.register_blueprint(predicted_exchange_rate_bp)
 
     return app
 
