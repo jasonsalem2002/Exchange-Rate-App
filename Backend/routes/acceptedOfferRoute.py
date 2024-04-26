@@ -6,7 +6,6 @@ from ..models.Transaction import Transaction
 
 accepted_offer_bp = Blueprint("accepted_offer_bp", __name__)
 
-
 @accepted_offer_bp.route("/accept_offer/<int:offer_id>", methods=["PUT"])
 def accept_offer(offer_id):
     try:
@@ -23,8 +22,7 @@ def accept_offer(offer_id):
         if user_id == offer.user_id:
             return jsonify({"error": "Unauthorized, cannot accept your own offer"}), 403
 
-        offer.mark_as = "complete"
-        
+        # Create a new transaction from the accepted offer
         new_transaction = Transaction(
             usd_amount=offer.amount_to_trade if offer.usd_to_lbp else offer.amount_requested,
             lbp_amount=offer.amount_requested if offer.usd_to_lbp else offer.amount_to_trade,
@@ -32,9 +30,11 @@ def accept_offer(offer_id):
             user_id=offer.user_id
         )
         db.session.add(new_transaction)
-        db.session.commit()
 
-        db.session.delete(offer)
+        # Mark the offer as complete
+        offer.mark_as = "complete"
+
+        # Commit changes to the database
         db.session.commit()
 
         return jsonify({"message": "Offer accepted successfully"}), 200
