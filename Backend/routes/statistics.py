@@ -5,7 +5,6 @@ from ..models.Transaction import Transaction
 from collections import defaultdict
 import datetime
 
-
 statistics_bp = Blueprint("statistics_bp", __name__)
 
 @statistics_bp.route("/number_of_transactions", methods=["GET"])
@@ -13,13 +12,25 @@ def get_statistics():
     try:
         start_date = request.args.get("start_date")
         end_date = request.args.get("end_date")
-        granularity = request.args.get("granularity", "daily")  # defaults to daily
+        granularity = request.args.get("granularity", "daily")  # daily el default
 
         if not start_date or not end_date:
             return jsonify({"error": "Start date and end date are required."}), 400
 
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
         end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+
+        if granularity == "daily":
+            max_start_date = end_date - datetime.timedelta(days=30)
+        elif granularity == "weekly":
+            max_start_date = end_date - datetime.timedelta(weeks=52)  
+        elif granularity == "monthly":
+            max_start_date = end_date - datetime.timedelta(days=365)
+        else:
+            max_start_date = None
+
+        if max_start_date and start_date < max_start_date:
+            start_date = max_start_date
 
         transactions = Transaction.query.filter(
             Transaction.added_date >= start_date, Transaction.added_date <= end_date
@@ -85,13 +96,25 @@ def get_average_exchange_rate():
 
         start_date = request.args.get("start_date")
         end_date = request.args.get("end_date")
-        granularity = request.args.get("granularity", "daily")  # defaults to daily
+        granularity = request.args.get("granularity", "daily")
 
         if not start_date or not end_date:
             return jsonify({"error": "Start date and end date are required."}), 400
 
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
         end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+
+        if granularity == "daily":
+            max_start_date = end_date - datetime.timedelta(days=30)
+        elif granularity == "weekly":
+            max_start_date = end_date - datetime.timedelta(weeks=52) 
+        elif granularity == "monthly":
+            max_start_date = end_date - datetime.timedelta(days=365)
+        else:
+            max_start_date = None
+
+        if max_start_date and start_date < max_start_date:
+            start_date = max_start_date
 
         transactions = Transaction.query.filter(
             Transaction.added_date >= start_date, Transaction.added_date <= end_date
@@ -117,7 +140,6 @@ def get_average_exchange_rate():
             if granularity == "daily":
                 period = transaction_date.strftime("%Y-%m-%d")
             elif granularity == "weekly":
-                # Calculate the week number of the transaction date
                 week_number = transaction_date.isocalendar()[1]
                 period = f"{transaction_date.year}-W{week_number:02d}"
             elif granularity == "monthly":
@@ -148,7 +170,6 @@ def get_average_exchange_rate():
         }
 
         response = {"lbp_to_usd": average_lbp_to_usd, "usd_to_lbp": average_usd_to_lbp}
-        print(response)
         return jsonify(response), 200
 
     except ValueError:
