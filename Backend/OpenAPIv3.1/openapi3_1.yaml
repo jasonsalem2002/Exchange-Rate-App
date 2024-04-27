@@ -1,0 +1,1940 @@
+openapi: 3.1.0
+info:
+  title: Exhange Rate API 
+  version: 1.0.0
+  description: The application provides a robust platform for secure financial transactions involving USD and LBP currencies, ensuring accurate tracking and processing. It also offers user authentication, group management, exchange rate prediction, and detailed statistical analysis, catering to users' diverse needs for secure and informed financial interactions.
+servers:
+  - url: https://jason.hydra-polaris.ts.net/
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the user
+        user_name:
+          type: string
+          maxLength: 30
+          description: The username of the user
+        hashed_password:
+          type: string
+          description: Hashed password for the user
+      required:
+        - id
+        - user_name
+        - hashed_password
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the transaction
+        usd_amount:
+          type: number
+          format: float
+          description: The amount in USD involved in the transaction
+        lbp_amount:
+          type: number
+          format: float
+          description: The equivalent amount in LBP
+        usd_to_lbp:
+          type: boolean
+          description: Indicates if the transaction is from USD to LBP
+        added_date:
+          type: string
+          format: date-time
+          description: The date and time when the transaction was added
+        user_id:
+          type: integer
+          format: int64
+          description: The ID of the user associated with this transaction
+      required:
+        - id
+        - usd_amount
+        - lbp_amount
+        - usd_to_lbp
+
+    Offer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        user_id:
+          type: integer
+          format: int64
+          description: The ID of the user who made the offer
+        amount_requested:
+          type: number
+          format: float
+          description: The amount requested in the offer
+        amount_to_trade:
+          type: number
+          format: float
+          description: The amount to be traded
+        usd_to_lbp:
+          type: boolean
+          description: Direction of the exchange in the offer
+        mark_as:
+          type: string
+          description: Status marker of the offer
+        added_date:
+          type: string
+          format: date-time
+          description: The date and time when the offer was created
+      required:
+        - id
+        - user_id
+        - amount_requested
+        - amount_to_trade
+        - usd_to_lbp
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        sender_id:
+          type: integer
+          format: int64
+          description: ID of the user who sent the message
+        recipient_id:
+          type: integer
+          format: int64
+          description: ID of the recipient user
+        content:
+          type: string
+          description: Content of the message
+        added_date:
+          type: string
+          format: date-time
+          description: The time the message was added
+      required:
+        - id
+        - sender_id
+        - recipient_id
+        - content
+
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          maxLength: 100
+          description: Name of the group
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          description: List of group members
+      required:
+        - id
+        - name
+
+    GroupMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        group_id:
+          type: integer
+          format: int64
+          description: ID of the group to which the message belongs
+        sender_id:
+          type: integer
+          format: int64
+          description: ID of the user who sent the message
+        content:
+          type: string
+          description: Content of the message
+        added_date:
+          type: string
+          format: date-time
+          description: When the message was added
+      required:
+        - id
+        - group_id
+        - sender_id
+        - content
+
+    ExchangeRate:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        lbp_amount:
+          type: number
+          format: float
+          description: The amount in LBP
+        added_date:
+          type: string
+          format: date-time
+          description: The date and time the rate was recorded
+      required:
+        - id
+        - lbp_amount
+        - added_date
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /user:
+    post:
+      summary: Create a new user
+      description: This endpoint creates a new user with a username and password.
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_name:
+                  type: string
+                  description: The user's username, which can only contain alphanumeric characters and underscores.
+                  examples: ["john_doe123"]
+                password:
+                  type: string
+                  description: "Password must be between 8 and 64 characters and include at least one uppercase, one lowercase, one digit, and one special character."
+                  examples: ["Password!23"]
+              required:
+                - user_name
+                - password
+      responses:
+        '201':
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                newUser:
+                  summary: New user created
+                  value:
+                    id: 1
+                    user_name: "john_doe123"
+                    created_at: "2024-04-27T12:00:00Z"
+        '400':
+          description: Bad request due to invalid input.
+          content:
+            application/json:
+              examples:
+                missingFields:
+                  summary: Username and password are required fields.
+                  value:
+                    error: "Username and password are required fields."
+                invalidUsernameFormat:
+                  summary: Invalid username format.
+                  value:
+                    error: "Username can only contain alphanumeric characters and underscores."
+                invalidPasswordFormat:
+                  summary: Invalid password format.
+                  value:
+                    error: "Password must be between 8 and 64 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
+                usernameExists:
+                  summary: Username already exists.
+                  value:
+                    error: "Username already exists. Please choose a different username."
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                internalError:
+                  summary: Generic server error
+                  value:
+                    error: "Internal server error."
+
+  /authentication:
+    post:
+      summary: Authenticate a user
+      description: This endpoint authenticates a user's username and password, and returns a token upon successful authentication.
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_name:
+                  type: string
+                  description: The user's username.
+                  examples: ["john_doe123"]
+                password:
+                  type: string
+                  description: "The user's password."
+                  examples: ["Password!23"]
+              required:
+                - user_name
+                - password
+      responses:
+        '200':
+          description: Authentication successful, token returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: The authentication token for the user.
+                    examples: ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."]
+        '400':
+          description: Invalid request format.
+          content:
+            application/json:
+              examples:
+                invalidRequest:
+                  summary: Missing username or password in the request.
+                  value:
+                    error: "Invalid request format."
+        '403':
+          description: Incorrect username or password.
+          content:
+            application/json:
+              examples:
+                incorrectCredentials:
+                  summary: Incorrect credentials provided.
+                  value:
+                    error: "Incorrect Username or Password."
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              examples:
+                userNotFound:
+                  summary: No user found with the provided username.
+                  value:
+                    error: "User not found."
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                internalError:
+                  summary: Generic server error
+                  value:
+                    error: "Internal server error."
+
+  /offers:
+    post:
+      summary: Create a new offer
+      description: Creates a new offer based on user input while validating the authentication token.
+      tags:
+        - Offers
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount_requested:
+                  type: number
+                  format: double
+                  examples: [5000]
+                amount_to_trade:
+                  type: number
+                  format: double
+                  examples: [7500000]
+                usd_to_lbp:
+                  type: boolean
+                  examples: [true]
+              required:
+                - amount_requested
+                - amount_to_trade
+                - usd_to_lbp
+      responses:
+        '201':
+          description: Offer created successfully.
+          content:
+            application/json:
+        '400':
+          description: Bad request due to invalid input or unexpected fields.
+          content:
+            application/json:
+              examples:
+                invalidData:
+                  summary: Invalid or incomplete data provided.
+                  value:
+                    error: "Invalid data format. JSON object expected."
+                unexpectedFields:
+                  summary: Unexpected fields in request body.
+                  value:
+                    error: "Unexpected fields in request body: some_field"
+        '403':
+          description: Unauthorized due to missing or invalid token.
+          content:
+            application/json:
+              examples:
+                noToken:
+                  summary: No authentication token provided.
+                  value:
+                    error: "Unauthorized, no token was provided"
+                invalidToken:
+                  summary: Token is expired or invalid.
+                  value:
+                    error: "Token is expired or is not valid"
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                serverError:
+                  summary: Unexpected error in the server.
+                  value:
+                    error: "Internal server error."
+    get:
+      summary: Get all incomplete offers
+      description: Retrieves all offers marked as incomplete, verifying the user's token before access.
+      tags:
+        - Offers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of all incomplete offers.
+          content:
+            application/json:
+        '403':
+          description: Unauthorized access due to missing or invalid token.
+          content:
+            application/json:
+              examples:
+                noToken:
+                  summary: No authentication token provided.
+                  value:
+                    error: "Unauthorized, no token was provided"
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                serverError:
+                  summary: Unexpected error in the server.
+                  value:
+                    error: "Internal server error."
+  /get_accepted_offers:
+    get:
+      tags:
+        - Offers
+      summary: Get all offers marked as complete for the authenticated user
+      description: Retrieves all offers that have been marked as complete by the authenticated user.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved completed offers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    amount_requested:
+                      type: number
+                      format: float
+                    amount_to_trade:
+                      type: number
+                      format: float
+                    usd_to_lbp:
+                      type: boolean
+                    username:
+                      type: string
+                  examples:
+                    - id: 1
+                      amount_requested: 1000.0
+                      amount_to_trade: 1500.0
+                      usd_to_lbp: true
+                      username: "johndoe"
+        '403':
+          description: Unauthorized access, no token provided or token is invalid
+          content:
+            application/json:
+              schema:
+                examples:
+                  [error: "Unauthorized, no token was provided"]
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                examples:
+                  [error: "Internal server error."]
+
+  /offers/{offer_id}:
+    delete:
+      summary: Delete an offer
+      description: Deletes a specific offer based on the offer ID if the user is authenticated and authorized to do so.
+      tags:
+        - Offers
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: offer_id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the offer to be deleted.
+      responses:
+        '200':
+          description: Offer deleted successfully.
+          content:
+            application/json:
+              examples:
+                deleted:
+                  summary: Successful deletion of offer.
+                  value:
+                    message: "Offer deleted successfully."
+        '403':
+          description: Unauthorized to delete the offer or invalid token.
+          content:
+            application/json:
+              examples:
+                noToken:
+                  summary: No authentication token provided.
+                  value:
+                    error: "Unauthorized, no token was provided"
+                notAuthorized:
+                  summary: User not authorized to delete this offer.
+                  value:
+                    error: "You are not authorized to delete this offer."
+        '404':
+          description: Offer not found.
+          content:
+            application/json:
+              examples:
+                notFound:
+                  summary: The specified offer does not exist.
+                  value:
+                    error: "Offer not found."
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              examples:
+                serverError:
+                  summary: Unexpected error in the server.
+                  value:
+                    error: "Internal server error."
+  /accept_offer/{offer_id}:
+    put:
+      tags:
+        - Offer
+      summary: Accept an offer
+      parameters:
+        - in: path
+          name: offer_id
+          required: true
+          schema:
+            type: integer
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Offer accepted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+
+
+  /exchangeRate:
+    get:
+      tags:
+        - Exchange Rate
+      summary: Get the average exchange rates for USD to LBP and LBP to USD over the last 72 hours
+      description: Retrieves the average exchange rates based on transactions in the past 72 hours, calculating separate rates for USD to LBP and LBP to USD conversions.
+      responses:
+        '200':
+          description: Successfully retrieved average exchange rates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usd_to_lbp:
+                    type: number
+                    format: float
+                  lbp_to_usd:
+                    type: number
+                    format: float
+              examples:
+                example1:
+                  summary: Both rates available
+                  value:
+                    usd_to_lbp: 1500.00
+                    lbp_to_usd: 1500.50
+                example2:
+                  summary: Only one rate available
+                  value:
+                    usd_to_lbp: 1500.00
+                    lbp_to_usd: null
+                example3:
+                  summary: No rates available
+                  value:
+                    usd_to_lbp: null
+                    lbp_to_usd: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              examples:
+                errorExample:
+                  value:
+                    error: "Internal Server Error"
+
+
+  /chat:
+    post:
+      tags:
+        - Chat
+      summary: Send a message to another user
+      description: Sends a chat message to another user specified by username. Both the recipient's username and the message content are required.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipient_username:
+                  type: string
+                content:
+                  type: string
+              required:
+                - recipient_username
+                - content
+      responses:
+        '201':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  added_date:
+                    type: string
+                    format: date-time
+                  content:
+                    type: string
+                  sender_username:
+                    type: string
+                  recipient_username:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    added_date: "2024-04-27T12:00:00Z"
+                    content: "Hello, how are you?"
+                    sender_username: "alice"
+                    recipient_username: "bob"
+        '400':
+          description: Missing or invalid fields in the request
+          content:
+            application/json:
+              examples:
+                errorExample:
+                  value:
+                    error: "Recipient username and message content are required."
+        '403':
+          description: Unauthorized access, including no token or invalid token
+          content:
+            application/json:
+              examples:
+                errorExample:
+                  value:
+                    error: "Unauthorized, no token was provided"
+        '404':
+          description: Recipient not found
+          content:
+            application/json:
+
+              examples:
+                errorExample:
+                  value:
+                    error: "Recipient not found."
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              examples:
+                errorExample:
+                  value:
+                    error: "Internal server error."
+
+  /chat/{username}:
+    get:
+      tags:
+        - Chat
+      summary: Retrieve all messages associated with a user
+      description: Retrieves all sent and received messages for the specified user, filtered by the username provided in the URL path.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    added_date:
+                      type: string
+                      format: date-time
+                    content:
+                      type: string
+                    sender_username:
+                      type: string
+                    recipient_username:
+                      type: string
+              examples:
+                example1:
+                  value:
+                    - added_date: "2024-04-27T12:00:00Z"
+                      content: "Hey, are you free for lunch?"
+                      sender_username: "bob"
+                      recipient_username: "alice"
+        '403':
+          description: Unauthorized access, including no token or accessing messages not related to the user
+          content:
+            application/json:
+              examples:
+                errorExample:
+                  value:
+                    error: "You are not authorized to access this resource."
+        '404':
+          description: User not found
+          content:
+            application/json:
+              examples:
+                errorExample:
+                  value:
+                    error: "User not found."
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              examples:
+                errorExample:
+                  value:
+                    error: "Internal server error."
+
+  /group:
+    post:
+      tags:
+        - Group
+      summary: Create a new group
+      description: Creates a new group with the specified name, only if it does not already exist and meets naming criteria.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+            examples:
+              correct:
+                value: { "name": "New Group" }
+              emptyName:
+                value: { "name": "" }
+              numericName:
+                value: { "name": "12345" }
+      responses:
+        '201':
+          description: Group created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  members:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                example1:
+                  value: { "id": 1, "name": "New Group", "members": ["alice"] }
+        '400':
+          description: Invalid input, group name is required or poorly formatted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                missingName:
+                  value: { "error": "Group name is required." }
+                emptyName:
+                  value: { "error": "Group name cannot be empty." }
+                numericName:
+                  value: { "error": "Group name cannot contain only numbers." }
+        '403':
+          description: Unauthorized attempt to create a group due to authentication failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                unauthorized:
+                  value: { "error": "Unauthorized, no token was provided" }
+        '500':
+          description: Internal server error occurred while creating a group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: { "error": "Internal server error." }
+
+  /group/{group_name}/message:
+    post:
+      tags:
+        - Group
+      summary: Send a message to a group
+      description: Sends a message to the specified group if the sender is a member.
+      parameters:
+        - in: path
+          name: group_name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+            examples:
+              correct:
+                value: { "content": "Hello everyone in the group!" }
+              emptyContent:
+                value: { "content": "" }
+      responses:
+        '201':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group_name:
+                    type: string
+                  added_date:
+                    type: string
+                    format: date-time
+                  sender_username:
+                    type: string
+                  content:
+                    type: string
+              examples:
+                example1:
+                  value: { "group_name": "New Group", "added_date": "2024-04-27T12:00:00Z", "sender_username": "alice", "content": "Hello everyone in the group!" }
+        '400':
+          description: Missing message content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                emptyContent:
+                  value: { "error": "Message content is required." }
+        '403':
+          description: Unauthorized attempt due to not being a group member or authentication issues
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                notMember:
+                  value: { "error": "You are not a member of this group." }
+                unauthorized:
+                  value: { "error": "Unauthorized, no token was provided" }
+        '404':
+          description: Group not found or sender not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                groupNotFound:
+                  value: { "error": "Group not found." }
+                senderNotFound:
+                  value: { "error": "Sender not found." }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: { "error": "Internal server error." }
+  /group/{group_name}/join:
+    post:
+      tags:
+        - Group
+      summary: Join a group
+      description: Allows a user to join a group if they are not already a member.
+      parameters:
+        - in: path
+          name: group_name
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User successfully joined the group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                success:
+                  value: { "message": "User joined the group successfully." }
+        '403':
+          description: Unauthorized access due to authentication failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                unauthorized:
+                  value: { "error": "Unauthorized, no token was provided" }
+        '404':
+          description: Group not found or user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                groupNotFound:
+                  value: { "error": "Group not found." }
+                userNotFound:
+                  value: { "error": "User not found." }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: { "error": "Internal server error." }
+
+  /group/{group_name}/leave:
+    post:
+      tags:
+        - Group
+      summary: Leave a group
+      description: Allows a user to leave a group if they are currently a member.
+      parameters:
+        - in: path
+          name: group_name
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User successfully left the group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                success:
+                  value: { "message": "User left the group successfully." }
+        '403':
+          description: Unauthorized access due to authentication failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                unauthorized:
+                  value: { "error": "Unauthorized, no token was provided" }
+        '404':
+          description: Group not found or user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                groupNotFound:
+                  value: { "error": "Group not found." }
+                userNotFound:
+                  value: { "error": "User not found." }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: { "error": "Internal server error." }
+
+
+  /group/{group_name}/messages:
+    get:
+      tags:
+        - Group
+      summary: Retrieve all messages from a group
+      description: Retrieves all messages from the specified group if the user is authorized and a member of the group.
+      parameters:
+        - in: path
+          name: group_name
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved all messages from the group
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    group_name:
+                      type: string
+                    added_date:
+                      type: string
+                      format: date-time
+                    sender_username:
+                      type: string
+                    content:
+                      type: string
+              examples:
+                example1:
+                  value:
+                    - group_name: "New Group"
+                      added_date: "2024-04-27T12:00:00Z"
+                      sender_username: "alice"
+                      content: "Hello everyone in the group!"
+        '403':
+          description: Unauthorized access, either due to lack of token or user not being a group member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                notMember:
+                  value: { "error": "You are not a member of this group." }
+                unauthorized:
+                  value: { "error": "Unauthorized, no token was provided" }
+        '404':
+          description: Group not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                groupNotFound:
+                  value: { "error": "Group not found." }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: { "error": "Internal server error." }
+
+  /groups:
+    get:
+      tags:
+        - Group
+      summary: List all groups
+      description: Retrieves a list of all group names available.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved list of group names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                example1:
+                  value: ["Group One", "Group Two", "New Group"]
+        '403':
+          description: Unauthorized access due to missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                unauthorized:
+                  value: { "error": "Unauthorized, no token was provided" }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: { "error": "Internal server error." }
+
+  /my-groups:
+    get:
+      tags:
+        - Group
+      summary: Get a list of all groups associated with the authenticated user
+      description: Retrieves a list of all groups that the authenticated user is a member of.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved list of group names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                example1:
+                  value: ["Group One", "Group Two", "New Group"]
+        '403':
+          description: Unauthorized access due to missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                unauthorized:
+                  value: { "error": "Unauthorized, no token was provided" }
+        '404':
+          description: User not found or no groups found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                senderNotFound:
+                  value: { "error": "Sender not found." }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: {"error": "Internal server error."}
+  /predictRate:
+    get:
+      tags:
+        - Predicted Exchange Rate
+      summary: Get the predicted exchange rate for a specific date
+      description: Retrieves the predicted exchange rate for the specified date based on available transaction data.
+      parameters:
+        - in: query
+          name: date
+          required: true
+          schema:
+            type: string
+            format: date
+            examples: ["2024-04-27"]
+      responses:
+        '200':
+          description: Successfully retrieved the exchange rate for the specified date
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    format: date
+                  average_exchange_rate:
+                    type: number
+                    format: float
+              examples:
+                example1:
+                  value:
+                    date: "2024-04-27"
+                    average_exchange_rate: 1500.50
+                example2:
+                  value:
+                    date: "2024-04-27"
+                    average_exchange_rate: null
+        '400':
+          description: Missing or invalid date parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                missingDate:
+                  value: { "error": "Date parameter is missing" }
+                invalidFormat:
+                  value: { "error": "Invalid date format. Please provide date in YYYY-MM-DD format." }
+                DateBiggerThan2030:
+                  value: { "error": "I am not a God" }
+        '404':
+          description: No transactions found for the specified date
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                notFound:
+                  value: { "error": "No transactions found near the requested date" }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: { "error": "Internal server error." }
+
+  /next30DaysRates:
+    get:
+      tags:
+        - Predicted Exchange Rate
+      summary: Predict exchange rates for the next 30 days
+      description: Provides a forecast of average exchange rates for the next 30 days based on the most recent transaction data.
+      responses:
+        '200':
+          description: Successfully retrieved forecasted exchange rates for the next 30 days
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                      format: date
+                    average_exchange_rate:
+                      type: number
+                      format: float
+              examples:
+                example1:
+                  value:
+                    - date: "2024-04-27"
+                      average_exchange_rate: 1500.50
+                    - date: "2024-04-28"
+                      average_exchange_rate: 1502.00
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: { "error": "Internal server error." }
+
+  /number_of_transactions:
+    get:
+      tags:
+        - Statistics
+      summary: Get the number of transactions within a specified date range and granularity
+      description: Retrieves transaction counts grouped by a specified granularity ('daily', 'weekly', 'monthly', 'yearly').
+      parameters:
+        - in: query
+          name: start_date
+          required: true
+          schema:
+            type: string
+            format: date
+            examples: ["2024-01-01"]
+        - in: query
+          name: end_date
+          required: true
+          schema:
+            type: string
+            format: date
+            examples: ["2024-01-31"]
+        - in: query
+          name: granularity
+          schema:
+            type: string
+            enum: [daily, weekly, monthly, yearly]
+            default: daily
+      responses:
+        '200':
+          description: Successfully retrieved the number of transactions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions_per_period:
+                    type: object
+                    additionalProperties:
+                      type: integer
+              examples:
+                dailyExample:
+                  value: {"2024-01-01": 20, "2024-01-02": 25}
+        '400':
+          description: Missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                missingDates:
+                  value: {"error": "Start date and end date are required."}
+                invalidGranularity:
+                  value: {"error": "Invalid granularity. Please choose either 'daily', 'weekly', 'monthly', or 'yearly'."}
+        '404':
+          description: No transactions found for the specified period
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                noData:
+                  value: {"error": "No transactions found for the specified period."}
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: {"error": "Internal server error."}
+
+  /average_exchange_rate:
+    get:
+      tags:
+        - Statistics
+      summary: Calculate average exchange rates over a specified period
+      description: Calculates average LBP to USD and USD to LBP exchange rates over a specified date range, grouped by the specified granularity.
+      parameters:
+        - in: query
+          name: start_date
+          required: true
+          schema:
+            type: string
+            format: date
+            examples: ["2024-01-01"]
+        - in: query
+          name: end_date
+          required: true
+          schema:
+            type: string
+            format: date
+            examples: ["2024-01-31"]
+        - in: query
+          name: granularity
+          schema:
+            type: string
+            enum: [daily, weekly, monthly, yearly]
+            default: daily
+      responses:
+        '200':
+          description: Successfully calculated average exchange rates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lbp_to_usd:
+                    type: object
+                    additionalProperties:
+                      type: number
+                  usd_to_lbp:
+                    type: object
+                    additionalProperties:
+                      type: number
+              examples:
+                weeklyExample:
+                  value: {"2024-W04": {"lbp_to_usd": 1500.5, "usd_to_lbp": 1500.2}}
+        '400':
+          description: Missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                missingDates:
+                  value: {"error": "Start date and end date are required."}
+                invalidGranularity:
+                  value: {"error": "Invalid granularity. Please choose either 'daily', 'weekly', 'monthly', or 'yearly'."}
+        '404':
+          description: No transactions found for the specified period
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                noData:
+                  value: {"error": "No transactions found for the specified period."}
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: {"error": "Internal server error."}
+
+  /highest_transaction_today:
+    get:
+      tags:
+        - Statistics
+      summary: Retrieve the highest transaction for the current day
+      description: Returns the highest transaction recorded for today based on USD amount.
+      responses:
+        '200':
+          description: Successfully retrieved the highest transaction of the day
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  highest_transaction:
+                    type: object
+                    properties:
+                      usd_amount:
+                        type: number
+                        format: float
+                      lbp_amount:
+                        type: number
+                        format: float
+                      usd_to_lbp:
+                        type: boolean
+              examples:
+                example1:
+                  value:
+                    highest_transaction:
+                      usd_amount: 10000
+                      lbp_amount: 15000000
+                      usd_to_lbp: true
+        '404':
+          description: No transactions found for today
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                noData:
+                  value: {"error": "No transactions found for today."}
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: {"error": "Internal server error."}
+
+  /volume_of_transactions:
+    get:
+      tags:
+        - Statistics
+      summary: Get the total transaction volume in USD and LBP for a specified period
+      description: Retrieves the total volume of transactions in USD and LBP over a given date range.
+      parameters:
+        - in: query
+          name: start_date
+          required: true
+          schema:
+            type: string
+            format: date
+            examples: ["2024-01-01"]
+        - in: query
+          name: end_date
+          required: true
+          schema:
+            type: string
+            format: date
+            examples: ["2024-01-31"]
+      responses:
+        '200':
+          description: Successfully retrieved the transaction volumes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usd_volume:
+                    type: integer
+                  lbp_volume:
+                    type: integer
+              examples:
+                example1:
+                  value:
+                    usd_volume: 500000
+                    lbp_volume: 750000000
+        '400':
+          description: Missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                missingDates:
+                  value: {"error": "Start date and end date are required."}
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: {"error": "Internal server error."}
+
+  /largest_transaction_amount:
+    get:
+      tags:
+        - Statistics
+      summary: Retrieve the largest transaction amount over a specified period
+      description: Returns details of the largest transaction recorded within the specified date range.
+      parameters:
+        - in: query
+          name: start_date
+          required: true
+          schema:
+            type: string
+            format: date
+            examples: ["2024-01-01"]
+        - in: query
+          name: end_date
+          required: true
+          schema:
+            type: string
+            format: date
+            examples: ["2024-01-31"]
+      responses:
+        '200':
+          description: Successfully retrieved the largest transaction
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  largest_transaction:
+                    type: object
+                    properties:
+                      usd_amount:
+                        type: number
+                        format: float
+                      lbp_amount:
+                        type: number
+                        format: float
+                      usd_to_lbp:
+                        type: boolean
+                      added_date:
+                        type: string
+                        format: date-time
+              examples:
+                example1:
+                  value:
+                    largest_transaction:
+                      usd_amount: 20000
+                      lbp_amount: 30000000
+                      usd_to_lbp: true
+                      added_date: "2024-01-15T14:30:00Z"
+        '404':
+          description: No transactions found for the specified period
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                noData:
+                  value: {"error": "No transactions found for the specified period."}
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value: {"error": "Internal server error."}
+  /transaction:
+    post:
+      tags:
+        - Transactions
+      summary: Create a new transaction
+      description: Adds a new transaction with specified USD and LBP amounts and direction.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usd_amount:
+                  type: number
+                  format: float
+                  description: Amount in USD.
+                lbp_amount:
+                  type: number
+                  format: float
+                  description: Amount in LBP.
+                usd_to_lbp:
+                  type: boolean
+                  description: Direction of exchange, true if USD to LBP.
+              required:
+                - usd_amount
+                - lbp_amount
+                - usd_to_lbp
+            examples:
+              correctInput:
+                value:
+                  usd_amount: 100
+                  lbp_amount: 150000
+                  usd_to_lbp: true
+      responses:
+        '201':
+          description: Transaction successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usd_amount:
+                    type: number
+                    format: float
+                  lbp_amount:
+                    type: number
+                    format: float
+                  usd_to_lbp:
+                    type: boolean
+                  user_id:
+                    type: integer
+              examples:
+                createdTransaction:
+                  value:
+                    usd_amount: 100
+                    lbp_amount: 150000
+                    usd_to_lbp: true
+                    user_id: 1
+        '400':
+          description: Invalid input data format or negative transaction values
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                negativeValues:
+                  value:
+                    error: "Transaction amounts must be positive numbers."
+                incompleteData:
+                  value:
+                    error: "Transaction data is incomplete."
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value:
+                    error: "Internal server error."
+
+    get:
+      tags:
+        - Transactions
+      summary: Retrieve transactions for the authenticated user
+      description: Fetches all transactions associated with the authenticated user's ID.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    usd_amount:
+                      type: number
+                      format: float
+                    lbp_amount:
+                      type: number
+                      format: float
+                    usd_to_lbp:
+                      type: boolean
+                    user_id:
+                      type: integer
+              examples:
+                transactionsList:
+                  value:
+                    - usd_amount: 200
+                      lbp_amount: 300000
+                      usd_to_lbp: false
+                      user_id: 1
+                    - usd_amount: 100
+                      lbp_amount: 150000
+                      usd_to_lbp: true
+                      user_id: 1
+        '403':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized, no token was provided"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value:
+                    error: "Internal server error."
+
+  /usernames:
+    get:
+      tags:
+        - Usernames
+      summary: Get all usernames
+      description: Retrieves a list of all usernames from the system.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved all usernames
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                usernamesList:
+                  value: ["alice", "bob", "charlie"]
+        '403':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                unauthorized:
+                  value:
+                    error: "Unauthorized, no token was provided"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                serverError:
+                  value:
+                    error: "Internal server error."
+
