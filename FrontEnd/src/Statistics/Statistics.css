@@ -1,0 +1,73 @@
+#containerBox
+{
+    display: flex;
+     flex-direction: column;
+       justify-content: space-around;
+        align-items: center;
+        margin-top: 8%; 
+}
+
+
+
+
+
+
+@media only screen and  (min-width: 750px) {
+
+    #containerBox
+    {
+        height:2000px;
+    }
+
+    .formBox {
+    
+    width: 100%;
+    height:30%;
+
+    }
+
+    #details
+    {
+        width:50%;
+        
+        
+    }
+
+ 
+
+
+  
+   
+   } 
+
+   
+
+   @media only screen and (max-width: 749px)  {
+    .formBox {
+    width: 100%;
+    height:30%;
+    flex-wrap: wrap;
+    }
+
+    #details
+    {
+        width:75%;
+        height:40%
+    }
+
+    #containerBox
+    {
+        height:1800px;
+
+    }
+
+    .headerText
+    {
+        font-size:12px;
+    }
+  
+    
+   } 
+
+   
+

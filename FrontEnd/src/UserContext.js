@@ -33,19 +33,36 @@ export function UserProvider({ children }) {
     const [chatName,setChatName]=useState('')
     const [userChatOpened,setUserChatState]=useState(false)
     const [groupChatOpened,setGroupChatState]=useState(false)
+    const [cantReachBackend,setCantReachBackend]=useState(false)
 
     function fetchRates() {
+      if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
+      if (userToken)
+      {
         fetch(`${SERVER_URL}/exchangeRate`)
         .then(response => {
-        return response.json();
-      })
+
+          if (response.ok)
+          {
+            return response.json();
+          }
+          else 
+          {
+              setCantReachBackend(true)
+           
+          }
+    })
         .then(data => {
         
           setBuyUsdRate( data['usd_to_lbp']);
           setSellUsdRate(data['lbp_to_usd']);
       
         });
-       }
+      }}
 
     //    useEffect(() => {
     //     const storedUserName = localStorage.getItem('username');
@@ -57,6 +74,11 @@ export function UserProvider({ children }) {
 
 
     const login = useCallback((username, password) => {
+      if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
         localStorage.setItem('username', username);
     
         return fetch(`${SERVER_URL}/authentication`, {
@@ -72,9 +94,14 @@ export function UserProvider({ children }) {
         .then((response) => {
             if (response.status === 403 || response.status === 404 || response.status === 400) {
                 setLoginState(true);
-                throw new Error("Unauthorized");
-            } else {
+                return;
+            } else if (response.ok) {
                 return response.json();
+            }
+
+            else
+            {
+                 return
             }
         })
         .then((body) => {
@@ -82,22 +109,20 @@ export function UserProvider({ children }) {
                 setAuthState(States.USER_AUTHENTICATED);
                 setUserToken(body.token);
                 saveUserToken(body.token);
-            } else {
-                // Handle case where token is undefined
-                console.error("Token is undefined");
-                setLoginState(true);
-                throw new Error("Token is undefined");
-            }
+            } 
         })
         .catch((error) => {
-            console.error("Login failed:", error.message);
-            throw error;
+           
         });
     }, [SERVER_URL]);
     
 
     const createUser = useCallback((username, password) => {
-
+      if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
         localStorage.setItem('username',(username))
         return fetch(`${SERVER_URL}/user`, {
             method: "POST",
@@ -126,6 +151,12 @@ export function UserProvider({ children }) {
 
 
     const fetchUserTransactions =() => {
+
+      if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
         if (userToken)
         {
         fetch(`${SERVER_URL}/transaction`, {
@@ -150,6 +181,11 @@ export function UserProvider({ children }) {
 
 
     const logout = useCallback(() => {
+      if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
         localStorage.setItem('username','')
         clearUserToken();
         setUserToken(null);
@@ -159,7 +195,11 @@ export function UserProvider({ children }) {
    
 
     const fetchUsernames = () => {
+      if (!navigator.onLine) {
         
+        setCantReachBackend(true);
+        return;
+      }
         if (userToken)
         {
         const username =localStorage.getItem('username')
@@ -178,7 +218,11 @@ export function UserProvider({ children }) {
     }
     
       const fetchMessages = () => {
-
+        if (!navigator.onLine) {
+        
+          setCantReachBackend(true);
+          return;
+        }
         if (userToken)
         {
         const username = localStorage.getItem('username')
@@ -193,7 +237,11 @@ export function UserProvider({ children }) {
         }}
 
       const fetchGroups = () => {
-
+        if (!navigator.onLine) {
+        
+          setCantReachBackend(true);
+          return;
+        }
         if (userToken)
         {
        
@@ -208,7 +256,11 @@ export function UserProvider({ children }) {
         }}
 
       const fetchJoinedGroups = () => {
-
+        if (!navigator.onLine) {
+        
+          setCantReachBackend(true);
+          return;
+        }
         if (userToken)
         {
     
@@ -223,7 +275,11 @@ export function UserProvider({ children }) {
 
 
         const joinGroup= useCallback((group)=>{ 
-   
+          if (!navigator.onLine) {
+        
+            setCantReachBackend(true);
+            return;
+          }
             fetch(`${SERVER_URL}/group/${group}/join`, {
               method: 'POST',
               headers: {
@@ -242,8 +298,13 @@ export function UserProvider({ children }) {
           })
 
           const createGroup= useCallback((name)=>{ 
-   
-             
+            if (!navigator.onLine) {
+        
+              setCantReachBackend(true);
+              return;
+            }
+             if (userToken)
+             {
             fetch(`${SERVER_URL}/group`, {
               method: 'POST',
               headers: {
@@ -262,10 +323,15 @@ export function UserProvider({ children }) {
               joinGroup(name)
               fetchJoinedGroups();
           });
-          })
+}})
 
 
           const fetchGroupMessages = (group) => {
+            if (!navigator.onLine) {
+        
+              setCantReachBackend(true);
+              return;
+            }
             if (userToken) {
                 fetch(`${SERVER_URL}/group/${group}/messages`, {
                     method: 'GET',
@@ -290,7 +356,12 @@ export function UserProvider({ children }) {
         
 
           const sendGroupMessage= useCallback((group,message)=>{ 
-            console.log(message)
+            if (!navigator.onLine) {
+        
+              setCantReachBackend(true);
+              return;
+            }
+            if (userToken){
             if (message.length<1)
             {
               return
@@ -316,10 +387,42 @@ export function UserProvider({ children }) {
               fetchGroupMessages(group)
         
           });
-          })
+          }})
+
+
+          const leaveGroup= useCallback((group)=>{ 
+            if (!navigator.onLine) {
+        
+              setCantReachBackend(true);
+              return;
+            }
+   
+            if (userToken){
+  
+            fetch(`${SERVER_URL}/group/${group}/leave`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userToken}`,
+              },
+              body: JSON.stringify({
+          
+              })
+            })
+            .then(response => {
+              return response.json();
+            })
+            
+            .then((body) => {
+              fetchJoinedGroups()
+              setGroupChatState(false)
+          });
+}})
+
+       
 
     return (
-        <UserContext.Provider value={{ setGroupChatState,setUserChatState,groupChatOpened,userChatOpened,setChatName,chatName,setIsDrawerOpen,isDrawerOpen,setJoinedGroups,sendGroupMessage,groupsMessages,fetchGroupMessages,createGroup,joinGroup,fetchMessages,fetchGroups,fetchJoinedGroups,joinedGroups,groups,fetchUsernames,usernames,messages,logout, authState, setAuthState, saveUserToken, States, login, createUser, userToken, fetchUserTransactions, userTransactions,SERVER_URL, loginRejected, setLoginState, setUserToken, setUserTransactions,registerRejected,setRegisterState,buyUsdRate,sellUsdRate,fetchRates,userName,setUserName }}>
+        <UserContext.Provider value={{setCantReachBackend,cantReachBackend, leaveGroup,setGroupChatState,setUserChatState,groupChatOpened,userChatOpened,setChatName,chatName,setIsDrawerOpen,isDrawerOpen,setJoinedGroups,sendGroupMessage,groupsMessages,fetchGroupMessages,createGroup,joinGroup,fetchMessages,fetchGroups,fetchJoinedGroups,joinedGroups,groups,fetchUsernames,usernames,messages,logout, authState, setAuthState, saveUserToken, States, login, createUser, userToken, fetchUserTransactions, userTransactions,SERVER_URL, loginRejected, setLoginState, setUserToken, setUserTransactions,registerRejected,setRegisterState,buyUsdRate,sellUsdRate,fetchRates,userName,setUserName }}>
             {children}
         </UserContext.Provider>
     );

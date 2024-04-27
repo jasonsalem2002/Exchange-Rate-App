@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { User } from './UserContext';
+import { User } from '../UserContext';
 import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel, Typography,Snackbar,Alert } from '@mui/material';
-import Nav from './Nav';
-import './App.css';
+import Nav from '../Nav';
+import '../App.css';
 import './Predictor.css';
 
 function Predictor() {
@@ -19,9 +19,16 @@ function Predictor() {
   const { SERVER_URL } = User();
   const { userToken } = User();
   const [requirementsRejected,setRequirementsState]=useState(false)
-
+ const {setCantReachBackend}=User()
 
   const fetchNext30Days = () => {
+    if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
+    if (userToken)
+    {
     fetch(`${SERVER_URL}/next30DaysRates`, {
       method: 'GET',
       headers: {
@@ -47,10 +54,17 @@ function Predictor() {
         setFetchedData(true);
         setData(data);
       });
-  };
+  }};
 
 
   const fetchATGivenDate = () => {
+    if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
+    if (userToken)
+    {
     fetch(`${SERVER_URL}/predictRate?date=${givenDate}`, {
       method: 'GET',
       headers: {
@@ -76,7 +90,7 @@ function Predictor() {
         setFetchedGivenDateData(true)
         setGivenDateData(data);
       });
-  };
+  }};
 
 
 
@@ -121,7 +135,7 @@ function Predictor() {
       <Nav />
       <Box id='containerBox' >
         <Box sx={{display:'flex',flexDirection:'column',alignItems:'center',height:'40%',maxWidth:'100%'}}>
-        {granularity === 'daily' && <Typography variant='h5' sx={{ textAlign: 'center' }}>Exchange Rate over Next 30 Day(s)</Typography>}
+        {granularity === 'daily' && <Typography className='graphTitle'>Exchange Rate over Next 30 Day(s)</Typography>}
         
         <Box sx={{ width: '70%', maxWidth: '100%',maxHeight:'100%' ,minWidth: '300px', display: { xs: 'flex' } }}>
         <LineChart
@@ -139,9 +153,9 @@ function Predictor() {
           </LineChart>
         </Box>
         </Box>
-        <Box className='formBox'>
+        <Box id='details' className='formBox'>
           <Box className='header' >
-            <Typography variant='h4' className='headerText'> Predict Rate Up Until 2030</Typography>
+            <Typography  className='headerText'> Predict Rate Up Until 2030</Typography>
           </Box>
           <form style={{ paddingLeft: '4%', backgroundColor: 'white', display: 'flex', flexDirection: 'column', height: '60%', justifyContent: 'space-around' }} onSubmit={handleSubmit}>
             

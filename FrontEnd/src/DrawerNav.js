@@ -30,7 +30,7 @@ const handleClose = () => {
 
         <Stack spacing={2} sx={{width:'70vw', height:'100%' ,display:'flex',alignItems:'center', bgcolor:'#d3d3d3'}}>
               <Box sx={{display:'flex',flexDirection:'row',width:'100%',height:'30%',justifyContent:'center',alignItems:'center', backgroundColor:'#0093d5'}}>
-                  <Typography variant="h5" color={"white"}>EXCHANGE RATE</Typography>    
+                  <Typography  color={"white"}>E.R</Typography>    
               </Box>
 
               <a class="navlinkdrawer" href="/transactions"><p>Transactions</p></a>
@@ -49,6 +49,8 @@ const handleClose = () => {
             </Menu>
 
             <a class="navlinkdrawer" href="/graph"><p>Graph</p></a>
+            <a class="navlinkdrawer" href="/predictor"><p>Predictor</p></a>
+            <a class="navlinkdrawer" href="/statistics"><p>Statistics</p></a>
               
 
         </Stack>

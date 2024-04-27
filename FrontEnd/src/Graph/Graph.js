@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { User } from './UserContext';
+import { User } from '../UserContext';
 import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel, Typography,Snackbar,Alert } from '@mui/material';
-import Nav from './Nav';
-import './App.css';
+import Nav from '../Nav';
+import '../App.css';
 import './Graph.css';
 
 function Graph() {
@@ -17,6 +17,7 @@ function Graph() {
   const { SERVER_URL } = User();
   const { userToken } = User();
   const [requirementsRejected,setRequirementsState]=useState(false)
+  const {setCantReachBackend}=User();
 
   useEffect(() => {
     const startDateObj = new Date();
@@ -29,7 +30,16 @@ function Graph() {
     setEndDate(formattedEndDate);
   }, []);
 
+
   const fetchData = () => {
+
+    if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
+    if (userToken)
+    {
     fetch(`${SERVER_URL}/average_exchange_rate?start_date=${startDate}&end_date=${endDate}&granularity=${granularity}`, {
       method: 'GET',
       headers: {
@@ -54,7 +64,7 @@ function Graph() {
         setFetchedData(true);
         setData(data);
       });
-  };
+  }};
 
   useEffect(() => {
     if (fetchedData) {
@@ -117,16 +127,16 @@ function Graph() {
     <div>
       <Nav />
       <Box id='containerBox' >
+      <Box sx={{display:'flex',flexDirection:'column',alignItems:'center',height:'40%',maxWidth:'100%'}}>
+        {granularity === 'monthly' && <Typography className='graphTitle' >Exchange Rate over Last {Math.abs(new Date(endDate).getMonth() - new Date(startDate).getMonth())} Month(s)</Typography>}
+        {granularity === 'daily' && <Typography  className='graphTitle'>Exchange Rate over Last {Math.ceil(Math.abs((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)))} Day(s)</Typography>}
+        {granularity === 'weekly' && <Typography className='graphTitle'>Exchange Rate over Last {Math.ceil(Math.abs((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24 * 7)))} Week(s)</Typography>}
+        {granularity === 'yearly' && <Typography  className='graphTitle'>Exchange Rate over Last {Math.abs(new Date(endDate).getFullYear() - new Date(startDate).getFullYear())} Year(s)</Typography>}
 
-        {granularity === 'monthly' && <Typography variant='h5' sx={{ textAlign: 'center' }}>Exchange Rate over Last {Math.abs(new Date(endDate).getMonth() - new Date(startDate).getMonth())} Month(s)</Typography>}
-        {granularity === 'daily' && <Typography variant='h5' sx={{ textAlign: 'center' }}>Exchange Rate over Last {Math.ceil(Math.abs((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)))} Day(s)</Typography>}
-        {granularity === 'weekly' && <Typography variant='h5' sx={{ textAlign: 'center' }}>Exchange Rate over Last {Math.ceil(Math.abs((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24 * 7)))} Week(s)</Typography>}
-        {granularity === 'yearly' && <Typography variant='h5' sx={{ textAlign: 'center' }}>Exchange Rate over Last {Math.abs(new Date(endDate).getFullYear() - new Date(startDate).getFullYear())} Year(s)</Typography>}
-
-        <Box sx={{ width: '50%', maxWidth: '100%',maxHeight:'100%' ,minWidth: '300px', display: { xs: 'flex' } }}>
+        <Box sx={{ width: '70%', maxWidth: '100%',maxHeight:'100%' ,minWidth: '300px', display: { xs: 'flex' } }}>
           <LineChart
-            width={600}
-            height={350}
+            width={800}
+            height={450}
             data={xAxisData.map((date, index) => ({ x: date, 'lbp_to_usd': yAxisData[0][index], 'usd_to_lbp': yAxisData[1][index] }))}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
@@ -138,9 +148,10 @@ function Graph() {
             <Line type="monotone" dataKey="usd_to_lbp" stroke="#82ca9d" activeDot={{ r: 8 }} />
           </LineChart>
         </Box>
-        <Box className='formBox'>
+        </Box>
+        <Box id='details'  className='formBox'>
           <Box className='header' >
-            <Typography variant='h4' className='headerText'> Enter Details</Typography>
+            <Typography  className='headerText'> Enter Details</Typography>
           </Box>
           <form style={{ paddingLeft: '4%', backgroundColor: 'white', display: 'flex', flexDirection: 'column', height: '60%', justifyContent: 'space-around' }} onSubmit={handleSubmit}>
             <TextField
@@ -176,7 +187,7 @@ function Graph() {
                 <MenuItem value="yearly">Yearly</MenuItem>
               </Select>
             </FormControl>
-            <Button type="submit" className='formButton' variant="contained" color="primary">
+            <Button type="submit" class='formButton' variant="contained" color="primary">
               Submit
             </Button>
           </form>

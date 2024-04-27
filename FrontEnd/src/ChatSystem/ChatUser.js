@@ -4,10 +4,10 @@ import { Chat as ChatIcon } from '@mui/icons-material';
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
 import Message from './Message';
 import { useEffect } from 'react';
-import { User } from './UserContext';
+import { User } from '../UserContext';
 import UserChatBox from './UserChatBox';
-import './App.css'
-
+import '../App.css'
+import './ChatUser.css'
 
 const ChatUser = ({user}) => {
 
@@ -61,7 +61,7 @@ let messagesWithUser = messages.filter(m => m.recipient_username===user ||m.send
 
 
   return (
-    <Box sx={{ display: 'flex',height:'700px',flexDirection:'column', width: '100%' }}>
+    <Box sx={{ display: 'flex',height:'100%',flexDirection:'column', width: '100%' }}>
     
          <Box id="messages" sx={{ height: '80%', width: '100%',display:'flex',flexDirection:'column',bgcolor: '#fffef7', overflowY: 'auto' }}>
               {messagesWithUser.map((m) => {
@@ -79,10 +79,11 @@ let messagesWithUser = messages.filter(m => m.recipient_username===user ||m.send
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(event)=>{if (event.key === 'Enter') {
                   sendMessage(user);
+                  setMessage('');
                 }}}
               />
 
-<Button id='sendButton' class='formButton' onClick={() => sendMessage(user)} disabled={message.trim().length===0}>Send</Button>
+<Button id='sendButton' class='formButton' onClick={() => {sendMessage(user);setMessage('');}} disabled={message.trim().length===0}>Send</Button>
 
           </Box>
  

@@ -1,12 +1,12 @@
-import logo from './logo.svg';
+
 import './ChatBox.css';
-import './App.css';
+import '../App.css';
 import React, { useCallback, useEffect } from 'react'
 import { useState } from 'react';
 import { Alert, AppBar, Box, Button, Link, MenuItem, Select, Snackbar, TextField, Toolbar, Typography ,IconButton} from '@mui/material';
-import UserCredentialsDialog from './UserCredentialsDialog/UserCredentialsDialog';
-import { getUserToken,saveUserToken, clearUserToken } from "./localstorage";
-import { User } from './UserContext';
+import UserCredentialsDialog from '../UserCredentialsDialog/UserCredentialsDialog';
+import { getUserToken,saveUserToken, clearUserToken } from "../localstorage";
+import { User } from '../UserContext';
 import Person2Icon from '@mui/icons-material/Person2';
 
 

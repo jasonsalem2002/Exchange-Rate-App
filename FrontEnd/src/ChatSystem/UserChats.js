@@ -4,10 +4,10 @@ import { Chat as ChatIcon } from '@mui/icons-material';
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
 import Message from './Message';
 import { useEffect } from 'react';
-import { User } from './UserContext';
+import { User } from '../UserContext';
 import UserChatBox from './UserChatBox';
 import ChatUser from './ChatUser';
-import './App.css';
+import '../App.css';
 import SearchIcon from '@mui/icons-material/Search';
 
 const UserChats = ({activeUsers,setActiveUsers,setDialogOpen,dialogOpen,userChatOpened,setUserChatState}) => {
@@ -46,7 +46,7 @@ const UserChats = ({activeUsers,setActiveUsers,setDialogOpen,dialogOpen,userChat
 
   const handleAddUser=()=>
   {
-    console.log('here')
+    
     if (activeUsers.includes(addedUser))
     {
       setUserAlreadyAdded(true)
@@ -55,7 +55,7 @@ const UserChats = ({activeUsers,setActiveUsers,setDialogOpen,dialogOpen,userChat
 
     else if(!usernamesExceptCurrent.includes(addedUser))
     {
-      console.log('here')
+     
       setUserDoesntExist(true)
     }
 

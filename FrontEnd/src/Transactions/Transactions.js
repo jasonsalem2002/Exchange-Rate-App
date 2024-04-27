@@ -36,18 +36,27 @@ const {logout}= User()
 const {setLoginState}= User()
 const {loginRejected}= User()
 const {userTransactions}= User()
- 
+ const{setCantReachBackend}=User()
 
 
 
  
  
  function addItem() {
+
+    if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
   
   var usd_amount = parseFloat(usdInput);
   var lbp_amount = parseFloat(lbpInput);
   var usdToLbp=transactionType
   
+
+  if (userToken)
+  {
 
   fetch(`${SERVER_URL}/transaction`, {
     method: 'POST',
@@ -64,7 +73,7 @@ const {userTransactions}= User()
   .then(response => {
     return response.json();
   })
-}
+  }}
 
 const {fetchUserTransactions}= User()
 
@@ -84,12 +93,12 @@ useEffect(fetchUserTransactions,[])
    <div className="wrapper">
       
         <Box className='header'>
-        <Typography className='headerText' variant="h4">Record Transaction</Typography>
+        <Typography class='headerText' >Record Transaction</Typography>
         </Box>
         <form  style={{height:'75%',display:'flex',flexDirection:'column',justifyContent:'space-around',paddingLeft:'5%'}}>
     
-              <TextField  className='formField' label="LBP Amount" type="number" value={lbpInput} onChange={e =>setLbpInput(e.target.value)}/>
-              <TextField className='formField' label="USD Amount" type="number" value={usdInput} onChange={e =>setUsdInput(e.target.value)}/> 
+              <TextField  className='formField' label="LBP Amount" type="number" value={lbpInput} onChange={e =>setLbpInput(e.target.value)} required/>
+              <TextField className='formField' label="USD Amount" type="number" value={usdInput} onChange={e =>setUsdInput(e.target.value)} required/> 
               <Select className='formField' defaultValue={"usd-to-lbp"} id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(true)}
               else{setTransactionType(false)}}} >
 
@@ -108,7 +117,7 @@ useEffect(fetchUserTransactions,[])
         {userToken && (
         <div className="wrapper">
           <Box className='header'>
-            <Typography className='headerText' variant="h4">Your Transactions</Typography>
+            <Typography className='headerText' >Your Transactions</Typography>
           </Box>
           {userTransactions  && (
             <DataGrid

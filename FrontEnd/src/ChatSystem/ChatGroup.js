@@ -4,13 +4,13 @@ import { Chat as ChatIcon } from '@mui/icons-material';
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
 import Message from './Message';
 import { useEffect } from 'react';
-import { User } from './UserContext';
+import { User } from '../UserContext';
 import UserChatBox from './UserChatBox';
-import './App.css'
+import '../App.css'
 import GroupMessage from './GroupMessage';
 
 
-const ChatGroup= ({group ,leaveGroup}) => {
+const ChatGroup= ({group}) => {
 
   
   const username = localStorage.getItem('username')
@@ -34,8 +34,8 @@ const ChatGroup= ({group ,leaveGroup}) => {
 
 
   return (
-    <Box sx={{ display: 'flex',height:'700px',flexDirection:'column', width: '100%' }}>
-        <Box><Button sx={{backgroundColor:'green',color:'white'}} onClick={()=>leaveGroup(group)}>Leave</Button></Box>
+    <Box sx={{ display: 'flex',height:'100%',flexDirection:'column', width: '100%' }}>
+    
          <Box id="messages" sx={{ height: '80%', width: '100%',display:'flex',flexDirection:'column',bgcolor: '#fffef7', overflowY: 'auto' }}>
               {groupm.map((m) => {
                 const sent = m.sender_username === username;
@@ -50,9 +50,12 @@ const ChatGroup= ({group ,leaveGroup}) => {
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-              />
+                onKeyPress={(event)=>{if (event.key === 'Enter') {
+                  sendGroupMessage(group,message);
+                  setMessage('');
+                }}}/>
 
-<Button id='sendButton' class='formButton' onClick={() => sendGroupMessage(group,message)}>Send</Button>
+<Button id='sendButton' class='formButton' onClick={() => {sendGroupMessage(group,message);}} disabled={message.trim().length===0}>Send</Button>
 
           </Box>
  

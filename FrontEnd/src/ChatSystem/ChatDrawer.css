@@ -8,12 +8,11 @@
 
 }
 
-/* @media only screen and (max-width: 749px)  {
-    .drawerStack {
-    width: 60vw;
+ @media only screen and (max-width: 749px)  {
+    #stackDrawer,#header {
+    width: 65vw;
     }
   
    
-   }  */
+   }  
 
-   

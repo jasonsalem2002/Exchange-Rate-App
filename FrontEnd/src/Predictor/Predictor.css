@@ -37,7 +37,12 @@
 
     #containerBox
     {
-        height:1000px
+        height:800px
+    }
+
+    #details
+    {
+        width:50%
     }
   
     

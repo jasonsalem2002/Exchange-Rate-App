@@ -21,6 +21,7 @@ const {setUserName}= User()
  label="Username"
  type="text"
  value={userName}
+ required
  onChange={({ target: { value } }) => setUserName(value)}
  />
  </div>
@@ -30,6 +31,7 @@ const {setUserName}= User()
  label="Password"
  type="password"
  value={password}
+ required
  onChange={({ target: { value } }) => setPassword(value)}
  onKeyPress={(event)=>{if (event.key === 'Enter') {
     onSubmit(userName, password);

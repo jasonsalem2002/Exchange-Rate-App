@@ -1,28 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+
+import '../App.css';
 import React, { useCallback, useEffect } from 'react'
 import { useState } from 'react';
 import { Alert, AppBar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Link, MenuItem, Select, Snackbar, TextField, Toolbar, Typography } from '@mui/material';
-import UserCredentialsDialog from './UserCredentialsDialog/UserCredentialsDialog';
-import { getUserToken,saveUserToken, clearUserToken } from "./localstorage";
-import Nav from './Nav';
-import { User } from './UserContext';
+import UserCredentialsDialog from '../UserCredentialsDialog/UserCredentialsDialog';
+import { getUserToken,saveUserToken, clearUserToken } from "../localstorage";
+import Nav from '../Nav';
+import { User } from '../UserContext';
 import { DataGrid } from '@mui/x-data-grid';
 
 
-function CreateOffer(fetchOffers) {
+function CreateOffer({fetchOffers}) {
 
    const [dialogOpen, setDialogOpen] = useState(false);
    const [transactionType,setTransactionType]= useState(false);
 
    const [amountRequested,setAmountRequested]=  useState();
   const [amountToTrade,setAmountToTrade]= useState();
-
+ const {setCantReachBackend}=User()
   const {SERVER_URL}= User();
   const {userToken}= User();
 
   function addOffer() {
+    if (!navigator.onLine) {
+        
+      setCantReachBackend(true);
+      return;
+    }
+    
     setDialogOpen(false)
+    if (userToken)
+    {
     fetch(`${SERVER_URL}/offers`, {
       method: 'POST',
       headers: {
@@ -43,7 +51,7 @@ function CreateOffer(fetchOffers) {
     .then(body => {
       fetchOffers()
     })
-  }  
+  }}  
 
    return(
    <div>

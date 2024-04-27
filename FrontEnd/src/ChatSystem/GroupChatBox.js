@@ -1,12 +1,12 @@
-import logo from './logo.svg';
+
 import './ChatBox.css';
-import './App.css';
+import '../App.css';
 import React, { useCallback, useEffect } from 'react'
 import { useState } from 'react';
 import { Alert, AppBar, Box, Button, Link, MenuItem, Select, Snackbar, TextField, Toolbar, Typography ,IconButton} from '@mui/material';
-import UserCredentialsDialog from './UserCredentialsDialog/UserCredentialsDialog';
-import { getUserToken,saveUserToken, clearUserToken } from "./localstorage";
-import { User } from './UserContext';
+import UserCredentialsDialog from '../UserCredentialsDialog/UserCredentialsDialog';
+import { getUserToken,saveUserToken, clearUserToken } from "../localstorage";
+import { User } from '../UserContext';
 import Person2Icon from '@mui/icons-material/Person2';
 
 
@@ -28,8 +28,8 @@ function GroupChatBox({ group, lastMessage,openGroupChat }) {
       <Box sx={{width:'80%',display:'flex',flexDirection:'column',justifyContent:'center'}}>
         <Box sx={{height:'60%'}}>
         <Box sx={{height:'40%',width:'70%',display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-        <Box sx={{width:'30%'}}>
-            <Typography id='group'>{group}</Typography>  
+        <Box sx={{width:'50%'}}>
+            <Typography sx={{fontSize:'10px'}}>{group}</Typography>  
         </Box>  
         
           <Typography id='date'>{lastMessage.added_date}</Typography>

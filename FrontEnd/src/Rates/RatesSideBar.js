@@ -8,8 +8,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { makeStyles } from '@mui/styles';
 import { Box, Button, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 import './RatesSideBar.css'
-import './App.css'
-import { User } from './UserContext';
+import '../App.css'
+import { User } from '../UserContext';
 
 
 function RatesSideBar() {
@@ -43,19 +43,19 @@ function RatesSideBar() {
       <Box sx={{display:'flex',flexDirection:'column',justifyContent:'space-between',height:'30%'}}>
           
           <Box className='headerDrawer'>
-            <Typography className='headerText' variant='h4'>Today's Exchange Rate</Typography>
+            <Typography class='headerText' >Today's Exchange Rate</Typography>
             </Box>
 
           <Box sx={{height:'70%',display:'flex',flexDirection:'column',justifyContent:'space-around',paddingLeft:'5%'}}>
-            <Typography variant="h5">Buy USD: <span id="buy-usd-rate">{buyUsdRate}</span></Typography>
-            <Typography variant="h5">Sell USD: <span id="sell-usd-rate">{sellUsdRate}</span></Typography>
+            <Typography>Buy USD: <span id="buy-usd-rate">{buyUsdRate||""}</span></Typography>
+            <Typography >Sell USD: <span id="sell-usd-rate">{sellUsdRate|| ""}</span></Typography>
           </Box>
         </Box>
         {/* <hr style={{margin:'20px'}}></hr> */}
 
         <Box sx={{height:'70%'}}>
         <Box id="calculatorHeader"  className='headerDrawer'>
-        <Typography className='headerText' variant="h4">Rate Calculator</Typography>
+        <Typography class='headerText' >Rate Calculator</Typography>
         </Box>
         <Box sx={{display:'flex',flexDirection:'column',justifyContent:'space-around',height:'80%',paddingLeft:'5%'}}>
           <Select 
@@ -84,7 +84,7 @@ function RatesSideBar() {
           <form style={{height:'65%',display:'flex',flexDirection:'column',justifyContent:'space-around'}} onSubmit={(e)=>{handleCalculate(e)}}>
 
             <Box sx={{display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
-              <Typography variant="h5" sx={{marginBottom:'2%'}}>
+              <Typography  sx={{marginBottom:'2%'}}>
                 {conversionType === 1
                   ? "Amount in USD"
                   : "Amount in LBP"}
@@ -97,7 +97,7 @@ function RatesSideBar() {
                 onChange={(e) => setAmountInput(e.target.value)}
               />
             </Box>
-            <Typography variant="h5" >
+            <Typography  >
               {conversionType === 1
                 ? `Amount in LBP: ${rateResult} L.L`
                 : `Amount in USD: ${rateResult} $`
@@ -107,9 +107,9 @@ function RatesSideBar() {
                 
             <Button
               id="calculate-button"
-              className='formButton'
+              class='formButton'
               variant="contained"
-              color="primary"
+             
               type="submit"
             >
               Calculate

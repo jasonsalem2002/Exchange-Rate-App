@@ -4,10 +4,10 @@ import { Chat as ChatIcon } from '@mui/icons-material';
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
 import Message from './Message';
 import { useEffect } from 'react';
-import { User } from './UserContext';
+import { User } from '../UserContext';
 import GroupChatBox from './GroupChatBox';
 import ChatGroup from './ChatGroup';
-import './App.css';
+import '../App.css';
 
 
 
@@ -55,30 +55,7 @@ const GroupChats = ({setDialogOpen,dialogOpen,groupChatOpened,setGroupChatState}
     setChatName(name)
   }
 
-  const leaveGroup= useCallback((group)=>{ 
-   
-   
   
-    fetch(`${SERVER_URL}/group/${group}/leave`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userToken}`,
-      },
-      body: JSON.stringify({
-  
-      })
-    })
-    .then(response => {
-      return response.json();
-    })
-    
-    .then((body) => {
-      fetchJoinedGroups()
-      setGroupChatState(false)
-  });
-  })
-
 
   function getLastMessageOfGroups() {
 
@@ -155,7 +132,7 @@ useEffect(()=>{
 useEffect(()=>{console.log(groupsMessages)},[groupsMessages])
 
 
-useEffect(getLastMessageOfGroups,[groupsMessages])
+useEffect(getLastMessageOfGroups,[joinedGroups,groupsMessages])
 
   return (
     <Box sx={{ display: 'flex',height:'100%',flexDirection:'column', width: '100%' }}>
@@ -206,7 +183,7 @@ useEffect(getLastMessageOfGroups,[groupsMessages])
         {sortedGroups.map((group) => {
         
           
-          return <GroupChatBox group={group} leaveGroup={leaveGroup} openGroupChat={openGroupChat} lastMessage={{ content: lastMessages[group]?.content || '', added_date: lastMessages[group]?.added_date }} />;
+          return <GroupChatBox group={group}  openGroupChat={openGroupChat} lastMessage={{ content: lastMessages[group]?.content || '', added_date: lastMessages[group]?.added_date }} />;
         }
       )}
       </Box>
@@ -216,7 +193,7 @@ useEffect(getLastMessageOfGroups,[groupsMessages])
 
 
 
-{groupChatOpened && <ChatGroup group={chatName} leaveGroup={leaveGroup} />}
+{groupChatOpened && <ChatGroup group={chatName} />}
  
  
     </Box>

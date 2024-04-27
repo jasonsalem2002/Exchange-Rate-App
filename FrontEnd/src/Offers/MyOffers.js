@@ -1,12 +1,12 @@
-import logo from './logo.svg';
-import './App.css';
+
+import '../App.css';
 import React, { useCallback, useEffect } from 'react'
 import { useState } from 'react';
 import { Alert, AppBar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Link, MenuItem, Select, Snackbar, TextField, Toolbar, Typography } from '@mui/material';
-import UserCredentialsDialog from './UserCredentialsDialog/UserCredentialsDialog';
-import { getUserToken,saveUserToken, clearUserToken } from "./localstorage";
-import Nav from './Nav';
-import { User } from './UserContext';
+import UserCredentialsDialog from '../UserCredentialsDialog/UserCredentialsDialog';
+import { getUserToken,saveUserToken, clearUserToken } from "../localstorage";
+import Nav from '../Nav';
+import { User } from '../UserContext';
 import { DataGrid } from '@mui/x-data-grid';
 import CreateOffer from './CreateOffer';
 
@@ -22,9 +22,17 @@ function MyOffers() {
  const {setUserChatState}=User();
  const {setChatName}=User()
  const {setIsDrawerOpen}=User();
+ const {setCantReachBackend}=User()
  
   const deleteOffer = () => {
+    if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
     setDialogOpen(false);
+    if (userToken)
+    {
     fetch(`${SERVER_URL}/offers/${selectedRow.id}`, {
       method: 'DELETE',
       headers: {
@@ -41,7 +49,7 @@ function MyOffers() {
     })
   
   
-  };
+  }};
 
   
 
@@ -54,6 +62,13 @@ function MyOffers() {
   }
 
   const fetchMyAcceptedOffers = useCallback(() => {
+    if (!navigator.onLine) {
+        
+        setCantReachBackend(true);
+        return;
+      }
+    if (userToken)
+    {
     fetch(`${SERVER_URL}/get_accepted_offers`, {
         method:'GET',
         headers: {
@@ -62,7 +77,7 @@ function MyOffers() {
     })
     .then((response) => response.json())
     .then((myAcceptedOffers) => setMyAcceptedOffers(myAcceptedOffers));
-}, [SERVER_URL, userToken,deleteOffer]);
+}}, [SERVER_URL, userToken,deleteOffer]);
 
 
 
@@ -92,7 +107,7 @@ useEffect(fetchMyAcceptedOffers,[])
         <Nav/>
         
         <Box sx={{paddingTop:'10%', width:'100%',height:'600px',display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'space-around'}}>
-             <Typography variant='h5' sx={{height:'100px'}}>MY OFFERS</Typography> 
+             <Typography className='title' sx={{height:'100px'}}>MY OFFERS</Typography> 
 
         <DataGrid sx={{marginTop:'5%',maxWidth:'100%'}}
               columns={[
