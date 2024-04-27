@@ -83,14 +83,6 @@ def get_statistics():
         print(e)
         return jsonify({"error": "Internal server error."}), 500
 
-from flask import jsonify, request
-from datetime import datetime, timedelta
-from collections import defaultdict
-
-from datetime import timedelta
-
-from datetime import timedelta
-
 @statistics_bp.route("/average_exchange_rate", methods=["GET"])
 def get_average_exchange_rate():
     try:
@@ -112,19 +104,17 @@ def get_average_exchange_rate():
         start_date = datetime.strptime(start_date, "%Y-%m-%d")
         end_date = datetime.strptime(end_date, "%Y-%m-%d")
 
-        # Validate maximum duration based on granularity
         max_duration = None
         if granularity == "daily":
             max_duration = timedelta(days=90)
         elif granularity == "weekly":
             max_duration = timedelta(weeks=52)
         elif granularity == "monthly":
-            max_duration = timedelta(days=36 * 30)  # Assuming 30 days per month for simplicity
+            max_duration = timedelta(days=36 * 30)
 
         if max_duration is not None and (end_date - start_date) > max_duration:
             end_date = start_date + max_duration
 
-        # Validate granularity
         if granularity not in ["daily", "weekly", "monthly", "yearly"]:
             return jsonify({"error": "Invalid granularity. Please choose either 'daily', 'weekly', 'monthly', or 'yearly'."}), 400
 
