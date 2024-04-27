@@ -4,6 +4,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.currencyexchange.chatting.ChatsFragment
+import com.example.currencyexchange.chatting.GroupsFragment
+
 class TabsPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fm, lifecycle) {
     override fun createFragment(position: Int): Fragment {
@@ -14,7 +17,7 @@ class TabsPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
             1 -> {
                 GroupsFragment()
             }
-            else ->ChatsFragment()
+            else -> ChatsFragment()
         }
     }
     override fun getItemCount(): Int {

@@ -1,15 +1,14 @@
-package com.example.currencyexchange
+package com.example.currencyexchange.chatting
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.currencyexchange.R
 import com.example.currencyexchange.api.Authentication
 import com.example.currencyexchange.api.model.GroupMessage
-import com.example.currencyexchange.api.model.Message
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class GroupMessageAdapter(private val groupmessages: List<GroupMessage>) :

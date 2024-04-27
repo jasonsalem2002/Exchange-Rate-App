@@ -1,4 +1,4 @@
-package com.example.currencyexchange
+package com.example.currencyexchange.chatting
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Filter
 import android.widget.Filterable
+import com.example.currencyexchange.R
+import com.example.currencyexchange.data.UserWithLastMessage
 
 class UsersRVAdapter(
     private val usersWithMessages: MutableList<UserWithLastMessage>,

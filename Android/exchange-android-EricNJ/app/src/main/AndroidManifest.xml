@@ -16,19 +16,28 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Prediction"
+            android:exported="false" />
+        <activity
+            android:name=".stats"
+            android:exported="false" />
+        <activity
+            android:name=".trading.ActiveOffers"
+            android:exported="false" />
+        <activity
             android:name=".Calculator"
             android:exported="false" />
         <activity
-            android:name=".Myoffers"
+            android:name=".trading.Myacceptedoffers"
             android:exported="false" />
         <activity
-            android:name=".GroupConvo"
+            android:name=".chatting.GroupConvo"
             android:exported="false" />
         <activity
-            android:name=".Convo"
+            android:name=".chatting.Convo"
             android:exported="false" />
         <activity
-            android:name=".ChatsActivity"
+            android:name=".chatting.ChatsActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

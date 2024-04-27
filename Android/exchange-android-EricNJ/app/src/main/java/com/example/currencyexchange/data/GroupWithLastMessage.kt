@@ -1,4 +1,4 @@
-package com.example.currencyexchange
+package com.example.currencyexchange.data
 
 data class GroupWithLastMessage(
     val groupname: String,

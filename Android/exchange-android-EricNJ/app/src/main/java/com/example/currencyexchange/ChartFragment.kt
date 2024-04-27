@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
@@ -34,9 +36,9 @@ class ChartFragment : Fragment() {
     private lateinit var startDatePicker: EditText
     private lateinit var endDatePicker: EditText
     private lateinit var dayDifference: TextView
-
+    private lateinit var show: Button
     private lateinit var lineChart: LineChart
-
+    private lateinit var spinn:Spinner
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,15 +48,18 @@ class ChartFragment : Fragment() {
         endDatePicker = view.findViewById(R.id.endDate)
         dayDifference = view.findViewById(R.id.dayDifference)
         lineChart = view.findViewById(R.id.chart1)
+        show=view.findViewById(R.id.showGraphButton)
+        spinn=view.findViewById(R.id.granularitySpinner)
         setupDatePickers()
         setupChart()
-
+        initialgraph()
         return view
     }
 
     private fun setupChart() {
         val description = Description().apply {
-            text = "Exchange Rate Trend"
+            text = "Rate"
+            textSize = 18f
             setPosition(150f, 15f)
         }
         lineChart.apply {
@@ -63,36 +68,42 @@ class ChartFragment : Fragment() {
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textSize = 15f
             axisLeft.apply {
-                axisMinimum =0f
-                axisMaximum = 90000f
+                axisMinimum =87000f
+                axisMaximum = 91000f
                 axisLineWidth = 2f
                 textSize = 15f
                 labelCount = 10
             }
             setTouchEnabled(true)
-
-            // Enable scaling and dragging
             isDragEnabled = true
             setScaleEnabled(true)
             setPinchZoom(false)
 
-        // Set the maximum and minimum scaling factors
-        // scaleXMax = 5.0f  // Max zoom limit for X-axis
-        //scaleYMax = 1.0f
-
         }
     }
+    private fun initialgraph() {
 
-    /*private fun fetchDataFromBackend() {
+        Authentication.getToken()?.let { token ->
+            val call = ExchangeService.exchangeApi().getAvgRates("Bearer $token","2024-04-02", "2024-04-20","daily")
+            call.enqueue(object : Callback<Map<String, Map<String, Double>>> {
+                override fun onResponse(call: Call<Map<String, Map<String, Double>>>, response: Response<Map<String, Map<String, Double>>>) {
+                    if (response.isSuccessful) {
+                        val ratesMap = response.body()
+                        displayChartData(ratesMap)
+                    } else {
+                        Toast.makeText(context, "There is no data to be shown at this time.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
+                    Toast.makeText(context, "Failed to show Graph.Make sure you are connected to the internet.", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }}
 
-        val exampleData = listOf(88f, 89f, 90f, 88.6f)
-        val reversedData = exampleData.reversed()
-        displayChartData(reversedData)
-    }*/
-    private fun fetchDataFromBackend() {
+    private fun fetchDataFromBackend(granularity:String) {
         val startDateStr = startDatePicker.text.toString()
         val endDateStr = endDatePicker.text.toString()
-        val granularity = "daily"
+
 
         if (startDateStr.isEmpty() || endDateStr.isEmpty()) {
             Toast.makeText(context, "Please select both start and end dates.", Toast.LENGTH_SHORT).show()
@@ -106,12 +117,11 @@ class ChartFragment : Fragment() {
                     val ratesMap = response.body()
                     displayChartData(ratesMap)
                 } else {
-                    Toast.makeText(context, "Failed to fetch data", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "There is no data to be shown at this time.", Toast.LENGTH_SHORT).show()
                 }
             }
-
             override fun onFailure(call: Call<Map<String, Map<String, Double>>>, t: Throwable) {
-                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Failed to show Graph.Make sure you are connected to the internet.", Toast.LENGTH_SHORT).show()
             }
         })
     }}
@@ -119,40 +129,41 @@ class ChartFragment : Fragment() {
     private fun displayChartData(ratesMap: Map<String, Map<String, Double>>?) {
         ratesMap ?: return
 
-        val entries = mutableListOf<Entry>()
-        var index = 0f
-        ratesMap["lbp_to_usd"]?.forEach { (date, rate) ->
-            entries.add(Entry(index++, rate.toFloat()))
-
+        // Entries for LBP to USD
+        val entriesLBPtoUSD = mutableListOf<Entry>()
+        var indexLBPtoUSD = 0f
+        ratesMap["lbp_to_usd"]?.forEach { (_, rate) ->
+            entriesLBPtoUSD.add(Entry(indexLBPtoUSD++, rate.toFloat()))
         }
 
-        for(dt in entries){
-            Log.e("logpaper",dt.toString())
+        // Entries for USD to LBP
+        val entriesUSDtoLBP = mutableListOf<Entry>()
+        var indexUSDtoLBP = 0f
+        ratesMap["usd_to_lbp"]?.forEach { (_, rate) ->
+            entriesUSDtoLBP.add(Entry(indexUSDtoLBP++, rate.toFloat()))
         }
-        val dataSet = LineDataSet(entries, "LBP to USD Exchange Rate")
-        dataSet.lineWidth = 2f
-        lineChart.data = LineData(dataSet)
-        lineChart.invalidate() // Refreshes the chart
-    }
-
-/*
-    private fun displayChartData(data: List<Float>) {
-        val entries = data.mapIndexed { index, value ->
-            Entry(index.toFloat(), value)
-        }
-
-        val dataSet = LineDataSet(entries, "Exchange Rate").apply {
+            Log.e("hhh",entriesUSDtoLBP.size.toString())
+        // Create dataset for LBP to USD
+        val dataSetLBPtoUSD = LineDataSet(entriesLBPtoUSD, "LBP to USD").apply {
+            color = android.graphics.Color.BLUE
             lineWidth = 2f
         }
 
-        lineChart.data = LineData(dataSet)
+        // Create dataset for USD to LBP
+        val dataSetUSDtoLBP = LineDataSet(entriesUSDtoLBP, "USD to LBP").apply {
+            color = android.graphics.Color.RED
+            lineWidth = 2f
+        }
+
+        // Adding both datasets to the chart
+        val lineData = LineData(dataSetLBPtoUSD, dataSetUSDtoLBP)
+        lineChart.data = lineData
         lineChart.invalidate() // Refreshes the chart
     }
-*/
+
     private fun setupDatePickers() {
         val calendar = Calendar.getInstance()
 
-        // Start Date Picker
         val startDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             val selectedDate = Calendar.getInstance()
             selectedDate.set(year, monthOfYear, dayOfMonth)
@@ -193,7 +204,6 @@ class ChartFragment : Fragment() {
         val startDateStr = startDatePicker.text.toString()
         val endDateStr = endDatePicker.text.toString()
 
-        // Check if either date string is empty
         if (startDateStr.isEmpty() || endDateStr.isEmpty()) {
             dayDifference.text = "Please select both dates."
             return
@@ -209,11 +219,9 @@ class ChartFragment : Fragment() {
                     val days = TimeUnit.MILLISECONDS.toDays(diff)
                     dayDifference.text = "Difference: $days days"
 
-
-                    fetchDataFromBackend()
-
-
-
+                    show.setOnClickListener {
+                        fetchDataFromBackend(spinn.selectedItem.toString())
+                    }
                 } else {
                     startDatePicker.text.clear()
                     endDatePicker.text.clear()

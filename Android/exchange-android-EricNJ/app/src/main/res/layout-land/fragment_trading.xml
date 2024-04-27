@@ -6,17 +6,27 @@
     android:background="@color/Light_Grey"
     tools:context=".trading.TradingFragment">
 
+    <!-- Top Bar Layout Adjustment -->
     <LinearLayout
         android:id="@+id/button_bar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:gravity="center_vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:contentDescription="@string/refresh_offers"
+            android:src="@drawable/ic_refresh"
+            app:fabSize="mini" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -25,26 +35,21 @@
             android:backgroundTint="@color/Vibrant_Blue"
             android:contentDescription="@string/add_offer"
             android:src="@drawable/baseline_add_24"
-            app:fabSize="normal"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="10dp"/>
+            app:fabSize="mini"
+            android:layout_marginEnd="30dp" />
 
         <Button
             android:id="@+id/button_view_my_offers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:text="Accepted" />
-
-
+            android:text="Accepted"
+            android:layout_marginEnd="30dp" />
         <Button
             android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:text="Active"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginEnd="30dp"
+            android:text="Active" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -63,18 +68,21 @@
                 android:id="@+id/toggletext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="Toggle Text"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
 
     </LinearLayout>
 
+    <!-- ListView taking up remaining space -->
     <ListView
         android:id="@+id/listview1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/button_bar"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

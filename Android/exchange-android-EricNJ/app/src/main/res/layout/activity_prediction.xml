@@ -14,44 +14,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Past 30 days vs Predicted 30 days"
+                android:layout_gravity="center"
+                android:textSize="15dp"
+                ></TextView>
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart1"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="600dp"
                 />
-
-
-            <Spinner
-                android:id="@+id/granularitySpinner"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:entries="@array/granularity_options" />
+                android:layout_height="match_parent"
+                android:text="Exchange Rate Prediction"
+                android:textSize="30dp"
+                >
+
+            </TextView>
 
             <EditText
                 android:id="@+id/startDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Start Date"
-                android:focusable="false"/>
+                android:focusable="false"
+                android:hint="Future Date" />
 
-            <EditText
-                android:id="@+id/endDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="End Date"
-                android:focusable="false"/>
-
-            <Button
-                android:id="@+id/showGraphButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Show Graph"/>
 
             <TextView
                 android:id="@+id/dayDifference"
+                android:textSize="25sp"
+                android:layout_gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="33dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

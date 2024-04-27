@@ -1,10 +1,11 @@
-package com.example.currencyexchange
+package com.example.currencyexchange.chatting
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.currencyexchange.R
 import com.example.currencyexchange.api.model.Message
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -15,17 +16,6 @@ class MessageAdapter(private val messages: List<Message>, private val currentUse
     companion object {
         private const val VIEW_TYPE_SENT = 1
         private const val VIEW_TYPE_RECEIVED = 2
-        fun formatCustomDateString(dateString: String): String {
-            val originalFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH)
-            val targetFormat = SimpleDateFormat("MMM dd, HH:mm", Locale.ENGLISH)
-            return try {
-                val date = originalFormat.parse(dateString) ?: return ""
-                targetFormat.format(date)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                ""
-            }
-        }
     }
 
     override fun getItemViewType(position: Int): Int {

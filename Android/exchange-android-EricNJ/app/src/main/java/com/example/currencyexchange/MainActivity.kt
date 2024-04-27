@@ -53,20 +53,7 @@ class MainActivity : AppCompatActivity() {
         tabLayout?.tabMode = TabLayout.MODE_FIXED
         tabLayout?.isInlineLabel = true
         tabsViewPager?.isUserInputEnabled = true
-
-       /* val adapter = TabsPagerAdapter(supportFragmentManager, lifecycle)
-        tabsViewPager?.adapter = adapter
-        TabLayoutMediator(tabLayout!!, tabsViewPager!!) { tab, position ->
-            when (position) {
-                0 -> {
-                    tab.text = "Exchange"
-                }
-                1 -> {
-                    tab.text = "Transactions"
-                }
-            }
-        }.attach()
-    */}
+}
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         this.menu = menu
         setMenu()
@@ -77,10 +64,6 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(if(Authentication.getToken() == null)
             R.menu.menu_logged_out else R.menu.menu_logged_in, menu)
     }
-
-
-
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.login) {
             val intent = Intent(this, LoginActivity::class.java)

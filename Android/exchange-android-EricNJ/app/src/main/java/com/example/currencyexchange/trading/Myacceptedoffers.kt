@@ -1,4 +1,4 @@
-package com.example.currencyexchange
+package com.example.currencyexchange.trading
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import com.example.currencyexchange.R
 import com.example.currencyexchange.api.Authentication
 import com.example.currencyexchange.api.ExchangeService
 import com.example.currencyexchange.api.model.Offer
@@ -17,7 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Myoffers : AppCompatActivity() {
+class Myacceptedoffers : AppCompatActivity() {
     private var listview: ListView? = null
     private var offers: ArrayList<Offer>? = ArrayList()
     private var adapter: TradingAdapter? = null
@@ -43,7 +44,8 @@ class TradingAdapter(
 ) : BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent:
     ViewGroup?): View {
-        val view: View =inflater.inflate(R.layout.item_trading,
+        val view: View =inflater.inflate(
+            R.layout.item_trading,
             parent, false)
         view.findViewById<TextView>(R.id.txtView1).text = dataSource[position].user.toString()
         view.findViewById<TextView>(R.id.tvTransactionDate).text =  dataSource[position].addedDate
@@ -69,14 +71,14 @@ class TradingAdapter(
             .getacceptedoffers("Bearer ${Authentication.getToken()}")
             .enqueue(object : Callback<List<Offer>> {
                 override fun onFailure(call: Call<List<Offer>>, t: Throwable) {
-                    Toast.makeText(this@Myoffers,"Failed to fetch offers.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@Myacceptedoffers,"Failed to fetch accepted offers.Make sure you are connected to teh internet.", Toast.LENGTH_LONG).show()
                 }
                 override fun onResponse(
                     call: Call<List<Offer>>,
                     response: Response<List<Offer>>
                 ) {
                     if(response.body()==null){
-                        Toast.makeText(this@Myoffers, "No offers found.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@Myacceptedoffers, "No offers found.", Toast.LENGTH_LONG).show()
                     }
                     else{
                         offers?.addAll(response.body()!!)

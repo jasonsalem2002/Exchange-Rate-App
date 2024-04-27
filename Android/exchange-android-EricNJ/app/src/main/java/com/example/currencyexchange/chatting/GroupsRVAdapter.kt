@@ -1,4 +1,4 @@
-package com.example.currencyexchange
+package com.example.currencyexchange.chatting
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.currencyexchange.R
+import com.example.currencyexchange.data.GroupWithLastMessage
 
 class GroupsRVAdapter(
     private val context: Context,

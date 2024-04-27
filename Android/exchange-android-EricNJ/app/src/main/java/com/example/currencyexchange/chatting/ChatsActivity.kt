@@ -1,16 +1,16 @@
-package com.example.currencyexchange
+package com.example.currencyexchange.chatting
 
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.currencyexchange.R
+import com.example.currencyexchange.TabsPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 
 class ChatsActivity : AppCompatActivity(){
-
-
     private var tabLayout: TabLayout? = null
     private var tabsViewPager: ViewPager2? = null
     override fun onCreate(savedInstanceState: Bundle?) {

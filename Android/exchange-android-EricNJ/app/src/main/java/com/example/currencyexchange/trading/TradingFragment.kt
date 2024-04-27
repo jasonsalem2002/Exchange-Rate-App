@@ -1,11 +1,10 @@
-package com.example.currencyexchange
+package com.example.currencyexchange.trading
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -17,12 +16,15 @@ import android.widget.RadioGroup
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import com.example.currencyexchange.chatting.Convo
+import com.example.currencyexchange.R
 import com.example.currencyexchange.api.Authentication
 import com.example.currencyexchange.api.ExchangeService
 import com.example.currencyexchange.api.model.Offer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback
@@ -64,8 +66,13 @@ class TradingFragment : Fragment() {
 
         var viewmyoffersbutton: Button =view.findViewById(R.id.button_view_my_offers)
         viewmyoffersbutton.setOnClickListener {
-            var intent90=Intent(requireContext(),Myoffers::class.java)
+            var intent90=Intent(requireContext(), Myacceptedoffers::class.java)
             startActivity(intent90)
+        }
+        var viewActiveoffersbutton: Button =view.findViewById(R.id.button4)
+        viewActiveoffersbutton.setOnClickListener {
+            var intent900 = Intent(requireContext(), ActiveOffers::class.java)
+            startActivity(intent900)
         }
 
         switchTradeDirection = view.findViewById(R.id.switch_trade_direction)
@@ -107,7 +114,8 @@ class TradingFragment : Fragment() {
     ) : BaseAdapter() {
         override fun getView(position: Int, convertView: View?, parent:
         ViewGroup?): View {
-            val view:View=inflater.inflate(R.layout.item_trading,
+            val view:View=inflater.inflate(
+                R.layout.item_trading,
                 parent, false)
             view.findViewById<TextView>(R.id.txtView1).text = dataSource[position].user.toString()
             view.findViewById<TextView>(R.id.tvTransactionDate).text =  dataSource[position].addedDate
@@ -147,7 +155,7 @@ class TradingFragment : Fragment() {
                 .getOffers("Bearer ${Authentication.getToken()}")
                 .enqueue(object : Callback<List<Offer>> {
                     override fun onFailure(call: Call<List<Offer>>, t: Throwable) {
-                        Toast.makeText(requireContext(),"Failed to fetch offers.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(),"Failed to fetch offers.Make sure you are connected to the internet.", Toast.LENGTH_LONG).show()
                     }
                     override fun onResponse(
                         call: Call<List<Offer>>,
@@ -167,6 +175,7 @@ class TradingFragment : Fragment() {
                 })
         }
     }
+
     private fun showDialog() {
         tradingDialog= LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_trading, null, false)
@@ -178,12 +187,15 @@ class TradingFragment : Fragment() {
                 try {
                     val amounttotrade = tradingDialog?.findViewById<TextInputLayout>(R.id.AmountToTrade)?.editText?.text.toString()
                     val amountrequested = tradingDialog?.findViewById<TextInputLayout>(R.id.AmountRequested)?.editText?.text.toString()
-                    val exchangerate = tradingDialog?.findViewById<TextInputLayout>(R.id.ExchangeRate)?.editText?.text.toString()
+            //        val exchangerate = tradingDialog?.findViewById<TextInputEditText>(R.id.ExchangeRate)
                     val ttrade= amounttotrade.toFloatOrNull() ?: throw IllegalArgumentException("Amount To Trade is not valid")
                     val trequest = amountrequested.toFloatOrNull() ?: throw IllegalArgumentException("Amount Requested is not valid")
-                    val trate = exchangerate.toFloatOrNull() ?: throw IllegalArgumentException("Exchnage Rate is not valid")
-
-                    if (ttrade <= 0 || trequest <=0 || trate<=0) {
+                    val radioGroup = tradingDialog?.findViewById<RadioGroup>(R.id.rdGrpTransactionType)
+            /*        radioGroup?.setOnCheckedChangeListener { group, checkedId ->
+                        val isUsdToLbp = checkedId == R.id.rdGrpTransactionType
+                        updateExchangeRate(amounttotrade, amountrequested,exchangerate, isUsdToLbp)
+                    }*/
+                    if (ttrade <= 0 || trequest <=0) {
                         throw IllegalArgumentException("Inputs must not be negative")
                     }
 
@@ -224,13 +236,22 @@ class TradingFragment : Fragment() {
             }
             .show()
     }
+    private fun updateExchangeRate(amountToTradeInput:String?, amountRequestedInput: String?, exchangeRateInput: TextInputEditText?, usdToLbp: Boolean) {
+        val amountToTrade = amountToTradeInput?.toFloatOrNull()
+        val amountRequested = amountRequestedInput?.toFloatOrNull()
+
+        if (amountToTrade != null && amountRequested != null && amountToTrade > 0 && amountRequested > 0) {
+            val exchangeRate = if (usdToLbp) amountToTrade / amountRequested else amountRequested / amountToTrade
+            exchangeRateInput?.setText(exchangeRate.toString())
+        }
+    }
     private fun acceptOffer(offerid: Int) {
-        Log.e("IDDDDDDDDDDDDDDDDDDDDDD",offerid.toString())
         ExchangeService.exchangeApi().acceptOffer(offerid, if (Authentication.getToken() != null) "Bearer ${Authentication.getToken()}" else null).enqueue(object :
             Callback<Any> {
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
                 if (response.isSuccessful) {
                     Snackbar.make(fab as View, "Trade Accepted!", Snackbar.LENGTH_LONG).show()
+                    fetchoffers()
                 } else {
                     Log.e("API Error", "Error Code: ${response.code()} - Message: ${response.message()}")
                     Snackbar.make(fab as View, "Failed to accept trade.", Snackbar.LENGTH_LONG).show()

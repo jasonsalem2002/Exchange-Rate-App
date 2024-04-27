@@ -37,6 +37,10 @@ class TransactionsFragment : Fragment() {
         listview?.adapter = adapter
         return view
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+       // outState.putParcelableArrayList("trans",transactions)
+    }
     class TransactionAdapter(
         private val inflater: LayoutInflater,
         private val dataSource: List<Transaction>
@@ -71,7 +75,7 @@ class TransactionsFragment : Fragment() {
                 .getTransactions("Bearer ${Authentication.getToken()}")
                 .enqueue(object : Callback<List<Transaction>> {
                     override fun onFailure(call: Call<List<Transaction>>, t: Throwable) {
-                        Toast.makeText(requireContext(),"Failed to fetch transactions.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(),"Failed to fetch transactions.Make sure you are connected to the internet.", Toast.LENGTH_LONG).show()
                     }
                     override fun onResponse(
                         call: Call<List<Transaction>>,

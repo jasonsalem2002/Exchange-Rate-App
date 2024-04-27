@@ -1,4 +1,4 @@
-package com.example.currencyexchange
+package com.example.currencyexchange.chatting
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,9 +16,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.currencyexchange.R
 import com.example.currencyexchange.api.Authentication
 import com.example.currencyexchange.api.ExchangeService
 import com.example.currencyexchange.api.model.Message
+import com.example.currencyexchange.data.UserWithLastMessage
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,24 +30,20 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
     private lateinit var usersAdapter: UsersRVAdapter
     private var usersWithLastMessage: MutableList<UserWithLastMessage> = mutableListOf()
     private var myusers:MutableList<String> = mutableListOf()
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_chats, container, false)
-
         val backButton: ImageView = view.findViewById(R.id.backButton)
         backButton.setOnClickListener {
             requireActivity().finish()
         }
-
         val addButton: ImageView = view.findViewById(R.id.addButton)
         addButton.setOnClickListener {
             fetchUsernamesAndShowDropdown()
         }
-        val editText: EditText = view.findViewById(R.id.idEdtCurrency)
+        val editText: EditText = view.findViewById(R.id.searchperson)
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -60,39 +58,32 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
 
         usersRecyclerView = view.findViewById(R.id.idRVcurrency)
         usersRecyclerView.layoutManager = LinearLayoutManager(context)
-
         usersAdapter = UsersRVAdapter(usersWithLastMessage, this)
         usersRecyclerView.adapter = usersAdapter
-
         fetchchat()
         return view
     }
-
     override fun onResume() {
         super.onResume()
         fetchchat()
     }
-
     override fun onUserClicked(user: UserWithLastMessage) {
-        Toast.makeText(context, "Clicked on user: ${user.username}", Toast.LENGTH_SHORT).show()
-        val intent = Intent(activity, Convo::class.java)
+        val intent = Intent(activity, Convo::class.java) //Goes to the chat with this user
         intent.putExtra("username", user.username)
         startActivity(intent)
     }
-
     private fun fetchchat() {
         myusers.clear()
         Authentication.getToken()?.let { token ->
-            val senderUsername = Authentication.getUsername()
-            ExchangeService.exchangeApi().getmessages("Bearer $token", senderUsername)
+            ExchangeService.exchangeApi().getmessages("Bearer $token", Authentication.getUsername())
                 .enqueue(object : Callback<List<Message>> {
                     override fun onResponse(call: Call<List<Message>>, response: Response<List<Message>>) {
                         val messageList = response.body()
+                        //Got all Messages available in database related to my username
                         messageList?.let { fetchUsersAndLastMessages(it) }
                     }
-
                     override fun onFailure(call: Call<List<Message>>, t: Throwable) {
-                        Toast.makeText(context, "Failed to fetch chat: ${t.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Failed to fetch chats.Make sure you are connected to the internet", Toast.LENGTH_LONG).show()
                     }
                 })
         }
@@ -101,7 +92,7 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
     private fun fetchUsersAndLastMessages(messages: List<Message>) {
         activity?.runOnUiThread {
             val seenUsers = LinkedHashMap<String, UserWithLastMessage>()
-
+            //for loop in reversed as messages go from oldest to newest so by reversing it we update hashmap with neswest messages whenever we see a recepient/sender other than mine that isnt in hashmap yet
             for (message in messages.reversed()) {
                 val recipient = message.recepient_Username
                 val sender = message.senderUsername
@@ -117,17 +108,13 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
                 )
                 if( seenUsers[username ?: "Unknown"]==null){
                     seenUsers[username ?: "Unknown"] = newMessage
-                    Log.e("forrrrrrr",username.toString())
                 }
 
                 }
             usersWithLastMessage.clear()
             for (lstmsg in seenUsers.values) {
                 usersWithLastMessage.add(lstmsg)
-                Log.e("finally",lstmsg.username)
             }
-
-
             myusers.addAll(seenUsers.keys)
             Authentication.getUsername()?.let { myusers.add(it) }
             usersRecyclerView.adapter?.notifyDataSetChanged()
@@ -148,9 +135,8 @@ class ChatsFragment : Fragment(), UsersRVAdapter.OnUserClickListener {
                             Toast.makeText(context, "Failed to fetch usernames.", Toast.LENGTH_LONG).show()
                         }
                     }
-
                     override fun onFailure(call: Call<List<String>>, t: Throwable) {
-                        Toast.makeText(context, "Error fetching usernames: ${t.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Make sure you are connected to the internet.", Toast.LENGTH_LONG).show()
                     }
                 })
         }

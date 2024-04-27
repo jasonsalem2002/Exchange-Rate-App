@@ -1,9 +1,8 @@
-package com.example.currencyexchange
+package com.example.currencyexchange.chatting
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +15,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.currencyexchange.R
 import com.example.currencyexchange.api.Authentication
 import com.example.currencyexchange.api.ExchangeService
 import com.example.currencyexchange.api.model.Group
 import com.example.currencyexchange.api.model.GroupMessage
+import com.example.currencyexchange.data.GroupWithLastMessage
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -102,7 +103,7 @@ class GroupsFragment : Fragment() {
                     context?.let {
                         AlertDialog.Builder(it)
                             .setTitle("Groups Failed")
-                            .setMessage("Failed to fetch groups.")
+                            .setMessage("Failed to fetch groups.Check Your internet connection.")
                             .setPositiveButton("OK", null)
                             .show()
                     }
@@ -230,14 +231,14 @@ class GroupsFragment : Fragment() {
         fun parseDate(dateString: String): Date {
             val dateFormatter = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
             return try {
-                dateFormatter.parse(dateString) ?: Date(0)  // Return an early default date if parsing fails
+                dateFormatter.parse(dateString) ?: Date(0)
             } catch (e: ParseException) {
-                Date(0)  // Return an early default date if any exception occurs
+                Date(0)
             }
         }
     fun showGroupNameDialog() {
         // Inflate the custom layout
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_creategroup ,null)
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_creategroup,null)
         val editText = dialogView.findViewById<EditText>(R.id.editGroupName)
 
         // Build the dialog
@@ -250,7 +251,7 @@ class GroupsFragment : Fragment() {
                 if (groupName.isNotEmpty()) {
                     createGroupName(groupName)
                     fetchGroups()
-                    Toast.makeText(requireContext(), "Group name set", Toast.LENGTH_SHORT).show()
+
                 } else {
                     Toast.makeText(requireContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show()
                 }
@@ -273,11 +274,11 @@ class GroupsFragment : Fragment() {
                 if (response.isSuccessful) {
                     Toast.makeText(requireContext(), "Created Group", Toast.LENGTH_LONG).show()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to Create Group", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Failed to Create Group.Check your Internet Connection", Toast.LENGTH_LONG).show()
                 }
             }
             override fun onFailure(call: Call<Any>, t: Throwable) {
-                Toast.makeText(requireContext(), "Could not creaet group", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Could not create group", Toast.LENGTH_LONG).show()
             }
         })
     }

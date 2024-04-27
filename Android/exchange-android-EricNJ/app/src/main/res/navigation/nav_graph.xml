@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_exchange" />
     <fragment
         android:id="@+id/navigation_trading"
-        android:name="com.example.currencyexchange.TradingFragment"
+        android:name="com.example.currencyexchange.trading.TradingFragment"
         android:label="fragment_trading"
         tools:layout="@layout/fragment_trading" />
     <fragment

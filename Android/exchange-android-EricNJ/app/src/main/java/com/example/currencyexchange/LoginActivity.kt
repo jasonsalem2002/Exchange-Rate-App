@@ -34,10 +34,9 @@ class LoginActivity : AppCompatActivity() {
             username = usernameEditText?.text.toString()
             password = passwordEditText?.text.toString()
         }
-
         ExchangeService.exchangeApi().authenticate(user).enqueue(object : Callback<Token> {
             override fun onFailure(call: Call<Token>, t: Throwable) {
-                Snackbar.make(loginButton as View, "Login failed.", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(loginButton as View, "Network error: ${t.localizedMessage}", Snackbar.LENGTH_LONG).show()
             }
 
             override fun onResponse(call: Call<Token>, response: Response<Token>) {
@@ -46,9 +45,11 @@ class LoginActivity : AppCompatActivity() {
                         Authentication.saveToken(token)
                         Authentication.saveUsername(usernameEditText?.text.toString())
                         onLoginCompleted()
-                    } ?: Snackbar.make(loginButton as View, "Login failed. Please try again.", Snackbar.LENGTH_LONG).show()
+                    } ?: Snackbar.make(loginButton as View, "Failed to login, no token received.", Snackbar.LENGTH_LONG).show()
                 } else {
-                    Snackbar.make(loginButton as View, "Invalid credentials.", Snackbar.LENGTH_LONG).show()
+                    // Get error message from response body if possible
+                    val errorMessage = response.errorBody()?.string() ?: "Invalid credentials"
+                    Snackbar.make(loginButton as View, errorMessage, Snackbar.LENGTH_LONG).show()
                 }
             }
         })

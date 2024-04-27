@@ -3,16 +3,16 @@ package com.example.currencyexchange
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.Toast
+import com.example.currencyexchange.chatting.ChatsActivity
 import com.example.currencyexchange.api.Authentication
 import com.example.currencyexchange.api.ExchangeService
 import com.example.currencyexchange.api.model.ExchangeRates
@@ -31,6 +31,10 @@ class ExchangeFragment : Fragment() {
     private var fab: FloatingActionButton? = null
     private var sellUsdTextView: TextView? = null
     private var transactionDialog: View? = null
+    private lateinit var data:String
+    private lateinit var data2:String
+    private var buttonstats :Button?=null
+    private var buttonprediction :Button?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fetchrates()
@@ -41,13 +45,35 @@ class ExchangeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         var view: View = inflater.inflate(R.layout.fragment_exchange, container, false)
-        fetchrates()
+
         buyUsdTextView = view.findViewById(R.id.txtBuyUsdRate)
         sellUsdTextView = view.findViewById(R.id.txtSellUsdRate)
+
+        buttonstats=view.findViewById<Button?>(R.id.buttonstats)
+        buttonstats?.setOnClickListener {
+            var intentstat=Intent(requireContext(),stats::class.java)
+            startActivity(intentstat)
+        }
+        buttonprediction=view.findViewById<Button?>(R.id.buttonprediction)
+        buttonprediction?.setOnClickListener {
+            var intentpred=Intent(requireContext(),Prediction::class.java)
+            startActivity(intentpred)
+        }
+        if (savedInstanceState != null) {
+            data = savedInstanceState.getString("usd-lbp", "")
+            data2 = savedInstanceState.getString("lbp-usd", "")
+            buyUsdTextView?.text = data2
+            sellUsdTextView?.text=data
+        }
+        else{
+            fetchrates()
+        }
+
+
         var buttchat:Button
         buttchat=view.findViewById(R.id.Chatbutton)
         buttchat.setOnClickListener {
-            val intent=Intent(activity,ChatsActivity::class.java)
+            val intent=Intent(activity, ChatsActivity::class.java)
             startActivity(intent)
         }
         fab = view.findViewById(R.id.fab)
@@ -56,8 +82,6 @@ class ExchangeFragment : Fragment() {
         }
         var calcbutton:Button=view.findViewById(R.id.buttonforcalculator)
         calcbutton.setOnClickListener {
-            Log.e("sellll",sellUsdTextView.toString())
-            Log.e("buyyy",buyUsdTextView.toString())
             var intentcalc=Intent(requireContext(),Calculator::class.java)
             intentcalc.putExtra("sell", sellUsdTextView?.text.toString())
             intentcalc.putExtra("buy",buyUsdTextView?.text.toString())
@@ -65,6 +89,12 @@ class ExchangeFragment : Fragment() {
             startActivity(intentcalc)
         }
         return view
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Save data to the bundle
+        outState.putString("usd-lbp", sellUsdTextView?.text.toString())
+        outState.putString("lbp-usd", buyUsdTextView?.text.toString())
     }
     fun fetchrates(){
         ExchangeService.exchangeApi().getExchangeRates().enqueue(object :
@@ -82,7 +112,7 @@ class ExchangeFragment : Fragment() {
                 }
             }
             override fun onFailure(call: Call<ExchangeRates>, t: Throwable) {
-                Log.e("Error","Failed")
+                Toast.makeText(requireContext(),"Could not fetch rates, Check your internet connection.",Toast.LENGTH_LONG)
             }
         })
     }

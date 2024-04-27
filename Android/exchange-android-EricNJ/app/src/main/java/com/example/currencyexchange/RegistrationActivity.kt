@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.content.Intent
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import com.example.currencyexchange.api.Authentication
 import com.example.currencyexchange.api.ExchangeService
 import com.example.currencyexchange.api.model.Token
 import com.example.currencyexchange.api.model.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,27 +46,55 @@ class RegistrationActivity : AppCompatActivity() {
             }
             override fun onResponse(call: Call<User>, response:
             Response<User>) {
+                if (response.isSuccessful) {
+                    ExchangeService.exchangeApi().authenticate(user).enqueue(object :
+                        Callback<Token> {
+                        override fun onFailure(
+                            call: Call<Token>, t:
+                            Throwable
+                        ) {
+                            Toast.makeText(
+                                this@RegistrationActivity,
+                                "Network Error Chck Internet Connection.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
-                ExchangeService.exchangeApi().authenticate(user).enqueue(object :
-                    Callback<Token> {
-                    override fun onFailure(call: Call<Token>, t:
-                    Throwable) {
-                        return
-                    }
-                    override fun onResponse(call: Call<Token>, response:
-                    Response<Token>) {
-                        Snackbar.make(
-                            submitButton as View,
-                            "Account Created.",
-                            Snackbar.LENGTH_LONG
-                        )
-                            .show()
-                        Authentication.saveUsername(user.username!!)
-                        response.body()?.token?.let {
-                            Authentication.saveToken(it) }
-                        onCompleted()
-                    }
-                })
+                        override fun onResponse(
+                            call: Call<Token>, response:
+                            Response<Token>
+                        ) {
+
+                            Snackbar.make(
+                                submitButton as View,
+                                "Account Created.",
+                                Snackbar.LENGTH_LONG
+                            )
+                                .show()
+
+                            Authentication.saveUsername(user.username!!)
+                            response.body()?.token?.let {
+                                Authentication.saveToken(it)
+                            }
+                            onCompleted()
+
+
+                        }
+                    })
+
+
+                }
+
+                else{
+                    val errorJsonStr = response.errorBody()?.string()
+                    val errorMessage = JSONObject(errorJsonStr).getString("error")
+                    Toast.makeText(
+                        this@RegistrationActivity,
+                        errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
             }
         })
     }

@@ -1,6 +1,7 @@
 package com.example.currencyexchange.api.model
 
 import com.google.gson.annotations.SerializedName
+
 class Transaction() {
     @SerializedName("usd_amount")
     var usdAmount: Float? = null

@@ -8,10 +8,12 @@ import com.example.currencyexchange.api.model.Offer
 import com.example.currencyexchange.api.model.Token
 import com.example.currencyexchange.api.model.Transaction
 import com.example.currencyexchange.api.model.User
+import com.example.currencyexchange.data.FutureRate
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -21,7 +23,7 @@ import retrofit2.http.Query
 
 
 object ExchangeService {
-    private const val API_URL: String = "https://jason.hydra-polaris.ts.net/"
+    private const val API_URL: String = "https://salex.hydra-polaris.ts.net/"
     fun exchangeApi(): Exchange {
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl(API_URL)
@@ -62,6 +64,11 @@ object ExchangeService {
 
         @PUT("accept_offer/{offer_id}")
         fun acceptOffer(
+            @Path("offer_id") offerId: Int,
+            @Header("Authorization") authorization: String?
+        ): Call<Any>
+        @DELETE("offers/{offer_id}")
+        fun deleteOffer(
             @Path("offer_id") offerId: Int,
             @Header("Authorization") authorization: String?
         ): Call<Any>
@@ -125,6 +132,16 @@ object ExchangeService {
             @Query("end_date") endDate: String?,
             @Query("granularity") granularity: String?
         ): Call<Map<String, Map<String, Double>>>
+
+        @GET("/predictRate")
+        fun getPredRate(
+            @Header("Authorization") authorization: String?,
+            @Query("date") date: String?
+        ): Call<FutureRate>
+
+        @GET("/next30DaysRates")
+        fun getNext30DaysRates(@Header("Authorization") authorization: String?): Call<List<FutureRate>>
+
     }
 
 
