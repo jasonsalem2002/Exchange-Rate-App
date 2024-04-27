@@ -111,9 +111,9 @@ const ChatDrawer = () => {
           size="large"
           variant="contained"
           onClick={handleClick}
-          sx={{ height: '30%', width: '15%', '&:hover': { opacity: 0.6, transition: 'opacity .25s ease-in-out' } }}
+          sx={{backgroundColor:'#0093d5' ,height: '30%', width: '30%', '&:hover': { opacity: 0.6, transition: 'opacity .25s ease-in-out' } }}
         >
-          <ChatIcon sx={{ color: 'white' }} />
+          <ChatIcon sx={{backgroundColor:'#0093d5' ,color: 'white' }} />
         </IconButton>
       )}
 

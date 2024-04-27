@@ -115,9 +115,12 @@ const handleClose = () => {
     <Snackbar elevation={6}variant="filled" open={cantReachBackend} autoHideDuration={2000} onClose={() => setCantReachBackend(false)}>
         <Alert severity="error">Please Turn Wifi On</Alert>
     </Snackbar>
-      
+      <Box sx={{display:'flex',flexDirection:'column',marginTop:'4%',marginRight:'0'}}>
     <ChatDrawer/>
+
+   
     <RatesSideBar/>
+    </Box>
     
     </div>
   );

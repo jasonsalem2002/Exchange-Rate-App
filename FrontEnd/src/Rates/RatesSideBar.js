@@ -10,6 +10,7 @@ import { Box, Button, MenuItem, Select, Stack, TextField, Typography } from '@mu
 import './RatesSideBar.css'
 import '../App.css'
 import { User } from '../UserContext';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 
 function RatesSideBar() {
@@ -25,6 +26,7 @@ function RatesSideBar() {
   const {buyUsdRate}=User()
   const {sellUsdRate}=User()
   const {fetchRates}=User()
+  const {userToken}=User()
 
   useEffect(fetchRates,[])
   const handleCalculate = (e) => {
@@ -34,8 +36,31 @@ function RatesSideBar() {
     setrateResult(Math.round(100 * result) / 100);
   };
 
+
+  const handleClick = () => {
+    setIsOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setIsOpen(false);
+  };
+
   return (
     <div>
+<Box sx={{ display: 'flex', height: '100%', width: '20%', justifyContent: 'center', alignItems: 'center' }}>
+{userToken && (
+        <IconButton
+          size="large"
+          variant="contained"
+          onClick={handleClick}
+          sx={{backgroundColor:'#0093d5' ,height: '40px', width: '30%', '&:hover': { opacity: 0.6, transition: 'opacity .25s ease-in-out' } }}
+        >
+          <AttachMoneyIcon sx={{backgroundColor:'#0093d5' ,color: 'white' }} />
+        </IconButton>
+      )}
+
+
+      </Box>
            
 <Drawer sx={{color:'white', height:'700px'}}  anchor="right" open={isOpen} onClose= {() => setIsOpen(false)}>
 
