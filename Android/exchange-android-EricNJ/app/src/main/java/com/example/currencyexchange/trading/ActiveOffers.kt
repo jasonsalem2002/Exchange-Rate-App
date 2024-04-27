@@ -126,7 +126,8 @@ class ActiveOffers : AppCompatActivity() {
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
                 if (response.isSuccessful) {
                     Snackbar.make(fab as View, "Trade Deleted!", Snackbar.LENGTH_LONG).show()
-                    fetchoffers()
+                    finish()
+
                 } else {
                     Log.e("API Error", "Error Code: ${response.code()} - Message: ${response.message()}")
                     Snackbar.make(fab as View, "Failed to accept trade.", Snackbar.LENGTH_LONG).show()

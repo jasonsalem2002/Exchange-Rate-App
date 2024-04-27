@@ -45,6 +45,11 @@ class TradingFragment : Fragment() {
         super.onCreate(savedInstanceState)
         fetchoffers()
     }
+
+    override fun onResume() {
+        super.onResume()
+        fetchoffers()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
