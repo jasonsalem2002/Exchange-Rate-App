@@ -14,7 +14,6 @@ import javafx.scene.control.Label;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -113,7 +112,6 @@ public class Predictor {
                                         predSeries.getData().add(new XYChart.Data<>(x.getDate(), Math.round(x.getAverageExchangeRate() * 100) / 100.0f));
                                     }
                                     lineChart.getData().add(predSeries);
-//                                yAxis.setLowerBound(data.stream().max());
                                 }
                             });
                         }

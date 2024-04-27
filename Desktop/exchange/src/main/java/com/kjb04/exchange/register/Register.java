@@ -36,6 +36,15 @@ public class Register implements PageCompleter {
             });
             return;
         }
+        if (!isValidPassword(passwordField.getText())) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid password");
+                alert.setContentText("Password must be between 8 and 64 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+                alert.showAndWait();
+            });
+            return;
+        }
         User user = new User(usernameTextField.getText(),
                 passwordField.getText());
         ExchangeService.exchangeApi().addUser(user).enqueue(new
@@ -83,4 +92,24 @@ public class Register implements PageCompleter {
             }
         });
     }
+
+    public static boolean isValidPassword(String password) {
+        if (password.length() < 8 || password.length() > 64) {
+            return false;
+        }
+        if (!password.matches(".*[A-Z].*")) {
+            return false;
+        }
+        if (!password.matches(".*[a-z].*")) {
+            return false;
+        }
+        if (!password.matches(".*\\d.*")) {
+            return false;
+        }
+        if (!password.matches(".*[^a-zA-Z0-9].*")) {
+            return false;
+        }
+        return true;
+    }
+
 }

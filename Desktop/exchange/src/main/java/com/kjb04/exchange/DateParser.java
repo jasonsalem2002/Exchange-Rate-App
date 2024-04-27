@@ -36,29 +36,4 @@ public class DateParser {
         }
     }
 
-    public static void main(String[] args) {
-//        String dateString = "Thu, 11 Apr 2024 19:18:40 GMT";
-//        Date date = convertStringToDate(dateString);
-//        System.out.println("Parsed Da1te: " + date);
-
-
-
-//        String dateStr = "1/1/2024"; // Example date
-//        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-//        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//
-//        // Parsing the date
-//        LocalDate date = LocalDate.parse(dateStr, inputFormatter);
-//
-//        // Formatting the date
-//        String formattedDate = date.format(outputFormatter);
-//
-//        // Output the result
-
-//        System.out.println(formattedDate); // Should output 01-01-2024
-
-
-        System.out.println(java.time.LocalDate.now().toString());
-    }
-
 }

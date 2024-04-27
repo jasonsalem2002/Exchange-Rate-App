@@ -34,7 +34,7 @@
                 <Label text="End Date" />
                 <DatePicker fx:id="endDatePicker" prefHeight="30.0" prefWidth="120.0"/>
             </VBox>
-            <Button fx:id="graphButton" text="Generate" onAction="#graph" prefHeight="30.0" prefWidth="80.0"/>
+            <Button fx:id="graphButton" styleClass="btn" text="Generate" onAction="#graph" prefHeight="30.0" prefWidth="80.0"/>
         </HBox>
         <Label fx:id="granNoteLabel" style="-fx-padding:3 0 0 25"/>
     </VBox>

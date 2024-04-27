@@ -5,23 +5,16 @@ import com.kjb04.exchange.Authentication;
 import com.kjb04.exchange.api.ExchangeService;
 import com.kjb04.exchange.api.model.GroupMessage;
 import com.kjb04.exchange.api.model.Message;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,9 +49,6 @@ public class Chat implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        chatPane.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
-            scrollPane.setVvalue(1.0);  // TODO - Fix
-        });
         messageBox.setOnAction(event -> {
             sendMessage();
         });
@@ -253,7 +243,6 @@ public class Chat implements Initializable {
                 VBox vbox = userBoxes.get(username);
                 if (vbox == null) {
                     vbox = new VBox();
-                    //vbox.setPrefHeight(50);
                     vbox.getChildren().add(new Label(username));
                     String content = msg.getContent().length()>20 ? msg.getContent().substring(0,17)+"..." : msg.getContent();  // Do not display full string if length>20
                     if (content.indexOf('\n')!=-1) { content = content.substring(0,content.indexOf('\n')); }    // Do not display anything after a line break
@@ -280,11 +269,9 @@ public class Chat implements Initializable {
                 vbox.setMaxWidth(chatPane.getWidth() - 20);
                 if (msg.getRecipientUsername().equals(Authentication.getInstance().getUsername())) {
                     vbox.setAlignment(Pos.TOP_LEFT);
-//                    contentLabel.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
                 }
                 else {
                     vbox.setAlignment(Pos.TOP_RIGHT);
-//                    contentLabel.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
                 }
                 timeLabel.setFont(new Font(8));
                 vbox.getChildren().add(contentLabel);
@@ -328,12 +315,6 @@ public class Chat implements Initializable {
         GroupMessage message = new GroupMessage(
                 messageBox.getText()
         );
-
-//        Alert alert1 = new Alert(Alert.AlertType.ERROR);
-//        alert1.setTitle("TEST ALERT");
-//        alert1.setContentText("Sending to Group: "+selectedGroup);
-//        alert1.showAndWait();
-
         String userToken = Authentication.getInstance().getToken();
         String authHeader = userToken != null ? "Bearer " + userToken : null;
         if (!messageBox.getText().isEmpty()) {
@@ -460,7 +441,6 @@ public class Chat implements Initializable {
                         Alerts.connectionFailure();
                     }
                 });
-        //return groupMessageMap.get(groupName);
     }
 
     private void displayGroupsPreview() {
@@ -612,7 +592,6 @@ public class Chat implements Initializable {
 
     public void createGroup() {
         String groupName = createGroupTextField.getText();
-//        String groupObj = "{\"name\": \"" + groupName + "\"}";
         JsonObject groupObj = new JsonObject();
         groupObj.addProperty("name", groupName);
         String userToken = Authentication.getInstance().getToken();

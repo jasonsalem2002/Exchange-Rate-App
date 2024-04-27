@@ -44,12 +44,12 @@
 
         </GridPane>
 
-        <LineChart fx:id="lineChart" >
+        <LineChart fx:id="lineChart" prefHeight="160.0">
             <xAxis>
-                <CategoryAxis fx:id="xAxis" label="X Axis"/>
+                <CategoryAxis fx:id="xAxis" label="Day"/>
             </xAxis>
             <yAxis>
-                <NumberAxis fx:id="yAxis" label="Y Axis" autoRanging="false"/>
+                <NumberAxis fx:id="yAxis" label="Exchange Rate (LBP/USD)" autoRanging="false"/>
             </yAxis>
         </LineChart>
         <HBox style="-fx-padding:0 0 0 25" spacing="5" alignment="BOTTOM_CENTER">
@@ -63,7 +63,7 @@
                 <Label text="End Date" />
                 <DatePicker fx:id="endDatePicker" prefHeight="30.0" prefWidth="120.0"/>
             </VBox>
-            <Button fx:id="graphButton" text="Generate" onAction="#graph" prefHeight="30.0" prefWidth="80.0"/>
+            <Button fx:id="graphButton" styleClass="btn" text="Generate" onAction="#graph" prefHeight="30.0" prefWidth="80.0"/>
         </HBox>
         <Label fx:id="granNoteLabel" style="-fx-padding:3 0 0 25"/>
     </VBox>

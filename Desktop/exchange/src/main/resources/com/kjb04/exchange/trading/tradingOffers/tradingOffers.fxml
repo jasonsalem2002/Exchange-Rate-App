@@ -12,14 +12,9 @@
             fx:controller="com.kjb04.exchange.trading.tradingOffers.TradingOffers"
             prefHeight="200.0" prefWidth="600.0">
     <VBox alignment="CENTER" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-        <Button fx:id="tradingRefreshButton" styleClass="btn"
-                text="REFRESH" onAction="#refreshOffers" />
         <HBox spacing="10">
-            <HBox spacing="10">
-                <Button fx:id="selectAllOffersButton" styleClass="btn" text="All Offers" onAction="#selectAllOffers" />
-                <Button fx:id="selectPendingButton" styleClass="btn" text="Your Pending Offers" onAction="#selectPending" />
-                <Button fx:id="selectAcceptedButton" styleClass="btn" text="Your Accepted Offers" onAction="#selectAccepted" />
-            </HBox>
+            <Button fx:id="tradingRefreshButton" styleClass="btn"
+                text="REFRESH" onAction="#refreshOffers" />
             <Pane HBox.hgrow="ALWAYS"/>
             <HBox fx:id="allOffersDirectionBox" spacing="10">
                 <RadioButton text="Buy USD" onAction="#selectAllOffers">
@@ -29,6 +24,11 @@
                 </RadioButton>
                 <RadioButton text="Sell USD " toggleGroup="$transactionType" onAction="#selectAllOffers"/>
             </HBox>
+        </HBox>
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="selectAllOffersButton" styleClass="btn" text="All Offers" onAction="#selectAllOffers" />
+            <Button fx:id="selectPendingButton" styleClass="btn" text="Your Pending Offers" onAction="#selectPending" />
+            <Button fx:id="selectAcceptedButton" styleClass="btn" text="Your Accepted Offers" onAction="#selectAccepted" />
         </HBox>
         <TableView
                 fx:id="tableView"

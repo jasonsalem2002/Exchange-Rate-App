@@ -58,7 +58,7 @@
     </RadioButton>
     <RadioButton text="Sell USD" GridPane.columnIndex="1" GridPane.rowIndex="9"
                  toggleGroup="$transactionType"/>
-    <Button text="Add Transaction" onAction="#addTransaction"
+    <Button text="Add Transaction" onAction="#addTransaction" styleClass="btn"
             GridPane.columnIndex="0" GridPane.rowIndex="10" GridPane.columnSpan="2" GridPane.halignment="CENTER"/>
 
     <Separator orientation="HORIZONTAL" GridPane.RowIndex="11"
@@ -88,7 +88,7 @@
     </RadioButton>
     <RadioButton text="LBP to USD" GridPane.columnIndex="1" GridPane.rowIndex="15"
                  toggleGroup="$transactionTypeConvert"/>
-    <Button text="Convert" onAction="#convert"
+    <Button text="Convert" onAction="#convert" styleClass="btn"
             GridPane.columnIndex="0" GridPane.rowIndex="16" GridPane.columnSpan="2" GridPane.halignment="CENTER"/>
 
 

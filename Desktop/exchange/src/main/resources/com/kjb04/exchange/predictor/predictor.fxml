@@ -16,10 +16,10 @@
     <VBox style="-fx-margin: 25 0 10 0">
         <LineChart fx:id="lineChart">
             <xAxis>
-                <CategoryAxis fx:id="xAxis" label="X Axis"/>
+                <CategoryAxis fx:id="xAxis" label="Day"/>
             </xAxis>
             <yAxis>
-                <NumberAxis fx:id="yAxis" label="Y Axis" autoRanging="false"/>
+                <NumberAxis fx:id="yAxis" label="Exchange Rate (LBP/USD)"autoRanging="false"/>
             </yAxis>
         </LineChart>
         <Label text="Predict exchange rate for any day up to 2030!" style="-fx-padding:5 0 0 25"/>

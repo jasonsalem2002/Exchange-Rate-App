@@ -18,5 +18,5 @@
     <TextField fx:id="usernameTextField"/>
     <Label text="Password"/>
     <PasswordField fx:id="passwordField"/>
-    <Button text="Login" onAction="#login"/>
+    <Button text="Login" styleClass="btn" onAction="#login"/>
 </FlowPane>

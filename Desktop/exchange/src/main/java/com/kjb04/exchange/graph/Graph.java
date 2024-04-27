@@ -2,12 +2,8 @@ package com.kjb04.exchange.graph;
 
 import com.kjb04.exchange.Alerts;
 import com.kjb04.exchange.Authentication;
-import com.kjb04.exchange.DateParser;
 import com.kjb04.exchange.api.ExchangeService;
-import com.kjb04.exchange.api.model.Message;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -18,9 +14,7 @@ import javafx.scene.control.Label;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Graph {

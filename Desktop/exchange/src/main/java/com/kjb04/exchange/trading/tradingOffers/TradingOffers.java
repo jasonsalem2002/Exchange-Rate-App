@@ -3,13 +3,9 @@ package com.kjb04.exchange.trading.tradingOffers;
 import com.kjb04.exchange.Alerts;
 import com.kjb04.exchange.Authentication;
 import com.kjb04.exchange.api.ExchangeService;
-import com.kjb04.exchange.api.model.Message;
 import com.kjb04.exchange.api.model.Offer;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -17,10 +13,7 @@ import javafx.scene.layout.HBox;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import java.io.IOException;
 import java.net.URL;
-import java.nio.channels.SelectableChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -140,7 +133,7 @@ public class TradingOffers implements Initializable {
                             tableView.getItems().setAll(offers);
 
                             rate.setCellValueFactory(cellData -> {
-                                Offer offer = cellData.getValue(); // Get the Offer instance for the current row
+                                Offer offer = cellData.getValue();
                                 Float amountOffered = offer.getAmountToTrade();
                                 Float amountRequested = offer.getAmountRequested();
                                 if (offer.getUsdToLbp()) {
@@ -213,7 +206,7 @@ public class TradingOffers implements Initializable {
                                 tableView.getItems().setAll(offers);
 
                                 rate.setCellValueFactory(cellData -> {
-                                    Offer offer = cellData.getValue(); // Get the Offer instance for the current row
+                                    Offer offer = cellData.getValue();
                                     Float amountOffered = offer.getAmountToTrade();
                                     Float amountRequested = offer.getAmountRequested();
                                     if (offer.getUsdToLbp()) {

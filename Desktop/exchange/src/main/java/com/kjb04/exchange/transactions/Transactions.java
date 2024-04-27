@@ -6,7 +6,6 @@ import com.kjb04.exchange.api.ExchangeService;
 import com.kjb04.exchange.api.model.Transaction;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;

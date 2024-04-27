@@ -12,17 +12,17 @@
             <VBox>
                 <Label fx:id="chatType" text="Private Chat" textAlignment="CENTER" style="-fx-font-size: 16px;" />
                 <HBox fx:id="newChatBox">
-                    <Button fx:id="newChatButton" text="+" onAction="#createNewChat" />
+                    <Button fx:id="newChatButton" text="+" onAction="#createNewChat" styleClass="btn" />
                     <TextField fx:id="newChatTextField" />
                 </HBox>
                 <ComboBox fx:id="joinGroupComboBox" prefHeight="30.0" prefWidth="120.0"
                           promptText="Join Group" onAction="#joinGroup" visible="false"/>
             </VBox>
             <Pane HBox.hgrow="ALWAYS"/>
-            <Button fx:id="createGroupButton" alignment="CENTER" onAction="#revealCreateGroup" prefHeight="20.0" prefWidth="100.0"
+            <Button fx:id="createGroupButton" alignment="CENTER" onAction="#revealCreateGroup" prefHeight="20.0" prefWidth="100.0" styleClass="btn"
                     visible="false" scaleShape="false" text="Create New Group" textAlignment="CENTER" HBox.hgrow="NEVER"/>
             <VBox fx:id="createGroupBox" visible="false">
-                <Button fx:id="submitGroupButton" alignment="CENTER" onAction="#createGroup" prefHeight="20.0" prefWidth="100.0"
+                <Button fx:id="submitGroupButton" alignment="CENTER" onAction="#createGroup" prefHeight="20.0" prefWidth="100.0" styleClass="btn"
                         scaleShape="false" text="Create" textAlignment="CENTER" HBox.hgrow="NEVER"/>
                 <TextField fx:id="createGroupTextField"/>
             </VBox>
@@ -32,7 +32,7 @@
         <VBox>
             <Label fx:id="chatName" textAlignment="CENTER" prefHeight="20.0" />
             <Button fx:id="leaveGroupButton" alignment="CENTER" onAction="#leaveGroup" prefHeight="20.0" prefWidth="100.0"
-                    visible="false" scaleShape="false" text="Leave" textAlignment="CENTER" HBox.hgrow="NEVER"/>
+                    visible="false" styleClass="btn" scaleShape="false" text="Leave" textAlignment="CENTER" HBox.hgrow="NEVER"/>
             <ScrollPane fx:id="scrollPane"
                         fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="300.0"
                         vmin="1.0" vvalue="1.0" VBox.vgrow="ALWAYS">
@@ -48,7 +48,7 @@
                     </font>
                 </TextField>
                 <Button fx:id="sendMessageButton" alignment="CENTER" onAction="#sendMessage" prefHeight="20.0" prefWidth="100.0"
-                        scaleShape="false" text="Send" textAlignment="CENTER" HBox.hgrow="NEVER"/>
+                        scaleShape="false" styleClass="btn" text="Send" textAlignment="CENTER" HBox.hgrow="NEVER"/>
             </HBox>
         </VBox>
     </center>

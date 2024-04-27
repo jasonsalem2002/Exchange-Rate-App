@@ -1,17 +1,11 @@
 package com.kjb04.exchange.trading;
 
-import com.kjb04.exchange.Authentication;
 import com.kjb04.exchange.OnPageCompleteListener;
 import com.kjb04.exchange.PageCompleter;
-import com.kjb04.exchange.Parent;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;

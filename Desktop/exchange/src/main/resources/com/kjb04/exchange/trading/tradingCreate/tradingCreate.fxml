@@ -38,6 +38,6 @@
            GridPane.columnIndex="0" GridPane.rowIndex="8"/>
     <Label fx:id="tradeRateTextField"
                GridPane.columnIndex="0" GridPane.rowIndex="9"/>
-    <Button text="Submit" onAction="#submitOffer"
+    <Button text="Submit" onAction="#submitOffer" styleClass="btn"
             GridPane.columnIndex="0" GridPane.rowIndex="10" GridPane.columnSpan="2" GridPane.halignment="CENTER"/>
 </GridPane>
