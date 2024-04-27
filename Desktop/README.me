@@ -1,0 +1,101 @@
+# Exchange Rate Desktop App
+
+A USD-LBP exchange rate app with the following features: 
+- Live exchange rate calculation based on user transactions
+- USD-LBP converter
+- Trading: Users submit USD-LBP offers which can be accepted by another user
+- Various statistics: Past exchange rates, number of transactions, largest transaction, transaction volume
+- Future exchange rate prediction
+- Private and group chats
+
+Built on JavaFX. Based on a Python-Flask backend. 
+
+Requires an Internet connection.
+
+## System Requirements
+
+- JDK 11+
+- IntelliJ IDEA
+
+## Installation
+
+1. Clone the Desktop repository
+
+`git clone https://github.com/EECE-430L/ExchangeRate-7/tree/main/Desktop`
+
+2. Open the Desktop folder in IntelliJ.
+
+3. Install and add the required dependencies from Maven:
+- com.squareup.retrofit2:retrofit:2.9.0
+- com.squareup.retrofit2:converter-gson:2.9.0
+
+To add a library: 
+- File -> Project Structure -> Libraries -> New Project Library
+- Select "from Maven"
+- Paste in the library name above and select 'Transitive Dependencies',
+'JavaDocs', and 'Annotations'.
+
+4. Once the project is built, run the main() function in com.kjb04.exchange.Main .
+
+
+## Project Structure
+
+- /src/main: Contains the source code for the project.
+  - /java/com/kjb04/exchange: Contains the Java files.
+    - /api: Contains the files related to api interaction.
+      - /model: Contains the models.
+  - /resources/com/kjb04/exchange: Contains the views (fxml, css files)
+
+
+## Software Platforms
+
+- JavaFX (for UI)
+- Maven (for dependencies)
+
+## Dependencies 
+
+- retrofit2: REST client for Java. Handles communication with the backend.
+- gson: For dealing with JSON objects.
+
+## Functionality
+### Exchange Rate
+
+Calculated based on all transactions submitted in the last three days
+
+### Calculator
+
+Converts between the two currencies based on current exchange rates
+
+### Trading
+
+Users can submit offers consisting of an offered amount and a requested amount. 
+
+Submitted offers can be viewed and accepted by other users. 
+
+Users can also view their pending offers and delete them after submission.
+
+Users can also view their offers that have been accepted.
+
+### Statistics
+
+The app displays various statistics:
+
+- Graph of average exchange rate over a time period chosen by the user
+- Graph of the total number of transactions on the app over a time period chosen by the user
+- The largest transaction submitted on the app on that day
+- The largest transaction submitted on the app over a time period chosen by the user
+- The total volume of transactions in USD and LBP submitted on the app over a time period chosen by the user
+
+### Prediction
+
+Predicts the future exchange rate for any day up to 2030.
+
+Graph displays the past exchange rates of the last 30 days next to the predictions for the next 30 days.
+
+Predictions done using a Dense Neural Network model.
+
+### Chat
+
+- Private chat with any other user on the app. Can only start a chat with a user using their exact username.
+
+- Group chats: Open for everyone to join. Users can create groups. 
