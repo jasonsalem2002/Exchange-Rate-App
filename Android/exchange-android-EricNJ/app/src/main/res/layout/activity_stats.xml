@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:fillViewport="true">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,8 +19,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/past_30_days_vs_predicted_30_days"
-                android:layout_gravity="center"
+                android:text="Number of Transactions"
+                android:textColor="@color/Vibrant_Blue"
+                android:gravity="center"
                 android:textSize="15dp" />
 
             <com.github.mikephil.charting.charts.LineChart
@@ -27,14 +29,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="600dp" />
 
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Statistics"
+                android:textColor="@color/Vibrant_Blue"
                 android:textSize="30dp"
                 >
 
             </TextView>
+            <Spinner
+                android:id="@+id/granularitySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/granularity_options" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,12 +51,13 @@
             <TextView
                 android:id="@+id/highest"
                 android:layout_width="wrap_content"
+                android:textColor="@color/Vibrant_Blue"
                 android:text="Highest Transaction Amount Today:         "
                 android:layout_height="40dp" />
             <TextView
                 android:id="@+id/highestamount"
                 android:layout_width="wrap_content"
-                android:text="Amount Today:"
+                android:text=""
                 android:layout_height="40dp" />
         </LinearLayout>
           <LinearLayout
@@ -57,12 +67,13 @@
               <TextView
                   android:id="@+id/largest"
                   android:layout_width="wrap_content"
+                  android:textColor="@color/Vibrant_Blue"
                   android:text="Largest Transaction:                                     "
                   android:layout_height="40dp" />
               <TextView
                   android:id="@+id/largestamount"
                   android:layout_width="wrap_content"
-                  android:text="Amount Today:"
+                  android:text=""
                   android:layout_height="40dp" />
 
           </LinearLayout>
@@ -74,12 +85,13 @@
                 <TextView
                     android:id="@+id/volume"
                     android:layout_width="wrap_content"
-                    android:text="Trnsaction Volume:                                       "
+                    android:textColor="@color/Vibrant_Blue"
+                    android:text="Transaction Volume:                                     "
                     android:layout_height="40dp" />
                 <TextView
                     android:id="@+id/volumeamount"
                     android:layout_width="wrap_content"
-                    android:text="Amount Today:"
+                    android:text=""
                     android:layout_height="40dp" />
 
             </LinearLayout>
@@ -103,8 +115,9 @@
             <Button
                 android:id="@+id/showGraphButton"
                 android:layout_width="match_parent"
+                android:backgroundTint="@color/Gold"
                 android:layout_height="wrap_content"
-                android:text="Select Dates to Generate Statistics"/>
+                android:text="Generate Statistics"/>
 
 
         </LinearLayout>

@@ -48,13 +48,8 @@ class Prediction : AppCompatActivity() {
     }
 
     private fun setupChart() {
-        val description = Description().apply {
-            text = "Exchange Rate"
-            textSize = 30f
-            setPosition(150f, 15f)
-        }
+
         lineChart.apply {
-            this.description = description
             axisRight.isEnabled = false
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textSize = 15f
@@ -241,7 +236,7 @@ class Prediction : AppCompatActivity() {
                 } else {
                     startDatePicker.text.clear()
 
-                    dayDifference.text = "End date must be after start date"
+                    dayDifference.text = "Please Enter a Future Date"
                 }
             }
         } catch (e: ParseException) {

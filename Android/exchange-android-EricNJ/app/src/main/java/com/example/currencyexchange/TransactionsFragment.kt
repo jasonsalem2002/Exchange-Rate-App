@@ -83,8 +83,8 @@ class TransactionsFragment : Fragment() {
                         response: Response<List<Transaction>>
                     ) {
 
-                        if(response.body()==null){
-                            Toast.makeText(requireContext(), "No transactions found.", Toast.LENGTH_LONG).show()
+                        if(response.body()?.isEmpty() == true){
+                            Toast.makeText(requireContext(), "No transactions yet.", Toast.LENGTH_LONG).show()
                         }
                         else{
                             transactions?.addAll(response.body()!!)

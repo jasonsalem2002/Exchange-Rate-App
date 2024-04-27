@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
+        android:textColor="@color/Vibrant_Blue"
         android:text="Offer ID"
         android:layout_marginBottom="16dp"/>
 
@@ -19,12 +20,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
+        android:textColor="@color/Vibrant_Blue"
         android:text="Transaction Date"
         android:layout_marginBottom="16dp"/>
 
     <TextView
         android:id="@+id/tvUsdAmount"
         android:layout_width="match_parent"
+        android:textColor="@color/Vibrant_Blue"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:text="USD Amount"
@@ -34,6 +37,7 @@
         android:id="@+id/tvLbpAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/Vibrant_Blue"
         android:textSize="18sp"
         android:text="LBP Amount"
         android:layout_marginBottom="16dp"/>
@@ -42,6 +46,7 @@
         android:id="@+id/tvExchangeDirection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/Vibrant_Blue"
         android:textSize="16sp"
         android:text="Exchange Direction"
         android:layout_marginBottom="16dp"/>

@@ -77,8 +77,8 @@ class TradingAdapter(
                     call: Call<List<Offer>>,
                     response: Response<List<Offer>>
                 ) {
-                    if(response.body()==null){
-                        Toast.makeText(this@Myacceptedoffers, "No offers found.", Toast.LENGTH_LONG).show()
+                    if(response.body()?.isEmpty() == true){
+                        Toast.makeText(this@Myacceptedoffers, "No offers yet.", Toast.LENGTH_LONG).show()
                     }
                     else{
                         offers?.addAll(response.body()!!)

@@ -161,7 +161,7 @@ class TradingFragment : Fragment() {
                         call: Call<List<Offer>>,
                         response: Response<List<Offer>>
                     ) {
-                        if(response.body()==null){
+                        if(response.body()?.isEmpty() == true){
                             Toast.makeText(requireContext(), "No offers found.", Toast.LENGTH_LONG).show()
                         }
                         else{

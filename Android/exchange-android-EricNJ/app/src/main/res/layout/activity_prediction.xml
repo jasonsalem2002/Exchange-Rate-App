@@ -18,7 +18,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Past 30 days vs Predicted 30 days"
-                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/Vibrant_Blue"
                 android:textSize="15dp"
                 ></TextView>
 
@@ -30,6 +31,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:textColor="@color/Vibrant_Blue"
                 android:text="Exchange Rate Prediction"
                 android:textSize="30dp"
                 >
@@ -40,13 +42,15 @@
                 android:id="@+id/startDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/Vibrant_Blue"
                 android:focusable="false"
-                android:hint="Future Date" />
+                android:hint="Enter a Future Date" />
 
 
             <TextView
                 android:id="@+id/dayDifference"
                 android:textSize="25sp"
+                android:textColor="@color/Vibrant_Blue"
                 android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="33dp" />

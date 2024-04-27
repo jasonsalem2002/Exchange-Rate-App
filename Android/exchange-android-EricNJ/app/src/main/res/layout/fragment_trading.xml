@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Light_Grey"
+    android:background="@color/white"
     tools:context=".trading.TradingFragment">
 
     <LinearLayout
@@ -22,7 +22,7 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/Vibrant_Blue"
+            android:backgroundTint="@color/Gold"
             android:contentDescription="@string/add_offer"
             android:src="@drawable/baseline_add_24"
             app:fabSize="normal"
@@ -33,6 +33,7 @@
             android:id="@+id/button_view_my_offers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/Gold"
 
             android:text="Accepted" />
 
@@ -42,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/Gold"
             android:layout_marginStart="16dp"
             android:text="Active"
             app:layout_constraintTop_toTopOf="parent" />

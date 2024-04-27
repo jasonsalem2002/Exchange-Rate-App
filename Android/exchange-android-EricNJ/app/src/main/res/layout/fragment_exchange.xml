@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Light_Grey"
+    android:background="@color/white"
     tools:context=".ExchangeFragment">
 
     <TextView
@@ -92,7 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="60dp"
-        android:backgroundTint="@color/Vibrant_Blue"
+        android:backgroundTint="@color/Gold"
         android:contentDescription="Add Transaction"
         android:src="@drawable/baseline_add_24"
         app:fabSize="normal"
@@ -103,7 +103,7 @@
         android:id="@+id/Chatbutton"
         android:layout_width="141dp"
         android:layout_height="50dp"
-        android:backgroundTint="@color/Vibrant_Blue"
+        android:backgroundTint="@color/Gold"
         android:text="Chats"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -117,7 +117,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Calculator"
-        android:backgroundTint="@color/Vibrant_Blue"
+        android:backgroundTint="@color/Gold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.842"
@@ -127,23 +127,23 @@
 
     <Button
         android:id="@+id/buttonstats"
-        android:layout_width="134dp"
-        android:layout_height="50dp"
-        android:backgroundTint="@color/Vibrant_Blue"
+        android:layout_width="149dp"
+        android:layout_height="52dp"
+        android:backgroundTint="@color/Gold"
         android:text="Statistics"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.148"
+        app:layout_constraintHorizontal_bias="0.129"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.527" />
+        app:layout_constraintVertical_bias="0.53" />
 
     <Button
         android:id="@+id/buttonprediction"
         android:layout_width="133dp"
         android:layout_height="49dp"
         android:text="Prediction"
-        android:backgroundTint="@color/Vibrant_Blue"
+        android:backgroundTint="@color/Gold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.841"

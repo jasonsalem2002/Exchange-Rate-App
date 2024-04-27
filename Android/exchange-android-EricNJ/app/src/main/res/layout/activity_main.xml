@@ -16,7 +16,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:backgroundTint="@color/Light_Grey"
+            android:backgroundTint="@color/Vibrant_Blue"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:title="LBP Currency Exchange"

@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/white"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_gravity="center"
             android:gravity="center_vertical"
-            android:textColor="@android:color/white"
+            android:textColor="@color/Vibrant_Blue"
             android:layout_marginStart="16dp" />
 
     </androidx.appcompat.widget.Toolbar>
@@ -81,6 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Convert"
+        android:backgroundTint="@color/Gold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"

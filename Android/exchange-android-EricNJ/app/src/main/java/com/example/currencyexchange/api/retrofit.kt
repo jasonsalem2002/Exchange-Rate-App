@@ -142,6 +142,31 @@ object ExchangeService {
         @GET("/next30DaysRates")
         fun getNext30DaysRates(@Header("Authorization") authorization: String?): Call<List<FutureRate>>
 
+
+        @GET("/highest_transaction_today")
+        fun getHighestTransactionToday(@Header("Authorization") authorization: String?): Call<Map<String?, Transaction>>
+
+        @GET("/largest_transaction_amount")
+        fun getLargestTransactionAmount(
+            @Header("Authorization") authorization: String?,
+            @Query("start_date") startDate: String?,
+            @Query("end_date") endDate: String?
+        ): Call<Map<String?, Transaction>>
+
+        @GET("/number_of_transactions")
+        fun getNumberOfTransactions(
+            @Header("Authorization") authorization: String?,
+            @Query("start_date") startDate: String?,
+            @Query("end_date") endDate: String?,
+            @Query("granularity") granularity: String?
+        ): Call<Map<String, Map<String,Double>>>
+        @GET("/volume_of_transactions")
+        fun getVolumeOfTransactions(
+            @Header("Authorization") authorization: String?,
+            @Query("start_date") startDate: String?,
+            @Query("end_date") endDate: String?
+        ): Call<Map<String?, Float>>
+
     }
 
 

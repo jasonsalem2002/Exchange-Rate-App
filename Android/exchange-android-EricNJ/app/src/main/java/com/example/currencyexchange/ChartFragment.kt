@@ -60,7 +60,7 @@ class ChartFragment : Fragment() {
         val description = Description().apply {
             text = "Rate"
             textSize = 18f
-            setPosition(150f, 15f)
+            setPosition(130f, 43f)
         }
         lineChart.apply {
             this.description = description

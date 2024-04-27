@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Light_Grey"
+    android:background="@color/white"
     tools:context=".chatting.ChatsActivity">
 
 
@@ -30,8 +30,8 @@
         android:layout_toEndOf="@+id/backButton"
         android:focusable="auto"
         android:hint="Search Person"
-        android:textColor="@color/Vibrant_Blue"
-        android:textColorHint="@color/Vibrant_Blue"
+        android:textColor="@color/Gold"
+        android:textColorHint="@color/Gold"
         android:textSize="20sp" />
 
     <ImageView

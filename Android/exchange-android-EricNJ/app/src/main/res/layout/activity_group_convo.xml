@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:elevation="4dp"
-        android:background="@color/Light_Grey">
+        android:background="@color/Vibrant_Blue">
 
         <ImageView
             android:id="@+id/backButton"
@@ -49,7 +49,7 @@
             android:textColor="@color/black"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:backgroundTint="@color/Light_Grey"
+            android:backgroundTint="@color/Gold"
             android:padding="8dp" />
     </RelativeLayout>
 

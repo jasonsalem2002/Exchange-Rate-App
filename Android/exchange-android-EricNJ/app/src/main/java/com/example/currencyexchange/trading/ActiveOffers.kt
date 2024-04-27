@@ -99,8 +99,8 @@ class ActiveOffers : AppCompatActivity() {
                         call: Call<List<Offer>>,
                         response: Response<List<Offer>>
                     ) {
-                        if(response.body()==null){
-                            Toast.makeText(this@ActiveOffers, "No offers found.", Toast.LENGTH_LONG).show()
+                        if(response.body()?.isEmpty() == true){
+                            Toast.makeText(this@ActiveOffers, "No offers yet.", Toast.LENGTH_LONG).show()
                         }
                         else{
                             offers?.clear()
