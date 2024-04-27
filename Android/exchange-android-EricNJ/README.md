@@ -62,12 +62,6 @@ To run the application:
 2. **Run the application**:
    - Use an Android emulator or a physical device to run the app.
 
-## API Endpoints
-
-- `GET /exchangeRate`: Fetches current exchange rates.
-- `POST /transaction`: Submits a new transaction.
-- `GET /transaction`: Retrieves all transactions.
-- Detailed API documentation can be found [here](#) (add the link to your API documentation).
 
 ## Troubleshooting
 
