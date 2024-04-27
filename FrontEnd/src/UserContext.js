@@ -19,7 +19,7 @@ export function UserProvider({ children }) {
     const [registerRejected, setRegisterState] = useState(false);
     const [userTransactions, setUserTransactions] = useState([]);
     const [authState, setAuthState] = useState(States.PENDING);
-    const [SERVER_URL, setServerUrl] = useState("https://jason.hydra-polaris.ts.net");
+    const [SERVER_URL, setServerUrl] = useState("https://salex.hydra-polaris.ts.net");
     let [buyUsdRate, setBuyUsdRate] = useState(null);
     let [sellUsdRate, setSellUsdRate] = useState(null);
     const [userName,setUserName]=useState('');
@@ -29,8 +29,11 @@ export function UserProvider({ children }) {
     const [joinedGroups,setJoinedGroups]=useState([])
     const [groupMessages,setGroupMessages]=useState([])
     const [groupsMessages, setGroupsMessages] = useState({});
+    const [isDrawerOpen,setIsDrawerOpen] = useState(false);
+    const [chatName,setChatName]=useState('')
+    const [userChatOpened,setUserChatState]=useState(false)
+    const [groupChatOpened,setGroupChatState]=useState(false)
 
-   
     function fetchRates() {
         fetch(`${SERVER_URL}/exchangeRate`)
         .then(response => {
@@ -316,7 +319,7 @@ export function UserProvider({ children }) {
           })
 
     return (
-        <UserContext.Provider value={{ setJoinedGroups,sendGroupMessage,groupsMessages,fetchGroupMessages,createGroup,joinGroup,fetchMessages,fetchGroups,fetchJoinedGroups,joinedGroups,groups,fetchUsernames,usernames,messages,logout, authState, setAuthState, saveUserToken, States, login, createUser, userToken, fetchUserTransactions, userTransactions,SERVER_URL, loginRejected, setLoginState, setUserToken, setUserTransactions,registerRejected,setRegisterState,buyUsdRate,sellUsdRate,fetchRates,userName,setUserName }}>
+        <UserContext.Provider value={{ setGroupChatState,setUserChatState,groupChatOpened,userChatOpened,setChatName,chatName,setIsDrawerOpen,isDrawerOpen,setJoinedGroups,sendGroupMessage,groupsMessages,fetchGroupMessages,createGroup,joinGroup,fetchMessages,fetchGroups,fetchJoinedGroups,joinedGroups,groups,fetchUsernames,usernames,messages,logout, authState, setAuthState, saveUserToken, States, login, createUser, userToken, fetchUserTransactions, userTransactions,SERVER_URL, loginRejected, setLoginState, setUserToken, setUserTransactions,registerRejected,setRegisterState,buyUsdRate,sellUsdRate,fetchRates,userName,setUserName }}>
             {children}
         </UserContext.Provider>
     );

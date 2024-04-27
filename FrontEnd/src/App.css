@@ -18,9 +18,9 @@ body
 
 .formField
 {
-    height:15%;
+   
     width:60%; 
-    padding: 0;
+  
     border-radius:5%;
     background-color: white;
 }
@@ -64,6 +64,7 @@ body
     display:flex;
     flex-direction:column;
     justify-content:center;
+    align-items: center;
     background-color:#0093d5;
     margin-top: 0%;
     padding-top: 0%;
@@ -74,7 +75,24 @@ body
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     font-weight: bold;
     padding-left:5%;
      color:white;
+     width: 65%;
 }
+
+
+.MuiButton-root.Mui-disabled {
+    
+    color:lightgray;
+    opacity: 0.5;
+    cursor: not-allowed; 
+  }
+
+
+
+.MuiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.MuiButton-colorPrimary.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium.MuiButton-colorPrimary.css-1e6y48t-MuiButtonBase-root-MuiButton-root {
+    background-color: #0093d5 !important;
+    color:white;
+  }

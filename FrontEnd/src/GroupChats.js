@@ -30,7 +30,8 @@ const GroupChats = ({setDialogOpen,dialogOpen,groupChatOpened,setGroupChatState}
   const [inactiveGroups,setInActiveGroups]=useState([]);
   const [creatingGroup,setCreatingGroup]=useState(false)
   const [newGroupName,setNewGroupName]=useState('')
-  const[chatName,setChatName]=useState(null)
+  const {chatName}=User();
+  const {setChatName}=User()
   const [sortedGroups,setSortedGroups]=useState([])
     const {joinGroup}=User()
   const {createGroup}=User()
@@ -160,15 +161,14 @@ useEffect(getLastMessageOfGroups,[groupsMessages])
     <Box sx={{ display: 'flex',height:'100%',flexDirection:'column', width: '100%' }}>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}  fullWidth>
            
+
            <Box className='headerDrawer'>
-            <DialogTitle className='headerText'>Join Group
-            <Button onClick={()=>{setCreatingGroup(true)}} sx={{backgroundColor:'green', color:'white'}}>Create Group</Button>
+            <DialogTitle className='headerText'>Join Group 
+            <Button  onClick={()=>{setDialogOpen(false);setCreatingGroup(true)}} sx={{backgroundColor:'green', color:'white'}}>Create Group</Button>
             </DialogTitle>
-
-
             
             </Box>
-            {inactiveGroups.length===0 && <Box   sx={{display:'flex',flexDirection:'column',justifyContent:'space-around',alignItems:'center',padding:'10%'}}><Typography>You have a chat with all current users.</Typography>
+            {inactiveGroups.length===0 && <Box   sx={{display:'flex',flexDirection:'column',justifyContent:'space-around',alignItems:'center',padding:'10%'}}><Typography>There are no availible groups left to join.</Typography>
             <button class='formButton' onClick={()=>{setDialogOpen(false)}}>Ok</button>            
             </Box>}
 
@@ -190,11 +190,11 @@ useEffect(getLastMessageOfGroups,[groupsMessages])
             <Dialog open={creatingGroup} onClose={() => setCreatingGroup(false)}  fullWidth>
            
            <Box className='headerDrawer'>
-            <DialogTitle className='headerText'>Create Group </DialogTitle>
+            <DialogTitle  className='headerText'>Create Group </DialogTitle>
              
-            <Box sx={{display:'flex',flexDirection:'column',alignItems:'center',backgroundColor:'lightgray'}}>
+            <Box sx={{display:'flex',flexDirection:'column',alignItems:'center',backgroundColor:'transparent',width:'100%'}}>
             <TextField sx={{margin:'4%'}}  className='formField' label="Group Name"  value={newGroupName} onChange={e =>setNewGroupName(e.target.value)}/>
-            <Button sx={{margin:'2%',backgroundColor:'green',color:'white'}} className='formButton' onClick={()=>{setCreatingGroup(false);createGroup(newGroupName)}}>Create</Button>
+            <Button disabled={newGroupName.trim().length===0} sx={{margin:'2%',backgroundColor:'green',color:'white'}} className='formButton' onClick={()=>{setCreatingGroup(false);createGroup(newGroupName)}}>Create</Button>
             </Box>
 
             </Box>

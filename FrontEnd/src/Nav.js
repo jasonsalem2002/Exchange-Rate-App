@@ -2,12 +2,14 @@ import logo from './logo.svg';
 import './Nav.css';
 import React, { useCallback, useEffect } from 'react'
 import { useState } from 'react';
-import { Alert, AppBar, Box, Button, Link, MenuItem, Select, Snackbar, TextField, Toolbar, Typography } from '@mui/material';
+import { Alert, AppBar, Box, Button, Link, MenuItem, Select, Snackbar, TextField, Toolbar, Typography,Menu } from '@mui/material';
 import UserCredentialsDialog from './UserCredentialsDialog/UserCredentialsDialog';
 import { getUserToken,saveUserToken, clearUserToken } from "./localstorage";
 import { User } from './UserContext';
 import DrawerNav from './DrawerNav';
 import './Nav.css'
+import ChatDrawer from './ChatDrawer';
+import RatesSideBar from './RatesSideBar';
 
 function Nav() {
 
@@ -25,6 +27,14 @@ const {setRegisterState}= User()
 const {loginRejected}= User()
 const {userTransactions}= User()
 const {registerRejected}= User()
+const [anchorEl, setAnchorEl] = useState(null);
+const handleMenu = (event) => {
+  setAnchorEl(event.currentTarget);
+};
+
+const handleClose = () => {
+  setAnchorEl(null);
+};
 
   return (
     <div>
@@ -34,11 +44,24 @@ const {registerRejected}= User()
       <AppBar position="static" sx={{display:{xs:'none',md:'flex'}}}>
       <Toolbar classes={{ root: "nav" }} >
       <a href='/' style={{color:'white',textDecoration:'None'}}><Typography variant="h5">EXCHANGE RATE</Typography> </a>
-      <Box>
-      <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/transactions'>Rates</a>
-      <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/offers'  >Transactions</a>
-      <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/offers'>Offers</a>
-      <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/offers'  >Calculator</a>
+      <Box sx={{width:'50%',display:'flex',flexDirection:'row'}}>
+      <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/transactions'  >Transactions</a>
+      <a className='navlink' onClick={handleMenu} style={{ color: 'white' }}>Offers</a>
+            <Menu sx={{
+    "& .MuiList-root.MuiMenu-list": {
+      padding: 0,
+    },
+  }}
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem class='menuitem' onClick={handleClose}><a class='menulink' href='availible_offers'>Availible Offers </a></MenuItem>
+              <MenuItem class='menuitem' onClick={handleClose}><a class='menulink' href='my_offers'>My Offers </a></MenuItem>
+            </Menu>
+      <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/graph'><p>Graph</p></a>
+      <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/predictor'><p>Predictor</p></a>
+      <a class="navlink"  style={{color:'white',textDecoration:'none'}} href='/statistics'><p>Statistics</p></a>
 
       </Box>
         <Box sx={{marginRight:'2%'}}>
@@ -86,7 +109,9 @@ const {registerRejected}= User()
     <Snackbar elevation={6}variant="filled" open={registerRejected} autoHideDuration={2000} onClose={() => setRegisterState(false)}>
         <Alert severity="error">Password must be between 8 and 64 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.</Alert>
     </Snackbar>
-
+      
+    <ChatDrawer/>
+    <RatesSideBar/>
     
     </div>
   );

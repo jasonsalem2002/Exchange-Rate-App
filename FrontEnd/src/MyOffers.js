@@ -12,19 +12,21 @@ import CreateOffer from './CreateOffer';
 
 
 
-function Offers() {
+function MyOffers() {
   
 
   const {userToken}= User();
   const {SERVER_URL}= User();
-
-  const [offers, setOffers] = useState([]);
-
-
-  const markComplete = () => {
+ const username=localStorage.getItem('username')
+  const [myAcceptedOffers, setMyAcceptedOffers] = useState([]);
+ const {setUserChatState}=User();
+ const {setChatName}=User()
+ const {setIsDrawerOpen}=User();
+ 
+  const deleteOffer = () => {
     setDialogOpen(false);
-    fetch(`${SERVER_URL}/accept_offer/${selectedRow.id}`, {
-      method: 'PUT',
+    fetch(`${SERVER_URL}/offers/${selectedRow.id}`, {
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userToken}`,
@@ -35,24 +37,36 @@ function Offers() {
     })
 
     .then(body => {
-      fetchOffers()
+      fetchMyAcceptedOffers()
     })
   
   
   };
 
-  const fetchOffers = useCallback(() => {
-    fetch(`${SERVER_URL}/offers`, {
+  
+
+  const handleChat=()=>{
+    console.log('here')
+    setDialogOpen(false)
+    setIsDrawerOpen(true)
+    setUserChatState(true)
+    setChatName(selectedRow.username)
+  }
+
+  const fetchMyAcceptedOffers = useCallback(() => {
+    fetch(`${SERVER_URL}/get_accepted_offers`, {
         method:'GET',
         headers: {
             Authorization: `Bearer ${userToken}`,
         },
     })
     .then((response) => response.json())
-    .then((offers) => setOffers(offers));
-}, [SERVER_URL, userToken,markComplete]);
+    .then((myAcceptedOffers) => setMyAcceptedOffers(myAcceptedOffers));
+}, [SERVER_URL, userToken,deleteOffer]);
 
-// useEffect(fetchOffers,[])
+
+
+useEffect(fetchMyAcceptedOffers,[])
 
 
 // useEffect(() => {
@@ -71,19 +85,15 @@ function Offers() {
         setDialogOpen(true);
       };
 
-     
     
-      const handleReject = () => {
-        setDialogOpen(false);
-      };
     
   return (
     <div>
         <Nav/>
         
         <Box sx={{paddingTop:'10%', width:'100%',height:'600px',display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'space-around'}}>
-             <Typography variant='h5' sx={{height:'100px'}}>OFFERS</Typography> 
-            <CreateOffer fetchOffers={fetchOffers}/>
+             <Typography variant='h5' sx={{height:'100px'}}>MY OFFERS</Typography> 
+
         <DataGrid sx={{marginTop:'5%',maxWidth:'100%'}}
               columns={[
                 { field: 'id', headerName: 'ID' },
@@ -93,7 +103,7 @@ function Offers() {
                 { field: 'exchangeRate', headerName: 'Exchange Rate' },
                 { field: 'added_date', headerName: 'Date' },
               ]}
-              rows={offers}
+              rows={myAcceptedOffers}
               onRowClick={handleRowClick}
             
             />
@@ -102,11 +112,8 @@ function Offers() {
              <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
 
         <DialogActions sx={{display:'flex',flexDirection:'column'}}>
-          <Button onClick={markComplete} >
-            Accept
-          </Button>
-          <Button onClick={handleReject} >
-            Reject
+          <Button onClick={()=>{deleteOffer()}} >
+            Delete
           </Button>
         </DialogActions>
       </Dialog> 
@@ -114,4 +121,4 @@ function Offers() {
   );
 }
 
-export default Offers;
+export default MyOffers;

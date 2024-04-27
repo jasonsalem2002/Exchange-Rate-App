@@ -21,7 +21,8 @@ import GroupChats from './GroupChats';
 const ChatDrawer = () => {
 
 
-  const [isOpen,setIsOpen] = useState(false);
+ const {isDrawerOpen}=User();
+ const {setIsDrawerOpen}=User()
   const  username=localStorage.getItem('username')
   const[dialogOpen,setDialogOpen]=useState(false)
   const {fetchMessages}=User()
@@ -31,20 +32,21 @@ const ChatDrawer = () => {
   const {messages}=User()
   const[activeUsers,setActiveUsers]=useState([])
   const [typeOfChats,setTypeOfChats]=useState('users')
-  const [userChatOpened,setUserChatState]=useState(false)
-  const[chatName,setChatName]=useState(null)
+  const {userChatOpened}=User()
+  const {setUserChatState}=User();
+
+ const {chatName}=User();
+ const {setChatName}=User()
   const {joinGroup}=User()
 
 
 
-
-
   const handleClick = () => {
-    setIsOpen(true);
+    setIsDrawerOpen(true);
   };
 
   const closeDrawer = () => {
-    setIsOpen(false);
+    setIsDrawerOpen(false);
   };
 
 
@@ -56,16 +58,10 @@ const ChatDrawer = () => {
   const { SERVER_URL } = User();
 
   const [message,setMessage]= useState('')
-  const [groupChatOpened,setGroupChatState]=useState(false)
+  const {groupChatOpened}=User()
+  const {setGroupChatState}=User()
 
-  const openGroupChat=(name) =>
-  {
-    setDialogOpen(false)
-    setGroupChatState(true)
-    setChatName(name)
-    joinGroup(name)
-  }
-  
+ 
  
 
 
@@ -127,7 +123,7 @@ const ChatDrawer = () => {
 
       <Drawer 
         anchor="left"
-        open={isOpen}
+        open={isDrawerOpen}
         onClose={closeDrawer}
       >
         
@@ -143,9 +139,16 @@ const ChatDrawer = () => {
               <Box sx={{ height: '50%', width: '20%', display: 'flex', justifyContent: 'center', alignItems: 'center',marginRight:'20%' }}>
                 <ChatIcon sx={{ height: '80%', color: 'white' }} />
               </Box>
-              <Typography variant='h4' sx={{color:'white'}}>
+              {!(userChatOpened || groupChatOpened) && <Typography variant='h4' sx={{color:'white'}}>
                 CHAT
               </Typography>
+}
+{(userChatOpened || groupChatOpened) && <Typography variant='h4' sx={{color:'white'}}>
+                {chatName}
+ 
+             </Typography>}
+
+             {groupChatOpened}
             </Box>
             {!(userChatOpened|| groupChatOpened )&&
             <IconButton sx={{color:'white',marginRight:'5%'}} onClick={()=>{setDialogOpen(true);}}><AddCircleIcon sx={{color:'white',marginRight:'5%'}}/></IconButton>

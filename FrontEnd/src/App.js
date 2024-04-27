@@ -6,9 +6,14 @@ import UserCredentialsDialog from './UserCredentialsDialog/UserCredentialsDialog
 import { getUserToken,saveUserToken, clearUserToken } from "./localstorage";
 import { DataGrid } from '@mui/x-data-grid';
 import Home from './Home';
-import Offers from './Offers';
+import AvailibleOffers from './AvailibleOffers';
 import { BrowserRouter as Router,Routes, Route, Switch,  NavLink, Redirect } from 'react-router-dom';
 import { UserProvider } from './UserContext';
+import Graph from './Graph';
+import MyOffers from './MyOffers';
+import AvailableOffers from './AvailibleOffers';
+import Predictor from './Predictor';
+import Transactions from './Transactions/Transactions';
 
 
 function App() {
@@ -20,9 +25,11 @@ function App() {
       <Routes>
         <Route path='/' element={<Home/>}></Route>
         <Route path='/rates' element={<Home/>}></Route>
-        <Route path='/transactions' element={<Offers/>}></Route>
-        <Route path='/offers' element={<Offers/>}></Route>
-        <Route path='/offers' element={<Offers/>}></Route>
+        <Route path='/transactions' element={<Transactions/>}></Route>
+        <Route path='/availible_offers' element={<AvailableOffers/>}></Route>
+        <Route path='/my_offers' element={<MyOffers/>}></Route>
+        <Route path='/graph' element={<Graph/>}></Route>
+        <Route path='/predictor' element={<Predictor/>}></Route>
       </Routes>
     </Router>
     </UserProvider>

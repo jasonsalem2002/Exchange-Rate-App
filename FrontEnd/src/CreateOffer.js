@@ -48,12 +48,12 @@ function CreateOffer(fetchOffers) {
    return(
    <div>
     <Button sx={{backgroundColor:'#0093d5',color:'white'}} onClick={()=>setDialogOpen(true)}>Create Offer</Button>
-    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+    <Dialog fullWidth open={dialogOpen} onClose={() => setDialogOpen(false)}>
     <Box sx={{backgroundColor:'#0093d5',height:'86px',display:'flex',flexDirection:'column',justifyContent:'center',paddingLeft:'4%'}}><Typography fontWeight={'bold'} color={'white'} variant='h6'>Create Offer</Typography></Box>
-    <form style={{height:'500px',width:'600px',display:'flex',flexDirection:'column',justifyContent:'space-around',paddingLeft:'4%'}}  >
+    <form style={{height:'500px',width:'100%',display:'flex',flexDirection:'column',justifyContent:'space-around',paddingLeft:'4%'}}  >
             
             
-            <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
+            
             
             <TextField
       
@@ -64,9 +64,9 @@ function CreateOffer(fetchOffers) {
               value={amountRequested}
               onChange={(e)=>{setAmountRequested(e.target.value)}}
             />
-            </Box>
+       
 
-            <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
+            
 
             <TextField
              className='formField'
@@ -76,15 +76,15 @@ function CreateOffer(fetchOffers) {
               value={amountToTrade}
               onChange={(e)=>{setAmountToTrade(e.target.value)}}
             />
-            </Box>
+        
 
-            <Box sx={{height:'100px',display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
+            
             <Select className='formField' defaultValue="usd-to-lbp" sx={{width:'50%', borderRadius:'5%'}} id="transaction-type" onChange={(e)=>{if (e.target.value==="usd-to-lbp"){setTransactionType(true)}
               else{setTransactionType(false)}}} >
                 <MenuItem value="usd-to-lbp" >USD to LBP</MenuItem>
                 <MenuItem value="lbp-to-usd">LBP to USD</MenuItem>
                </Select>
-            </Box>
+       
 
             <Button onClick={addOffer} style={{width:'80px',padding:'8px',backgroundColor:'#0093d5'}} variant="contained" color="primary" >
               Add

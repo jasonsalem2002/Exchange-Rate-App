@@ -77,9 +77,12 @@ let messagesWithUser = messages.filter(m => m.recipient_username===user ||m.send
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={(event)=>{if (event.key === 'Enter') {
+                  sendMessage(user);
+                }}}
               />
 
-<Button id='sendButton' class='formButton' onClick={() => sendMessage(user)}>Send</Button>
+<Button id='sendButton' class='formButton' onClick={() => sendMessage(user)} disabled={message.trim().length===0}>Send</Button>
 
           </Box>
  

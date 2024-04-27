@@ -1,0 +1,47 @@
+#containerBox
+{
+    display: flex;
+     flex-direction: column;
+      
+        align-items: center;
+        margin-top: 8%; 
+}
+
+
+
+
+
+
+@media only screen and  (min-width: 750px) {
+    .formBox {
+    
+    width: 50%;
+    height:40%;
+    }
+
+    #containerBox
+    {
+        height:1200px
+    }
+  
+   
+   } 
+
+
+   @media only screen and (max-width: 749px)  {
+    .formBox {
+    width: 75%;
+    height:40%;
+    flex-wrap: wrap;
+    }
+
+    #containerBox
+    {
+        height:1000px
+    }
+  
+    
+   } 
+
+   
+

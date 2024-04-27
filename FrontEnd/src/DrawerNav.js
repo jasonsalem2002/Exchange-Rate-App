@@ -1,14 +1,22 @@
 import React from "react";
-import { Box, Drawer, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Drawer, IconButton, Stack, Typography,Menu,MenuItem } from "@mui/material";
 import { useState } from "react";
 import MenuIcon from '@mui/icons-material/Menu';
+import './Nav.css'
 
 const DrawerNav= ()=>
 {
 
     const[isOpen, setIsOpen]= useState(false);
     const handleClick=()=> {setIsOpen(true)}
+    const [anchorEl, setAnchorEl] = useState(null);
+const handleMenu = (event) => {
+  setAnchorEl(event.currentTarget);
+};
 
+const handleClose = () => {
+  setAnchorEl(null);
+};
 
 
   return (
@@ -25,10 +33,23 @@ const DrawerNav= ()=>
                   <Typography variant="h5" color={"white"}>EXCHANGE RATE</Typography>    
               </Box>
 
-              <a class="navlinkdrawer" href="/home"><p>Rates</p></a>
-              <a class="navlinkdrawer" href="/apparel"><p>Transactions</p></a>
-              <a class="navlinkdrawer" href="/home"><p>Offers</p></a>
-              <a class="navlinkdrawer" href="/apparel"><p>Calculator</p></a>
+              <a class="navlinkdrawer" href="/transactions"><p>Transactions</p></a>
+              <a class="navlinkdrawer" onClick={handleMenu}><p>Offers</p></a>
+            <Menu sx={{
+    "& .MuiList-root.MuiMenu-list": {
+      padding: 0,
+    },
+  }}
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem class='menuitem' onClick={handleClose}><a class='menulink' href='availible_offers'>Availible Offers </a></MenuItem>
+              <MenuItem class='menuitem' onClick={handleClose}><a class='menulink' href='my_offers'>My Offers </a></MenuItem>
+            </Menu>
+
+            <a class="navlinkdrawer" href="/graph"><p>Graph</p></a>
+              
 
         </Stack>
 

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Drawer, Box, Stack, IconButton, Typography,TextField,Button ,Input,Dialog,DialogTitle} from '@mui/material';
+import { Drawer, Box, Stack, IconButton, Typography,TextField,Button ,Input,Dialog,DialogTitle,Snackbar,Alert} from '@mui/material';
 import { Chat as ChatIcon } from '@mui/icons-material';
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
 import Message from './Message';
@@ -8,7 +8,7 @@ import { User } from './UserContext';
 import UserChatBox from './UserChatBox';
 import ChatUser from './ChatUser';
 import './App.css';
-
+import SearchIcon from '@mui/icons-material/Search';
 
 const UserChats = ({activeUsers,setActiveUsers,setDialogOpen,dialogOpen,userChatOpened,setUserChatState}) => {
   
@@ -23,7 +23,11 @@ const UserChats = ({activeUsers,setActiveUsers,setDialogOpen,dialogOpen,userChat
   const {usernames}=User()
   const {messages}=User()
   const usernamesExceptCurrent= usernames.filter(u => u !== username)
-  const[chatName,setChatName]=useState(null)
+  const{chatName}=User();
+  const {setChatName}=User();
+  const[addedUser,setAddedUser]=useState('')
+  const [userAlreadyAdded,setUserAlreadyAdded]=useState(false)
+  const [userDoesntExist,setUserDoesntExist]=useState(false)
 
   const openUserChat=(name) =>
   {
@@ -40,11 +44,32 @@ const UserChats = ({activeUsers,setActiveUsers,setDialogOpen,dialogOpen,userChat
     setActiveUsers([...activeUsers, name])
   }
 
+  const handleAddUser=()=>
+  {
+    console.log('here')
+    if (activeUsers.includes(addedUser))
+    {
+      setUserAlreadyAdded(true)
+      
+    }
+
+    else if(!usernamesExceptCurrent.includes(addedUser))
+    {
+      console.log('here')
+      setUserDoesntExist(true)
+    }
+
+    else 
+    {
+      addUserChat(addedUser)
+    }
+  }
+
   
 
 
 // let messagesWithUser = messages.filter(m => m.recipient_username===user ||m.sender_username ===user);
-
+//ass
 
 
     function getLastMessages() {
@@ -129,23 +154,33 @@ const UserChats = ({activeUsers,setActiveUsers,setDialogOpen,dialogOpen,userChat
     <Box sx={{ display: 'flex',height:'100%',flexDirection:'column', width: '100%' }}>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}  fullWidth>
            
-           <Box className='headerDrawer'>
-            <DialogTitle className='headerText'>Add Chat</DialogTitle>
+           <Box className='headerDrawer' sx={{padding:'3%'}}>
+          
+            <Box sx={{display:'flex',flexDirection:'row',justifyContent:'space-around',alignItems:'center',width:'70%'}}> <TextField
+            sx={{backgroundColor:'white'}}
+            
+      onChange={(e)=>setAddedUser(e.target.value)}
+      variant="outlined"
+      InputProps={{
+        startAdornment: <SearchIcon sx={{marginRight:'3%'}} />,
+      }}
+      required
+    />
+    <Button class='formButton'  onClick={()=>{handleAddUser()}}>Add</Button>
+    </Box>
+
+            
             </Box>
-            {inactiveUsers.length===0 && <Box  sx={{display:'flex',flexDirection:'column',justifyContent:'space-around',alignItems:'center',padding:'10%'}}><Typography>You have a chat with all current users.</Typography>
-            <Button class='formButton' onClick={()=>{setDialogOpen(false)}}>Ok</Button>            
+            {inactiveUsers.length===0 && <Box  sx={{display:'flex',flexDirection:'column',justifyContent:'space-around',alignItems:'center',padding:'10%'}}><Typography>You have a chat with all current friends.</Typography>
+            <Button class='formButton' style={{height:'35%'}} onClick={()=>{setDialogOpen(false)}}>Ok</Button> 
+            <Snackbar elevation={6}variant="filled" open={userDoesntExist} autoHideDuration={2000} onClose={() => setUserDoesntExist(false)}>
+        <Alert severity="error">Please enter an existing user</Alert>
+    </Snackbar>
+    <Snackbar elevation={6}variant="filled" open={userAlreadyAdded} autoHideDuration={2000} onClose={() => setUserAlreadyAdded(false)}>
+        <Alert severity="error">User already added</Alert>
+    </Snackbar>           
             </Box>}
 
-
-            <Box>
-              
-            {inactiveUsers.map((user) => {
-        
-        
-          return <UserChatBox key={user.id} username={user} openUserChat={addUserChat} lastMessage={{ content: lastMessages[user]?.content || '', added_date: lastMessages[user]?.added_date || '' }} />;
-        }
-      )}
-            </Box>
 
             </Dialog>
 

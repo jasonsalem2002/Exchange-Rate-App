@@ -91,7 +91,7 @@ body {
     font-size: 1.5rem;
     height: 100%;
     width:50%;
-    font-family: "With My Woes";
+   
     text-decoration: none;
     font-weight:600;
     display: flex;
@@ -108,7 +108,7 @@ body {
     font-size: 1.4rem;
     padding-right: 20px;
     transition: opacity .25s ease-in-out;
-    font-family: "With My Woes";
+
     text-decoration: none;
     font-weight: bold;
 }
@@ -120,6 +120,7 @@ body {
     transition: opacity .25s ease-in-out;
     -moz-transition: opacity .25s ease-in-out;
     -webkit-transition: opacity .25s ease-in-out;
+    cursor: pointer;
 
 }
 
@@ -127,8 +128,47 @@ body {
 
 .navlink:hover
 {
-    
+    cursor: pointer;
     text-decoration: underline;
 }
 
 
+.menulink
+{
+    color: black;
+    font-size: 1.4rem;
+    padding-right: 20px;
+    transition: opacity .25s ease-in-out;
+    text-align: center;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+}
+
+
+.navlinkdrawer:hover,cursor
+{
+    opacity:0.6;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+    cursor: pointer;
+
+}
+
+
+
+.menulink:hover
+{
+    cursor: pointer;
+}
+
+
+.menuitem{
+    border-bottom: 1px solid black;
+    background-color: lightgray ;
+    padding:5%;
+}
