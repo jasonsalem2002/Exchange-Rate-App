@@ -18,15 +18,15 @@ def get_statistics():
         if not start_date or not end_date:
             return jsonify({"error": "Start date and end date are required."}), 400
 
-        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
 
         if granularity == "daily":
-            max_start_date = end_date - datetime.timedelta(days=30)
+            max_start_date = end_date - timedelta(days=30)
         elif granularity == "weekly":
-            max_start_date = end_date - datetime.timedelta(weeks=52)  
+            max_start_date = end_date - timedelta(weeks=52)  
         elif granularity == "monthly":
-            max_start_date = end_date - datetime.timedelta(days=1096)
+            max_start_date = end_date - timedelta(days=1096)
         else:
             max_start_date = None
 
@@ -70,10 +70,10 @@ def get_statistics():
         response = {
             "transactions_per_period": {
                 period: count for period, count in transactions_per_period.items()
-            },
-            "total_transactions": sum(transactions_per_period.values()),
+            }
+            # "total_transactions": sum(transactions_per_period.values()),
         }
-
+        print(response)
         return jsonify(response), 200
 
     except ValueError:
@@ -164,14 +164,12 @@ def format_period(date, granularity):
         return str(date.year)
 
 
-
-
 @statistics_bp.route("/highest_transaction_today", methods=["GET"])
 def get_highest_transaction_today():
     try:
-        today = datetime.date.today()
-        start_of_day = datetime.datetime.combine(today, datetime.time.min)
-        end_of_day = datetime.datetime.combine(today, datetime.time.max)
+        today = datetime.today().date()
+        start_of_day = datetime.combine(today, datetime.min.time())
+        end_of_day = datetime.combine(today, datetime.max.time())
 
         highest_transaction = Transaction.query.filter(
             Transaction.added_date >= start_of_day,
@@ -196,6 +194,7 @@ def get_highest_transaction_today():
         return jsonify({"error": "Internal server error."}), 500
 
 
+
 @statistics_bp.route("/volume_of_transactions", methods=["GET"])
 def get_volume_of_transactions():
     try:
@@ -205,8 +204,8 @@ def get_volume_of_transactions():
         if not start_date or not end_date:
             return jsonify({"error": "Start date and end date are required."}), 400
 
-        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
 
         usd_volume = db.session.query(db.func.sum(Transaction.usd_amount)).filter(
             Transaction.usd_to_lbp == True,
@@ -224,7 +223,7 @@ def get_volume_of_transactions():
             "usd_volume": int(usd_volume),
             "lbp_volume": int(lbp_volume)
         }
-
+        print(response)
         return jsonify(response), 200
 
     except ValueError:
@@ -244,8 +243,8 @@ def get_largest_transaction_amount():
         if not start_date or not end_date:
             return jsonify({"error": "Start date and end date are required."}), 400
 
-        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
 
         largest_transaction = Transaction.query.filter(
             Transaction.added_date >= start_date,
