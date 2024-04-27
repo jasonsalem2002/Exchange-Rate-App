@@ -58,7 +58,7 @@ public class TradingOffers implements Initializable {
 
             @Override
             public void onFailure(Call<Object> call, Throwable throwable) {
-                Alerts.showFailure("Accept Offer Failed", throwable);
+                Alerts.connectionFailure();
             }
         });
     }
@@ -75,7 +75,7 @@ public class TradingOffers implements Initializable {
 
                     @Override
                     public void onFailure(Call<Object> call, Throwable throwable) {
-                        Alerts.showFailure("Delete Offer Failed", throwable);
+                        Alerts.connectionFailure();
                     }
                 });
     }
@@ -164,6 +164,7 @@ public class TradingOffers implements Initializable {
                     @Override
                     public void onFailure(Call<List<Offer>> call,
                                           Throwable throwable) {
+                        Alerts.connectionFailure();
                     }
                 });
 
@@ -232,6 +233,7 @@ public class TradingOffers implements Initializable {
                     @Override
                     public void onFailure(Call<List<Offer>> call,
                                           Throwable throwable) {
+                        Alerts.connectionFailure();
                     }
                 });
 
@@ -275,6 +277,7 @@ public class TradingOffers implements Initializable {
                     @Override
                     public void onFailure(Call<List<Offer>> call,
                                           Throwable throwable) {
+                        Alerts.connectionFailure();
                     }
                 });
 

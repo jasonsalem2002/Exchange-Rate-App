@@ -1,9 +1,12 @@
 package com.kjb04.exchange.transactions;
 
+import com.kjb04.exchange.Alerts;
 import com.kjb04.exchange.Authentication;
 import com.kjb04.exchange.api.ExchangeService;
 import com.kjb04.exchange.api.model.Transaction;
+import javafx.application.Platform;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -32,11 +35,14 @@ public class Transactions implements Initializable {
                     @Override
                     public void onResponse(Call<List<Transaction>> call,
                                            Response<List<Transaction>> response) {
-                        tableView.getItems().setAll(response.body());
+                        Platform.runLater(()-> {
+                            tableView.getItems().setAll(response.body());
+                        });
                     }
                     @Override
                     public void onFailure(Call<List<Transaction>> call,
                                           Throwable throwable) {
+                        Alerts.connectionFailure();
                     }
                 });
     }

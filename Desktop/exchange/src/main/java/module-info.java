@@ -15,6 +15,8 @@ module com.kjb04.exchange {
     opens com.kjb04.exchange.trading.tradingCreate to javafx.fxml;
     opens com.kjb04.exchange.chat to javafx.fxml;
     opens com.kjb04.exchange.graph to javafx.fxml;
+    opens com.kjb04.exchange.predictor to javafx.fxml;
+    opens com.kjb04.exchange.statistics to javafx.fxml;
     opens com.kjb04.exchange to javafx.fxml;
     opens com.kjb04.exchange.api.model to javafx.base, gson, okhttp3;
     requires java.prefs;

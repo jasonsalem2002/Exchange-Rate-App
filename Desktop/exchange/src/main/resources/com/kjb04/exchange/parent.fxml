@@ -21,12 +21,14 @@
                    text="LBP Rate App"
                    textAlignment="CENTER"
             />
-            <VBox> <!--spacing="5"-->
+            <VBox>
                 <Button fx:id="exchangeRateButton" styleClass="nav-button" text="Exchange Rate" onAction="#ratesSelected"/>
                 <Button fx:id="transactionButton" styleClass="nav-button" text="Transactions" onAction="#transactionsSelected"/>
                 <Button fx:id="tradingButton" styleClass="nav-button" text="Trading" onAction="#tradingSelected"/>
                 <Button fx:id="chatButton" styleClass="nav-button" text="Chat" onAction="#chatSelected"/>
                 <Button fx:id="graphButton" styleClass="nav-button" text="Graph" onAction="#graphSelected"/>
+                <Button fx:id="predictorButton" styleClass="nav-button" text="Predictor" onAction="#predictorSelected"/>
+                <Button fx:id="statisticsButton" styleClass="nav-button" text="Statistics" onAction="#statisticsSelected"/>
             </VBox>
             <Pane VBox.vgrow="ALWAYS"/>
             <VBox spacing="5">

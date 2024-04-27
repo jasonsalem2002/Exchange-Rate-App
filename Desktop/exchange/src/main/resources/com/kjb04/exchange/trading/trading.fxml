@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.HBox?>
 <BorderPane xmlns="http://javafx.com/javafx"
             fx:id="borderPane" fx:controller="com.kjb04.exchange.trading.Trading"
-            xmlns:fx="http://javafx.com/fxml" prefHeight="400.0"
+            xmlns:fx="http://javafx.com/fxml"
             stylesheets="@trading.css"
-            prefWidth="600.0">
+            maxHeight="Infinity" maxWidth="Infinity" prefHeight="480.0" prefWidth="640.0">
     <top>
         <VBox alignment="CENTER" style="-fx-padding: 10 0 25 0">
             <Label styleClass="header"

@@ -7,20 +7,18 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.kjb04.exchange.transactions.Transactions"
-            prefHeight="400.0" prefWidth="600.0">
-    <TableView
-            fx:id="tableView"
-            AnchorPane.bottomAnchor="4"
-            AnchorPane.leftAnchor="4"
-            AnchorPane.rightAnchor="4"
-            AnchorPane.topAnchor="4">
-        <columns>
-            <TableColumn text="USD Amount" fx:id="usdAmount"
-                         prefWidth="150"/>
-            <TableColumn text="LBP Amount" fx:id="lbpAmount"
-                         prefWidth="150"/>
-            <TableColumn text="Transaction Date" fx:id="transactionDate"
-                         prefWidth="150"/>
-        </columns>
-    </TableView>
+            maxHeight="Infinity" maxWidth="Infinity" prefHeight="400.0" prefWidth="600.0" >
+    <VBox alignment="CENTER" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" >
+        <Label text="Your Transactions" styleClass="header"/>
+        <TableView fx:id="tableView" maxWidth="450" >
+            <columns>
+                <TableColumn text="USD Amount" fx:id="usdAmount"
+                             prefWidth="150"/>
+                <TableColumn text="LBP Amount" fx:id="lbpAmount"
+                             prefWidth="150"/>
+                <TableColumn text="Transaction Date" fx:id="transactionDate"
+                             prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
 </AnchorPane>

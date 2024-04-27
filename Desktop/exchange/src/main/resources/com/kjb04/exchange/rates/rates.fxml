@@ -11,7 +11,7 @@
           stylesheets="@rates.css"
           alignment="center"
           hgap="10" vgap="10"
-          prefHeight="480.0" prefWidth="640.0" >
+          maxHeight="Infinity" maxWidth="Infinity" prefHeight="480.0" prefWidth="640.0">
     <Label styleClass="header"
            text="Current Exchange Rate"
            textAlignment="CENTER" GridPane.columnSpan="2"
@@ -23,13 +23,13 @@
            text="Buy USD Rate" GridPane.columnIndex="0"
            GridPane.rowIndex="3"/>
     <Label styleClass="value"
-           fx:id="buyUsdRateLabel" text="Buy Rate"
+           fx:id="buyUsdRateLabel" text="Not available"
            GridPane.columnIndex="0" GridPane.rowIndex="4"/>
     <Label styleClass="value-label"
            text="Sell USD Rate" GridPane.columnIndex="1"
            GridPane.rowIndex="3"/>
     <Label styleClass="value"
-           fx:id="sellUsdRateLabel" text="Sell Rate"
+           fx:id="sellUsdRateLabel" text="Not available"
            GridPane.columnIndex="1" GridPane.rowIndex="4"/>
     <Separator orientation="HORIZONTAL" GridPane.RowIndex="5"
                GridPane.columnIndex="0" GridPane.columnSpan="2"/>

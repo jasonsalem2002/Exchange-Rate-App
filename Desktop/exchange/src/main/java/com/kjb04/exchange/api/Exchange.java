@@ -69,4 +69,28 @@ public interface Exchange {
                                               @Query("end_date") String endDate,
                                               @Query("granularity") String granularity
                                      );
+    @GET("/predictRate")
+    Call<FutureRate> getPredRate(@Header("Authorization") String authorization,
+                                                     @Query("date") String date);
+    @GET("/next30DaysRates")
+    Call<List<FutureRate>> getNext30DaysRates(@Header("Authorization") String authorization);
+
+    @GET("/highest_transaction_today")
+    Call<Map<String,Transaction>> getHighestTransactionToday(@Header("Authorization") String authorization);
+    @GET("/largest_transaction_amount")
+    Call<Map<String,Transaction>> getLargestTransactionAmount(@Header("Authorization") String authorization,
+                                                       @Query("start_date") String startDate,
+                                                       @Query("end_date") String endDate
+    );
+    @GET("/number_of_transactions")
+    Call<Map<String,Map<String, Float>>> getNumberOfTransactions(@Header("Authorization") String authorization,
+                                                     @Query("start_date") String startDate,
+                                                     @Query("end_date") String endDate,
+                                                     @Query("granularity") String granularity
+    );
+    @GET("/volume_of_transactions")
+    Call<Map<String, Float>> getVolumeOfTransactions(@Header("Authorization") String authorization,
+                                                   @Query("start_date") String startDate,
+                                                   @Query("end_date") String endDate
+    );
 }

@@ -1,5 +1,6 @@
 package com.kjb04.exchange.chat;
 
+import com.kjb04.exchange.Alerts;
 import com.kjb04.exchange.Authentication;
 import com.kjb04.exchange.api.ExchangeService;
 import com.kjb04.exchange.api.model.GroupMessage;
@@ -49,7 +50,9 @@ public class Chat implements Initializable {
     public Button submitGroupButton;
     public Button leaveGroupButton;
     public VBox createGroupBox;
+    public HBox newChatBox;
     public TextField createGroupTextField;
+    public TextField newChatTextField;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -61,20 +64,26 @@ public class Chat implements Initializable {
 
     public void selectPrivate() {
         preview.getItems().clear();
+        chatPane.getItems().clear();
         chatType.setText("Private Chat");
         chatName.setText("");
+        newChatBox.setVisible(true);
         leaveGroupButton.setVisible(false);
         createGroupButton.setVisible(false);
+        joinGroupComboBox.setVisible(false);
         fetchChat();
         fetchUsernames();
     }
 
     public void selectGroup() {
         preview.getItems().clear();
+        chatPane.getItems().clear();
         chatType.setText("Groups");
         chatName.setText("");
+        newChatBox.setVisible(false);
         leaveGroupButton.setVisible(false);
         createGroupButton.setVisible(true);
+        joinGroupComboBox.setVisible(true);
         Platform.runLater(() -> {
             fetchUserGroups();
             fetchGroups();
@@ -113,12 +122,7 @@ public class Chat implements Initializable {
 
                 @Override
                 public void onFailure(Call<Object> call, Throwable throwable) {
-                    Platform.runLater(() -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Chat failed");
-                        alert.setContentText("Failed to send message.");
-                        alert.showAndWait();
-                    });
+                    Alerts.connectionFailure();
                 }
             });
         }
@@ -144,10 +148,7 @@ public class Chat implements Initializable {
                     @Override
                     public void onFailure(Call<List<Message>> call,
                                           Throwable throwable) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Chat Failed");
-                        alert.setContentText("Failed to fetch chat.");
-                        alert.showAndWait();
+                        Alerts.connectionFailure();
                     }
                 });
 
@@ -168,10 +169,7 @@ public class Chat implements Initializable {
                     @Override
                     public void onFailure(Call<List<String>> call,
                                           Throwable throwable) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Chat Failed");
-                        alert.setContentText("Failed to fetch usernames.");
-                        alert.showAndWait();
+                        Alerts.connectionFailure();
                     }
                 });
 
@@ -190,15 +188,22 @@ public class Chat implements Initializable {
     }
 
 
-//    private void createNewChat() {
-//        Platform.runLater(() -> {
-//            chatPane.getItems().clear();
-//            if (newChatComboBox.getValue()!=null && usernameList.contains((String)newChatComboBox.getValue())) {
-//                selectedUsername = (String) newChatComboBox.getValue();
-//                chatName.setText(selectedUsername);
-//            }
-//        });
-//    }
+    public void createNewChat() {
+        Platform.runLater(() -> {
+            chatPane.getItems().clear();
+            if (usernameList.contains(newChatTextField.getText())) {
+                selectedUsername = newChatTextField.getText();
+                chatName.setText(selectedUsername);
+            }
+            else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid username");
+                alert.setContentText("User "+newChatTextField.getText()+" does not exist.");
+                alert.showAndWait();
+            }
+            newChatTextField.setText("");
+        });
+    }
 
 
     private void displayPreview() {
@@ -232,7 +237,9 @@ public class Chat implements Initializable {
                     vbox = new VBox();
                     //vbox.setPrefHeight(50);
                     vbox.getChildren().add(new Label(username));
-                    vbox.getChildren().add(new Label(msg.getContent()));
+                    String content = msg.getContent().length()>20 ? msg.getContent().substring(0,17)+"..." : msg.getContent();  // Do not display full string if length>20
+                    if (content.indexOf('\n')!=-1) { content = content.substring(0,content.indexOf('\n')); }    // Do not display anything after a line break
+                    vbox.getChildren().add(new Label(content));
                     vbox.getChildren().add(new Label(msg.getAddedDate().toString()));
                     vbox.setOnMouseClicked(event -> displayChat(username));
                     userBoxes.put(username, vbox);
@@ -329,12 +336,7 @@ public class Chat implements Initializable {
 
                 @Override
                 public void onFailure(Call<Object> call, Throwable throwable) {
-                    Platform.runLater(() -> {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Chat failed");
-                        alert.setContentText("Failed to send group message.");
-                        alert.showAndWait();
-                    });
+                    Alerts.connectionFailure();
                 }
             });
         }
@@ -384,10 +386,7 @@ public class Chat implements Initializable {
                     @Override
                     public void onFailure(Call<List<String>> call,
                                           Throwable throwable) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Groups Failed");
-                        alert.setContentText("Failed to fetch groups.");
-                        alert.showAndWait();
+                        Alerts.connectionFailure();
                     }
                 });
 
@@ -412,10 +411,7 @@ public class Chat implements Initializable {
                     @Override
                     public void onFailure(Call<List<String>> call,
                                           Throwable throwable) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Groups Failed");
-                        alert.setContentText("Failed to fetch user groups.");
-                        alert.showAndWait();
+                        Alerts.connectionFailure();
                     }
                 });
 
@@ -440,10 +436,7 @@ public class Chat implements Initializable {
                     @Override
                     public void onFailure(Call<List<GroupMessage>> call,
                                           Throwable throwable) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Groups Failed");
-                        alert.setContentText("Failed to fetch groups.");
-                        alert.showAndWait();
+                        Alerts.connectionFailure();
                     }
                 });
         //return groupMessageMap.get(groupName);
@@ -490,7 +483,10 @@ public class Chat implements Initializable {
 //                alert.setContentText("Added to preview: "+groupName);
 //                alert.showAndWait();
             }
-            displayGroupChat(selectedGroup);
+            leaveGroupButton.setVisible(false);
+            if (selectedGroup!=null && !selectedGroup.isEmpty()){
+                displayGroupChat(selectedGroup);
+            }
         });
     }
 
@@ -553,12 +549,7 @@ public class Chat implements Initializable {
 
             @Override
             public void onFailure(Call<Object> call, Throwable throwable) {
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Chat failed");
-                    alert.setContentText("Failed to join group.");
-                    alert.showAndWait();
-                });
+                Alerts.connectionFailure();
             }
         });
     }
@@ -583,12 +574,7 @@ public class Chat implements Initializable {
 
                     @Override
                     public void onFailure(Call<Object> call, Throwable throwable) {
-                        Platform.runLater(() -> {
-                            Alert alert = new Alert(Alert.AlertType.ERROR);
-                            alert.setTitle("Chat failed");
-                            alert.setContentText("Failed to leave group.");
-                            alert.showAndWait();
-                        });
+                        Alerts.connectionFailure();
                     }
                 });
     }
@@ -613,12 +599,7 @@ public class Chat implements Initializable {
 
                     @Override
                     public void onFailure(Call<Object> call, Throwable throwable) {
-                        Platform.runLater(() -> {
-                            Alert alert = new Alert(Alert.AlertType.ERROR);
-                            alert.setTitle("Chat failed");
-                            alert.setContentText("Failed to create group.");
-                            alert.showAndWait();
-                        });
+                        Alerts.connectionFailure();
                     }
                 });
     }

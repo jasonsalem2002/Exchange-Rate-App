@@ -1,5 +1,6 @@
 package com.kjb04.exchange.login;
 
+import com.kjb04.exchange.Alerts;
 import com.kjb04.exchange.Authentication;
 import com.kjb04.exchange.OnPageCompleteListener;
 import com.kjb04.exchange.PageCompleter;
@@ -31,18 +32,24 @@ public class Login implements PageCompleter {
             @Override
             public void onResponse(Call<Token> call, Response<Token>
                  response) {
-                 Authentication.getInstance().saveToken(response.body().getToken());
-                 Authentication.getInstance().saveUsername(usernameTextField.getText());
+                if (response.isSuccessful()) {
+                    Authentication.getInstance().saveToken(response.body().getToken());
+                    Authentication.getInstance().saveUsername(usernameTextField.getText());
                     Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Success");
+                        alert.setContentText("Logged in successfully.");
+                        alert.showAndWait();
                         onPageCompleteListener.onPageCompleted();
                     });
+                }
+                else {
+                    Alerts.showResponse(response);
+                }
             }
             @Override
             public void onFailure(Call<Token> call, Throwable throwable) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Login Failed");
-                alert.setContentText("Failed to login.");
-                alert.showAndWait();
+                Alerts.connectionFailure();
             }
         });
     }

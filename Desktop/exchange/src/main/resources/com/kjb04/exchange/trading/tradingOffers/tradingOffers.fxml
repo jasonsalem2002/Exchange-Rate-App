@@ -21,7 +21,7 @@
                 <Button fx:id="selectAcceptedButton" styleClass="btn" text="Your Accepted Offers" onAction="#selectAccepted" />
             </HBox>
             <Pane HBox.hgrow="ALWAYS"/>
-            <HBox fx:id="allOffersDirectionBox" spacing="10">  <!-- Inner HBox for radio buttons -->
+            <HBox fx:id="allOffersDirectionBox" spacing="10">
                 <RadioButton text="Buy USD" onAction="#selectAllOffers">
                     <toggleGroup>
                         <ToggleGroup fx:id="transactionType"/>

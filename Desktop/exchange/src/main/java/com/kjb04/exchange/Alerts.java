@@ -67,11 +67,19 @@ public class Alerts {
 //        });
 //    }
 
-    public static void showFailure(String error, Throwable throwable) {
+//    public static void showFailure(String error) {
+//        Platform.runLater(() -> {
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle(error);
+//            alert.setContentText("Please connect to the Internet");
+//            alert.showAndWait();
+//        });
+//    }
+    public static void connectionFailure() {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle(error);
-            alert.setContentText("Error: " + throwable.getMessage());
+            alert.setTitle("Connection Error");
+            alert.setContentText("Please connect to the Internet");
             alert.showAndWait();
         });
     }

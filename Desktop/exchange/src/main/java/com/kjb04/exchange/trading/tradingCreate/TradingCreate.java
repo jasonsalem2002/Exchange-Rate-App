@@ -1,5 +1,6 @@
 package com.kjb04.exchange.trading.tradingCreate;
 
+import com.kjb04.exchange.Alerts;
 import com.kjb04.exchange.Authentication;
 import com.kjb04.exchange.OnPageCompleteListener;
 import com.kjb04.exchange.PageCompleter;
@@ -69,12 +70,7 @@ public class TradingCreate implements PageCompleter {
 
             @Override
             public void onFailure(Call<Object> call, Throwable throwable) {
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Transaction Failed");
-                    alert.setContentText("Failed to add transaction.");
-                    alert.showAndWait();
-                });
+                Alerts.connectionFailure();
             }
         });
 

@@ -1,5 +1,6 @@
 package com.kjb04.exchange.register;
 
+import com.kjb04.exchange.Alerts;
 import com.kjb04.exchange.Authentication;
 import com.kjb04.exchange.OnPageCompleteListener;
 import com.kjb04.exchange.PageCompleter;
@@ -31,36 +32,45 @@ public class Register implements PageCompleter {
             @Override
             public void onResponse(Call<User> call, Response<User>
                     response) {
+                if (response.isSuccessful()) {
+                    ExchangeService.exchangeApi().authenticate(user).enqueue(new
+                             Callback<Token>() {
+                                 @Override
+                                 public void onResponse(Call<Token> call,
+                                                        Response<Token> response) {
 
-                ExchangeService.exchangeApi().authenticate(user).enqueue(new
-                 Callback<Token>() {
-                     @Override
-                     public void onResponse(Call<Token> call,
-                                            Response<Token> response) {
+                                     Authentication.getInstance().saveToken(response.body().getToken());
+                                     Authentication.getInstance().saveUsername(usernameTextField.getText());
+                                     Platform.runLater(() -> {
+                                         Alert alert = new Alert(Alert.AlertType.ERROR);
+                                         alert.setTitle("Success");
+                                         alert.setContentText("Account created successfully.");
+                                         alert.showAndWait();
+                                         onPageCompleteListener.onPageCompleted();
+                                     });
+                                 }
 
-                         Authentication.getInstance().saveToken(response.body().getToken());
-                         Authentication.getInstance().saveUsername(usernameTextField.getText());
-                         Platform.runLater(() -> {
-                             onPageCompleteListener.onPageCompleted();
-                         });
-                     }
-                     @Override
-                     public void onFailure(Call<Token> call, Throwable
-                             throwable) {
-                         Alert alert = new Alert(Alert.AlertType.ERROR);
-                         alert.setTitle("Login Failed");
-                         alert.setContentText("Failed to login.");
-                         alert.showAndWait();
-                     }
-                 });
+                                 @Override
+                                 public void onFailure(Call<Token> call, Throwable
+                                         throwable) {
+                                     Platform.runLater(() -> {
+                                         Alert alert = new Alert(Alert.AlertType.ERROR);
+                                         alert.setTitle("Login Failed");
+                                         alert.setContentText("Failed to login.");
+                                         alert.showAndWait();
+                                     });
+                                 }
+                             });
+
+                }
+                else {
+                    Alerts.showResponse(response);
+                }
             }
             @Override
             public void onFailure(Call<User> call, Throwable throwable) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Register Failed");
-                alert.setContentText("Failed to register.");
-                alert.showAndWait();
+                Alerts.connectionFailure();
             }
-            });
+        });
     }
 }

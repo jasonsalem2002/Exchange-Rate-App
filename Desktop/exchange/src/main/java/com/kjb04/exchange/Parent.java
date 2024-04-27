@@ -14,6 +14,8 @@ public class Parent implements Initializable, OnPageCompleteListener {
     public Button tradingButton;
     public Button chatButton;
     public Button graphButton;
+    public Button predictorButton;
+    public Button statisticsButton;
     public Button loginButton;
     public Button registerButton;
     public Button logoutButton;
@@ -41,6 +43,12 @@ public class Parent implements Initializable, OnPageCompleteListener {
     }
     public void graphSelected() {
         swapContent(Section.GRAPH);
+    }
+    public void predictorSelected() {
+        swapContent(Section.PREDICTOR);
+    }
+    public void statisticsSelected() {
+        swapContent(Section.STATISTICS);
     }
     public void loginSelected() { swapContent(Section.LOGIN); }
     public void registerSelected() {
@@ -76,6 +84,10 @@ public class Parent implements Initializable, OnPageCompleteListener {
         chatButton.setVisible(authenticated);
         graphButton.setManaged(authenticated);
         graphButton.setVisible(authenticated);
+        predictorButton.setManaged(authenticated);
+        predictorButton.setVisible(authenticated);
+        statisticsButton.setManaged(authenticated);
+        statisticsButton.setVisible(authenticated);
         loginButton.setManaged(!authenticated);
         loginButton.setVisible(!authenticated);
         registerButton.setManaged(!authenticated);
@@ -91,6 +103,8 @@ public class Parent implements Initializable, OnPageCompleteListener {
         TRADING,
         CHAT,
         GRAPH,
+        PREDICTOR,
+        STATISTICS,
         LOGIN,
         REGISTER;
         public String getResource() {
@@ -105,6 +119,10 @@ public class Parent implements Initializable, OnPageCompleteListener {
                         "/com/kjb04/exchange/chat/chat.fxml";
                 case GRAPH ->
                         "/com/kjb04/exchange/graph/graph.fxml";
+                case PREDICTOR ->
+                        "/com/kjb04/exchange/predictor/predictor.fxml";
+                case STATISTICS ->
+                        "/com/kjb04/exchange/statistics/statistics.fxml";
                 case LOGIN ->
                         "/com/kjb04/exchange/login/login.fxml";
                 case REGISTER ->

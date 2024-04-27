@@ -1,6 +1,7 @@
 package com.kjb04.exchange.rates;
 
 
+import com.kjb04.exchange.Alerts;
 import com.kjb04.exchange.Authentication;
 import com.kjb04.exchange.api.ExchangeService;
 import com.kjb04.exchange.api.model.ExchangeRates;
@@ -37,19 +38,15 @@ public class Rates {
                                     Response<ExchangeRates> response) {
                  ExchangeRates exchangeRates = response.body();
                  Platform.runLater(() -> {
-                     assert exchangeRates != null;
-                     buyUsdRateLabel.setText(exchangeRates.lbpToUsd.toString());
-                     sellUsdRateLabel.setText(exchangeRates.usdToLbp.toString());
+                     if (exchangeRates != null ) {
+                         buyUsdRateLabel.setText(exchangeRates.lbpToUsd.toString());
+                         sellUsdRateLabel.setText(exchangeRates.usdToLbp.toString());
+                     }
                  });
              }
              @Override
              public void onFailure(Call<ExchangeRates> call, Throwable throwable) {
-                 Platform.runLater(() -> {
-                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                     alert.setTitle("fetchRates Failed");
-                     alert.setContentText("Failed to fetch rates.");
-                     alert.showAndWait();
-                 });
+                 Alerts.connectionFailure();
              }
          });
     }
@@ -116,12 +113,7 @@ public class Rates {
 
             @Override
             public void onFailure(Call<Object> call, Throwable throwable) {
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Transaction Failed");
-                    alert.setContentText("Failed to add transaction.");
-                    alert.showAndWait();
-                });
+                Alerts.connectionFailure();
             }
         });
     }

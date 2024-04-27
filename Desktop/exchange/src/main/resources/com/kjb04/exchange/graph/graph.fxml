@@ -12,14 +12,15 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.kjb04.exchange.graph.Graph"
-            prefHeight="400.0" prefWidth="600.0" style="-fx-padding: 10px">
-    <VBox style="-fx-margin: 25 0 10 0">
-        <LineChart fx:id="lineChart">
+            maxHeight="Infinity" maxWidth="Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-padding: 10px">
+    <VBox alignment="CENTER" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0"
+          style="-fx-margin: 25 0 10 0">
+        <LineChart fx:id="lineChart" VBox.vgrow="ALWAYS">
             <xAxis>
-                <CategoryAxis fx:id="xAxis" label="X Axis"/>
+                <CategoryAxis fx:id="Time" label="Day"/>
             </xAxis>
             <yAxis>
-                <NumberAxis fx:id="yAxis" label="Y Axis"/>
+                <NumberAxis fx:id="yAxis" label="Exchange Rate (LBP/USD)" autoRanging="false" />
             </yAxis>
         </LineChart>
         <HBox style="-fx-padding:0 0 0 25" spacing="5" alignment="BOTTOM_CENTER">
@@ -27,13 +28,13 @@
                       promptText="Granularity" onAction="#displayGranNote"/>
             <VBox>
                 <Label text="Start Date" />
-                <DatePicker fx:id="startDatePicker" prefHeight="30.0"/>
+                <DatePicker fx:id="startDatePicker" prefHeight="30.0" prefWidth="120.0"/>
             </VBox>
             <VBox>
                 <Label text="End Date" />
-                <DatePicker fx:id="endDatePicker" prefHeight="30.0"/>
+                <DatePicker fx:id="endDatePicker" prefHeight="30.0" prefWidth="120.0"/>
             </VBox>
-            <Button fx:id="graphButton" text="Generate" onAction="#graph" prefHeight="30.0"/>
+            <Button fx:id="graphButton" text="Generate" onAction="#graph" prefHeight="30.0" prefWidth="80.0"/>
         </HBox>
         <Label fx:id="granNoteLabel" style="-fx-padding:3 0 0 25"/>
     </VBox>

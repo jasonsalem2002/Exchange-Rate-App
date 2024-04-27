@@ -12,7 +12,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new
                 FXMLLoader(Main.class.getResource("parent.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 475);
+        Scene scene = new Scene(fxmlLoader.load(), 640, 480);
         stage.setTitle("Currency Exchange");
         stage.setScene(scene);
         stage.show();
