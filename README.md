@@ -1,3 +1,119 @@
+
+# Exchange Rate
+
+## Setup and Running the Server
+
+Before running the server, ensure that all dependencies are installed and the database is set up properly.
+
+### Installation
+
+1. Install the required packages from `requirements.txt`:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Database Setup
+
+To set up and initialize the database, run the following commands:
+
+```bash
+flask db init
+flask db migrate
+flask db upgrade
+```
+
+### Running the Server
+
+To run the server on your local machine, use the following command:
+
+```bash
+flask run --host=0.0.0.0 --debug --port=5000
+```
+
+### Accessing the Deployed Server
+
+The backend has been deployed on a local server accessible via:
+
+[https://jason.hydra-polaris.ts.net](https://jason.hydra-polaris.ts.net)
+
+*Note: The server can be turned on upon request as it is typically kept offline to protect local ports from public access.*
+
+## API Routes and Functionalities
+
+This API consists of multiple endpoints grouped by their functionality, including user management, transaction handling, group interactions, and statistical data retrieval. Here are some examples for the routes/endpoints:
+
+### User Management
+
+#### Create User
+
+- **Endpoint:** `POST /user`
+- **Description:** Registers a new user with a username and password.
+- **Body:**
+  ```json
+  {
+    "user_name": "username",
+    "password": "password"
+  }
+  ```
+
+#### Authenticate User
+
+- **Endpoint:** `POST /authentication`
+- **Description:** Authenticates user and returns a JWT for accessing protected routes.
+
+### Transaction Handling
+
+#### Create Transaction
+
+- **Endpoint:** `POST /transaction`
+- **Description:** Creates a new transaction recording the exchange of currencies between USD and LBP.
+- **Body:**
+  ```json
+  {
+    "usd_amount": 100,
+    "lbp_amount": 152000,
+    "usd_to_lbp": true
+  }
+  ```
+
+#### Get User Transactions
+
+- **Endpoint:** `GET /transaction`
+- **Description:** Retrieves all transactions associated with the authenticated user's ID.
+
+### Group Management
+
+#### Create Group
+
+- **Endpoint:** `POST /group`
+- **Description:** Creates a new group with a specified name.
+
+#### Send Group Message
+
+- **Endpoint:** `POST /group/{group_name}/message`
+- **Description:** Sends a message to all members of a specified group.
+
+### Statistics
+
+#### Number of Transactions
+
+- **Endpoint:** `GET /number_of_transactions`
+- **Description:** Provides the number of transactions over a specified period, aggregated by a specified granularity.
+
+### Exchange Rate Predictions
+
+#### Predict Exchange Rate
+
+- **Endpoint:** `GET /predictRate`
+- **Description:** Predicts the exchange rate for a specified future date based on historical data.
+
+## OpenAPi v3.1
+
+Find the OpenAPI documentation inside of the backend folder.
+
+
+# Project Tree
 ```
 ExchangeRate-7
 ├─ Android
@@ -22,37 +138,44 @@ ExchangeRate-7
 │     │     │  │        └─ currencyexchange
 │     │     │  │           ├─ Calculator.kt
 │     │     │  │           ├─ ChartFragment.kt
-│     │     │  │           ├─ ChatsActivity.kt
-│     │     │  │           ├─ ChatsFragment.kt
-│     │     │  │           ├─ Convo.kt
 │     │     │  │           ├─ ExchangeFragment.kt
-│     │     │  │           ├─ GroupConvo.kt
-│     │     │  │           ├─ GroupMessageAdapter.kt
-│     │     │  │           ├─ GroupWithLastMessage.kt
-│     │     │  │           ├─ GroupsFragment.kt
-│     │     │  │           ├─ GroupsRVAdapter.kt
 │     │     │  │           ├─ LoginActivity.kt
 │     │     │  │           ├─ MainActivity.kt
-│     │     │  │           ├─ MessageAdapter.kt
-│     │     │  │           ├─ Myoffers.kt
+│     │     │  │           ├─ Prediction.kt
 │     │     │  │           ├─ RegistrationActivity.kt
 │     │     │  │           ├─ TabsPagerAdapter.kt
-│     │     │  │           ├─ TradingFragment.kt
 │     │     │  │           ├─ TransactionsFragment.kt
-│     │     │  │           ├─ UserWithLastMessage.kt
-│     │     │  │           ├─ UsersRVAdapter.kt
-│     │     │  │           └─ api
-│     │     │  │              ├─ Authentication.kt
-│     │     │  │              ├─ model
-│     │     │  │              │  ├─ ExchangeRates.kt
-│     │     │  │              │  ├─ Group.kt
-│     │     │  │              │  ├─ GroupMessage.kt
-│     │     │  │              │  ├─ Message.kt
-│     │     │  │              │  ├─ Offer.kt
-│     │     │  │              │  ├─ Token.kt
-│     │     │  │              │  ├─ Transaction.kt
-│     │     │  │              │  └─ User.kt
-│     │     │  │              └─ retrofit.kt
+│     │     │  │           ├─ api
+│     │     │  │           │  ├─ Authentication.kt
+│     │     │  │           │  ├─ model
+│     │     │  │           │  │  ├─ ExchangeRates.kt
+│     │     │  │           │  │  ├─ Group.kt
+│     │     │  │           │  │  ├─ GroupMessage.kt
+│     │     │  │           │  │  ├─ Message.kt
+│     │     │  │           │  │  ├─ Offer.kt
+│     │     │  │           │  │  ├─ Token.kt
+│     │     │  │           │  │  ├─ Transaction.kt
+│     │     │  │           │  │  └─ User.kt
+│     │     │  │           │  └─ retrofit.kt
+│     │     │  │           ├─ chatting
+│     │     │  │           │  ├─ ChatsActivity.kt
+│     │     │  │           │  ├─ ChatsFragment.kt
+│     │     │  │           │  ├─ Convo.kt
+│     │     │  │           │  ├─ GroupConvo.kt
+│     │     │  │           │  ├─ GroupMessageAdapter.kt
+│     │     │  │           │  ├─ GroupsFragment.kt
+│     │     │  │           │  ├─ GroupsRVAdapter.kt
+│     │     │  │           │  ├─ MessageAdapter.kt
+│     │     │  │           │  └─ UsersRVAdapter.kt
+│     │     │  │           ├─ data
+│     │     │  │           │  ├─ FutureRate.kt
+│     │     │  │           │  ├─ GroupWithLastMessage.kt
+│     │     │  │           │  └─ UserWithLastMessage.kt
+│     │     │  │           ├─ stats.kt
+│     │     │  │           └─ trading
+│     │     │  │              ├─ ActiveOffers.kt
+│     │     │  │              ├─ Myacceptedoffers.kt
+│     │     │  │              └─ TradingFragment.kt
 │     │     │  └─ res
 │     │     │     ├─ drawable
 │     │     │     │  ├─ baseline_add_24.xml
@@ -71,6 +194,7 @@ ExchangeRate-7
 │     │     │     ├─ drawable-v24
 │     │     │     │  └─ ic_launcher_foreground.xml
 │     │     │     ├─ layout
+│     │     │     │  ├─ activity_active_offers.xml
 │     │     │     │  ├─ activity_calculator.xml
 │     │     │     │  ├─ activity_chats.xml
 │     │     │     │  ├─ activity_convo.xml
@@ -78,7 +202,9 @@ ExchangeRate-7
 │     │     │     │  ├─ activity_login.xml
 │     │     │     │  ├─ activity_main.xml
 │     │     │     │  ├─ activity_myoffers.xml
+│     │     │     │  ├─ activity_prediction.xml
 │     │     │     │  ├─ activity_registration.xml
+│     │     │     │  ├─ activity_stats.xml
 │     │     │     │  ├─ dialog_creategroup.xml
 │     │     │     │  ├─ dialog_trading.xml
 │     │     │     │  ├─ dialog_transaction.xml
@@ -94,6 +220,9 @@ ExchangeRate-7
 │     │     │     │  ├─ item_trading.xml
 │     │     │     │  ├─ item_transaction.xml
 │     │     │     │  └─ item_users.xml
+│     │     │     ├─ layout-land
+│     │     │     │  ├─ fragment_exchange.xml
+│     │     │     │  └─ fragment_trading.xml
 │     │     │     ├─ menu
 │     │     │     │  ├─ bottom_nav.xml
 │     │     │     │  ├─ menu_logged_in.xml
@@ -123,8 +252,6 @@ ExchangeRate-7
 │     │     │     │  ├─ dimens.xml
 │     │     │     │  ├─ strings.xml
 │     │     │     │  └─ themes.xml
-│     │     │     ├─ values-land
-│     │     │     │  └─ dimens.xml
 │     │     │     ├─ values-night
 │     │     │     │  └─ themes.xml
 │     │     │     ├─ values-w1240dp
@@ -152,14 +279,21 @@ ExchangeRate-7
 │     ├─ settings.gradle
 │     └─ temp.txt
 ├─ Backend
+│  ├─ NeuralNetwork
+│  │  ├─ Models
+│  │  │  ├─ FinalMODELLLL.h5
+│  │  │  └─ finalMODEL.keras
+│  │  ├─ Plot
+│  │  │  └─ plotdata.py
+│  │  ├─ Predicted
+│  │  │  └─ predicted_exchange_rates.csv
+│  │  └─ Train
+│  │     └─ lastPre.py
 │  ├─ __init__.py
 │  ├─ app.py
 │  ├─ config.py
-│  ├─ files
-│  │  ├─ Predict.py
-│  │  ├─ data.csv
-│  │  └─ testPrediction.py
 │  ├─ models
+│  │  ├─ ExchangeRate.py
 │  │  ├─ Group.py
 │  │  ├─ Message.py
 │  │  ├─ Offer.py
@@ -175,6 +309,7 @@ ExchangeRate-7
 │  │  ├─ exchangeRateRoute.py
 │  │  ├─ groupRoute.py
 │  │  ├─ offersRoute.py
+│  │  ├─ predictedExchangeRate.py
 │  │  ├─ statistics.py
 │  │  ├─ transactionRoute.py
 │  │  ├─ userRoute.py
@@ -202,6 +337,8 @@ ExchangeRate-7
 │     │  ├─ .gitignore
 │     │  ├─ .gitignore.old
 │     │  ├─ encodings.xml
+│     │  ├─ inspectionProfiles
+│     │  │  └─ Project_Default.xml
 │     │  ├─ misc.xml
 │     │  ├─ misc.xml.old
 │     │  ├─ uiDesigner.xml
@@ -233,6 +370,7 @@ ExchangeRate-7
 │           │  ├─ com
 │           │  │  └─ kjb04
 │           │  │     └─ exchange
+│           │  │        ├─ Alerts.java
 │           │  │        ├─ Authentication.java
 │           │  │        ├─ DateParser.java
 │           │  │        ├─ Main.java
@@ -244,6 +382,7 @@ ExchangeRate-7
 │           │  │        │  ├─ ExchangeService.java
 │           │  │        │  └─ model
 │           │  │        │     ├─ ExchangeRates.java
+│           │  │        │     ├─ FutureRate.java
 │           │  │        │     ├─ GroupMessage.java
 │           │  │        │     ├─ Message.java
 │           │  │        │     ├─ Offer.java
@@ -252,12 +391,18 @@ ExchangeRate-7
 │           │  │        │     └─ User.java
 │           │  │        ├─ chat
 │           │  │        │  └─ Chat.java
+│           │  │        ├─ graph
+│           │  │        │  └─ Graph.java
 │           │  │        ├─ login
 │           │  │        │  └─ Login.java
+│           │  │        ├─ predictor
+│           │  │        │  └─ Predictor.java
 │           │  │        ├─ rates
 │           │  │        │  └─ Rates.java
 │           │  │        ├─ register
 │           │  │        │  └─ Register.java
+│           │  │        ├─ statistics
+│           │  │        │  └─ Statistics.java
 │           │  │        ├─ trading
 │           │  │        │  ├─ Trading.java
 │           │  │        │  ├─ tradingCreate
@@ -274,17 +419,26 @@ ExchangeRate-7
 │                       ├─ chat
 │                       │  ├─ chat.css
 │                       │  └─ chat.fxml
+│                       ├─ graph
+│                       │  ├─ graph.css
+│                       │  └─ graph.fxml
 │                       ├─ login
 │                       │  ├─ login.css
 │                       │  └─ login.fxml
 │                       ├─ parent.css
 │                       ├─ parent.fxml
+│                       ├─ predictor
+│                       │  ├─ predictor.css
+│                       │  └─ predictor.fxml
 │                       ├─ rates
 │                       │  ├─ rates.css
 │                       │  └─ rates.fxml
 │                       ├─ register
 │                       │  ├─ register.css
 │                       │  └─ register.fxml
+│                       ├─ statistics
+│                       │  ├─ statistics.css
+│                       │  └─ statistics.fxml
 │                       ├─ trading
 │                       │  ├─ trading.css
 │                       │  ├─ trading.fxml
@@ -295,6 +449,7 @@ ExchangeRate-7
 │                       │     ├─ tradingOffers.css
 │                       │     └─ tradingOffers.fxml
 │                       └─ transactions
+│                          ├─ transactions.css
 │                          └─ transactions.fxml
 ├─ FrontEnd
 │  ├─ README.md
@@ -311,22 +466,38 @@ ExchangeRate-7
 │     ├─ App.css
 │     ├─ App.js
 │     ├─ App.test.js
+│     ├─ AvailibleOffers.js
+│     ├─ ChatBox.css
 │     ├─ ChatDrawer.css
 │     ├─ ChatDrawer.js
+│     ├─ ChatGroup.js
+│     ├─ ChatUser.css
 │     ├─ ChatUser.js
 │     ├─ CreateOffer.js
 │     ├─ DrawerNav.js
+│     ├─ Graph.css
+│     ├─ Graph.js
+│     ├─ GroupChatBox.js
+│     ├─ GroupChats.js
+│     ├─ GroupMessage.css
+│     ├─ GroupMessage.js
 │     ├─ Home.css
 │     ├─ Home.js
 │     ├─ Message.css
 │     ├─ Message.js
+│     ├─ MyOffers.js
 │     ├─ Nav.css
 │     ├─ Nav.js
-│     ├─ Offers.js
+│     ├─ Predictor.css
+│     ├─ Predictor.js
 │     ├─ RatesSideBar.css
 │     ├─ RatesSideBar.js
+│     ├─ Transactions
+│     │  ├─ Transactions.css
+│     │  └─ Transactions.js
 │     ├─ UserChatBox.css
 │     ├─ UserChatBox.js
+│     ├─ UserChats.js
 │     ├─ UserContext.js
 │     ├─ UserCredentialsDialog
 │     │  ├─ UserCredentialsDialog.css
@@ -337,8 +508,6 @@ ExchangeRate-7
 │     ├─ logo.svg
 │     ├─ reportWebVitals.js
 │     └─ setupTests.js
-├─ LSTM_Exchange_Rate_Predictor.pth
-├─ README.md
-└─ scaler.joblib
+└─ README.md
 
 ```
