@@ -1,0 +1,243 @@
+Rates:
+
+
+
+Today's Exchange Rate:
+
+    Displays the current buy and sell rates for USD fetched from the server.
+
+Rate Calculator:
+
+    Allows users to select the conversion type (USD to LBP or LBP to USD).
+    Users input the amount they want to convert.
+    Upon clicking the "Calculate" button, the equivalent amount in the selected currency is calculated and displayed.
+
+
+
+Functions:
+
+    toggleDrawer():
+    Purpose: Toggles the visibility of the drawer.
+    Actions: Sets the state to open or close the drawer.
+
+    handleCalculate(e):
+        Purpose: Calculates the equivalent amount based on the selected conversion type and input amount.
+                
+        Retrieves the conversion rate based on the selected conversion type.
+        Calculates the equivalent amount and updates the state.
+
+
+    handleClick():
+
+        Purpose: Handles the click event for opening the drawer.
+        Actions: Sets the state to open the drawer.
+
+    closeDrawer():
+
+        Purpose: Closes the drawer.
+        Actions: Sets the state to close the drawer.
+
+
+
+
+
+
+
+
+
+
+
+Transactions:
+
+- Recording Transactions
+    Users can input the amount they wish to exchange in either USD or LBP and specify the transaction type (USD to LBP or LBP to USD). Upon clicking the "Add" button, the transaction is recorded:
+
+    Users input the amount they want to exchange in USD and LBP fields.
+    They select the transaction type from the dropdown menu: either "USD to LBP" or "LBP to USD".
+    Upon clicking the "Add" button, the addItem() function is called to handle the addition of the transaction.
+
+- Viewing User Transactions:
+
+    Users who are authenticated can view their recorded transactions in a tabular format. Each transaction includes details such as the transaction ID, USD amount, LBP amount, transaction type, date added, and user ID.
+    Authenticated users can view their recorded transactions.
+    The fetchUserTransactions() function is called using the useEffect() hook to fetch user transactions from the server.
+    The transactions are displayed in a table format using the DataGrid component.
+
+
+
+
+Chat System:
+
+   *Chat Drawer:    
+   
+        Chat Navigation:
+
+                        Users can open the chat drawer by clicking on the chat icon.
+                        The drawer displays tabs for navigating between user-to-user chats and group chats.
+                        Users can switch between user-to-user and group chats by clicking on the respective tabs.
+
+        User-to-User Chats:
+
+                        Users can view a list of active users available for chat.
+                        Clicking on a user's name opens a chat window with that user.
+                        Users can initiate new chat sessions by clicking the "+" button and selecting a user from the dialog.
+
+        Group Chats:
+                    Users can view a list of active group chats.
+                    Clicking on a group chat opens a chat window with that group.
+                    Users can initiate new group chat sessions by clicking the "+" button and creating a new group.
+
+
+Functions
+
+handleClick():
+
+    Purpose: Opens the chat drawer.
+    Actions: Sets the state to open the drawer.
+
+closeDrawer():
+
+    Purpose: Closes the chat drawer.
+    Actions: Sets the state to close the drawer.
+
+
+addGroupChat(name):
+
+    Purpose: Adds a new group chat by joining an existing group.
+    Actions: Sets the chat state to open the selected group chat and sets the chat name.
+
+
+openGroupChat(name):
+
+    Purpose: Opens an existing group chat.
+    Actions: Sets the chat state to open the selected group chat and sets the chat name.
+
+
+openUserChat(name):
+
+    Purpose: Opens a user chat with the specified username.
+    Actions: Sets the chat state to open the selected user chat and sets the chat name.
+
+addUserChat(name):
+
+    Purpose: Adds a new user chat by including the specified username in the active users list.
+    Actions: Sets the chat state to open the selected user chat, sets the chat name, and updates the active users list.
+
+handleAddUser():
+
+    Purpose: Handles the process of adding a new user to initiate a chat.
+    Actions:
+    Checks if the added user is already in the active users list or if the user exists.
+    Adds the user to the active users list if they are not already added.
+
+
+
+sendMessage(user):
+
+    Purpose: Sends a message to the specified user.
+    Actions:
+    Sends a POST request to the server with the message content and recipient username.
+    Updates the message history upon successful message sending.
+
+
+
+sendGroupMessage(group, message):
+
+    Purpose: Sends a message to the specified group.
+    Actions:
+    Sends a POST request to the server with the message content and group name.
+    Updates the message history for the group upon successful message sending.
+
+
+
+fetchGroups(): Fetches groups.
+fetchJoinedGroups(): Fetches joined groups.
+joinGroup(): Joins a group.
+createGroup(): Creates a group.
+fetchGroupMessages(): Fetches messages for a specific group.
+
+
+fetchUsernames(): Fetches usernames of all existing users.
+fetchMessages(): Fetches chat messages between a user and everyone he has chatted with.
+
+
+Graph: 
+
+State Management:
+
+    data, xAxisData, yAxisData: Manage the fetched data and its representation for the line chart.
+    startDate, endDate: Store the selected date range for data retrieval.
+    fetchedData: Tracks whether data has been fetched.
+    granularity: Manages the granularity of data (daily, weekly, monthly, yearly).
+    requirementsRejected: Manages the state for displaying an error message if no transactions are found.
+
+    Functions:
+    fetchData: Fetch exchange rate data based on the selected date range and granularity.
+    handleSubmit: Handle form submission to fetch exchange rate data.
+    handleStartDateChange and handleEndDateChange: Handle changes in the start and end dates.
+
+    Effect Hooks:
+    Set default start and end dates and fetch initial data when the component mounts.
+    Fetch data when the start or end date changes.
+    Update the chart data when fetchedData changes.
+
+
+
+Predictor:
+
+State Management:
+
+        data, xAxisData, yAxisData: Manage the fetched data and its representation for the line chart.
+        givenDate: Store the selected date for predicting the exchange rate.
+        givenDateData, fetchedGivenDateData: Store and track the fetched exchange rate data for the given date.
+        endDate: Store the end date for fetching exchange rate data for the next 30 days.
+        fetchedData: Track whether data for the next 30 days has been fetched.
+        granularity: Manage the granularity of data (daily,weekly,monthly,yearly).
+        requirementsRejected: Manage the state for displaying an error message if no data is found.
+
+Functions:
+
+        fetchNext30Days: Fetch exchange rate data for the next 30 days.
+        fetchATGivenDate: Fetch exchange rate data for the given date.
+        handleSubmit: Handle form submission to predict the exchange rate for the given date.
+        handleDateChange: Handle changes in the selected date.
+
+Effect Hooks:
+
+        Fetch data for the next 30 days when the component mounts.
+        Update the chart data when fetchedData changes.
+        Fetch exchange rate data for the given date when the component mounts or givenDate changes.
+
+
+
+
+Offers:
+
+
+State Management:
+
+        myAcceptedOffers: Stores the list of offers accepted by the current user.
+        selectedRow: Stores the currently selected row in the data grid.
+        dialogOpen: Manages the state of the dialog for deleting an offer.
+
+Functionality:
+
+        fetchMyAcceptedOffers: Retrieves the list of accepted offers for the current user from the server. It is triggered once on component mount.
+        deleteOffer: Sends a DELETE request to the server to delete the selected offer. It updates the list of accepted offers once the request is successful.  
+        addOffer: Sends a POST request to the server to add a new offer with the specified details. It updates the list of offers once the request is successful.   
+        fetchOffers: Fetches offers from the server, calculates the exchange rate for each offer, and updates the state.
+        markComplete: Marks the selected offer as complete by sending a PUT request to the server and updates the list of offers.
+        handleChat: Opens the chat drawer and sets the chat state for the selected user.
+        calculateExchangeRate: Calculates the exchange rate for a given offer based on the amount requested and amount to trade.
+
+
+
+Statistics:
+
+    Functionality:
+    
+        Fetching Data: The component fetches transaction data from the server based on the specified time range and granularity.
+        Displaying Information: It displays various transaction-related information such as the largest transaction amount, highest transaction today, and volumes of transactions.
+        Visualizing Data: Transaction data is visualized using a line chart, providing users with a clear understanding of transaction trends over time.
+
+
