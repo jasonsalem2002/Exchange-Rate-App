@@ -4,7 +4,6 @@ from ..utils.util import extract_auth_token, decode_token
 from ..models.Transaction import Transaction
 from ..schemas.transactionSchema import transaction_schema, transactions_schema
 import jwt
-from datetime import datetime
 
 transaction_bp = Blueprint("transaction_bp", __name__)
 

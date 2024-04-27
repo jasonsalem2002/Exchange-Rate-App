@@ -11,7 +11,7 @@ bcrypt = Bcrypt()
 
 
 def create_app():
-    from .models import Offer, Transaction, User, Message, Group
+    pass
 
     app = Flask(__name__)
     app.config.from_pyfile("config.py")
@@ -46,6 +46,7 @@ def create_app():
     app.register_blueprint(predicted_exchange_rate_bp)
 
     return app
+
 
 if __name__ == "__main__":
     app = create_app()

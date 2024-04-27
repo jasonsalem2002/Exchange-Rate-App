@@ -146,7 +146,10 @@ def delete_offer(offer_id):
             return jsonify({"error": "Offer not found."}), 404
 
         if offer.user_id != user_id:
-            return jsonify({"error": "You are not authorized to delete this offer."}), 403
+            return (
+                jsonify({"error": "You are not authorized to delete this offer."}),
+                403,
+            )
 
         db.session.delete(offer)
         db.session.commit()
@@ -155,4 +158,3 @@ def delete_offer(offer_id):
 
     except Exception as e:
         return jsonify({"error": "Internal server error."}), 500
-
