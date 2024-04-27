@@ -15,7 +15,7 @@ def get_exchange_rate_by_date():
             return jsonify({"error": "Date parameter is missing"}), 400
 
         if requested_date > datetime.datetime(2030, 12, 30):
-            return jsonify({"message": "Khalas rouh zammir"}), 400
+            return jsonify({"message": "I am not a GOD"}), 400
 
         start_of_day = requested_date
         end_of_day = requested_date + datetime.timedelta(days=1)
