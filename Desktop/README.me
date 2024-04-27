@@ -8,7 +8,6 @@ A USD-LBP exchange rate app with the following features:
 - Future exchange rate prediction
 - Private and group chats
 
-Built on JavaFX. Based on a Python-Flask backend. 
 
 Requires an Internet connection.
 
@@ -46,6 +45,12 @@ To add a library:
       - /model: Contains the models.
   - /resources/com/kjb04/exchange: Contains the views (fxml, css files)
 
+## Project Architecture
+
+- Built on JavaFX. 
+- Backend: Python-Flask. 
+- Database: mySQL
+
 
 ## Software Platforms
 
@@ -54,15 +59,15 @@ To add a library:
 
 ## Dependencies 
 
-- retrofit2: REST client for Java. Handles communication with the backend.
-- gson: For dealing with JSON objects.
+- retrofit2 2.9.0: REST client for Java. Handles communication with the backend.
+- gson 2.9.0: For dealing with JSON objects.
 
 ## Functionality
 ### Exchange Rate
 
 Calculated based on all transactions submitted in the last three days
 
-### Calculator
+Calculator: 
 
 Converts between the two currencies based on current exchange rates
 
