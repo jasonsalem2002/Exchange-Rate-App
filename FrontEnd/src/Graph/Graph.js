@@ -126,12 +126,10 @@ function Graph() {
   return (
     <div>
       <Nav />
-      <Box id='containerBox' >
+      <Box sx={{height:'1200px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'space-around'}}>
       <Box sx={{display:'flex',flexDirection:'column',alignItems:'center',height:'40%',maxWidth:'100%'}}>
-        {granularity === 'monthly' && <Typography className='graphTitle' >Exchange Rate over Last {Math.abs(new Date(endDate).getMonth() - new Date(startDate).getMonth())} Month(s)</Typography>}
-        {granularity === 'daily' && <Typography  className='graphTitle'>Exchange Rate over Last {Math.ceil(Math.abs((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)))} Day(s)</Typography>}
-        {granularity === 'weekly' && <Typography className='graphTitle'>Exchange Rate over Last {Math.ceil(Math.abs((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24 * 7)))} Week(s)</Typography>}
-        {granularity === 'yearly' && <Typography  className='graphTitle'>Exchange Rate over Last {Math.abs(new Date(endDate).getFullYear() - new Date(startDate).getFullYear())} Year(s)</Typography>}
+       <Typography className='graphTitle' >Exchange Rate Between {startDate} and {endDate}</Typography>
+      
 
         <Box sx={{ width: '70%', maxWidth: '100%',maxHeight:'100%' ,minWidth: '300px', display: { xs: 'flex' } }}>
           <LineChart
