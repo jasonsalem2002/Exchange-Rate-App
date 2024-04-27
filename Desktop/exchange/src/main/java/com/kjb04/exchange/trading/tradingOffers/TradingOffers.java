@@ -53,7 +53,12 @@ public class TradingOffers implements Initializable {
             @Override
             public void onResponse(Call<Object> call, Response<Object>
                     response) {
-                selectAllOffers();
+                if (response.isSuccessful()) {
+                    selectAllOffers();
+                }
+                else {
+                    Alerts.showResponse(response);
+                }
             }
 
             @Override
@@ -69,8 +74,13 @@ public class TradingOffers implements Initializable {
                     @Override
                     public void onResponse(Call<Object> call, Response<Object>
                             response) {
-                        Alerts.showResponse(response);
-                        selectPending();
+                        if (response.isSuccessful()) {
+                            Alerts.showResponse(response);
+                            selectPending();
+                        }
+                        else {
+                            Alerts.showResponse(response);
+                        }
                     }
 
                     @Override
@@ -119,47 +129,51 @@ public class TradingOffers implements Initializable {
                     @Override
                     public void onResponse(Call<List<Offer>> call,
                                            Response<List<Offer>> response) {
-                        RadioButton radioButton = (RadioButton) transactionType.getSelectedToggle();
-                        List<Offer> offers = new ArrayList<Offer>();
-                        if (radioButton.getText().equals("Buy USD")) {
-                            offers = filterOffers(response.body(),"USD_TO_LBP");
-                        }
-                        else if (radioButton.getText().equals("Sell USD ")) {
-                            offers = filterOffers(response.body(),"LBP_TO_USD");
-                        }
-                        tableView.getItems().setAll(offers);
+                        if (response.isSuccessful()) {
+                            RadioButton radioButton = (RadioButton) transactionType.getSelectedToggle();
+                            List<Offer> offers = new ArrayList<Offer>();
+                            if (radioButton.getText().equals("Buy USD")) {
+                                offers = filterOffers(response.body(), "USD_TO_LBP");
+                            } else if (radioButton.getText().equals("Sell USD ")) {
+                                offers = filterOffers(response.body(), "LBP_TO_USD");
+                            }
+                            tableView.getItems().setAll(offers);
 
-                        rate.setCellValueFactory(cellData -> {
-                            Offer offer = cellData.getValue(); // Get the Offer instance for the current row
-                            Float amountOffered = offer.getAmountToTrade();
-                            Float amountRequested = offer.getAmountRequested();
-                            if (offer.getUsdToLbp()) {
-                                return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
-                            }
-                            else {
-                                return new ReadOnlyObjectWrapper<>(amountRequested * amountOffered);
-                            }
-                        });
+                            rate.setCellValueFactory(cellData -> {
+                                Offer offer = cellData.getValue(); // Get the Offer instance for the current row
+                                Float amountOffered = offer.getAmountToTrade();
+                                Float amountRequested = offer.getAmountRequested();
+                                if (offer.getUsdToLbp()) {
+                                    return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
+                                } else {
+                                    return new ReadOnlyObjectWrapper<>(amountRequested * amountOffered);
+                                }
+                            });
 
-                        buttonColumn.setCellFactory(col -> new TableCell<Offer, Void>() {
-                            private final Button btn = new Button("Accept");
-                            {
-                                btn.setOnAction(event -> {
-                                    Offer offer = getTableView().getItems().get(getIndex());
-                                    acceptOffer(offer);
-                                });
-                            }
-                            @Override
-                            protected void updateItem(Void item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if (empty) {
-                                    setGraphic(null);
+                            buttonColumn.setCellFactory(col -> new TableCell<Offer, Void>() {
+                                private final Button btn = new Button("Accept");
+
+                                {
+                                    btn.setOnAction(event -> {
+                                        Offer offer = getTableView().getItems().get(getIndex());
+                                        acceptOffer(offer);
+                                    });
                                 }
-                                else {
-                                    setGraphic(btn);
+
+                                @Override
+                                protected void updateItem(Void item, boolean empty) {
+                                    super.updateItem(item, empty);
+                                    if (empty) {
+                                        setGraphic(null);
+                                    } else {
+                                        setGraphic(btn);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                        else {
+                            Alerts.showResponse(response);
+                        }
                     }
                     @Override
                     public void onFailure(Call<List<Offer>> call,
@@ -193,42 +207,47 @@ public class TradingOffers implements Initializable {
                     @Override
                     public void onResponse(Call<List<Offer>> call,
                                            Response<List<Offer>> response) {
-                        List<Offer> offers = filterOffers(response.body(),"PENDING");
-                        Platform.runLater(() -> {
-                            tableView.getItems().setAll(offers);
+                        if (response.isSuccessful()) {
+                            List<Offer> offers = filterOffers(response.body(), "PENDING");
+                            Platform.runLater(() -> {
+                                tableView.getItems().setAll(offers);
 
-                            rate.setCellValueFactory(cellData -> {
-                                Offer offer = cellData.getValue(); // Get the Offer instance for the current row
-                                Float amountOffered = offer.getAmountToTrade();
-                                Float amountRequested = offer.getAmountRequested();
-                                if (offer.getUsdToLbp()) {
-                                    return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
-                                } else {
-                                    return new ReadOnlyObjectWrapper<>(amountOffered / amountRequested);
-                                }
-                            });
-
-                            buttonColumn.setCellFactory(col -> new TableCell<Offer, Void>() {
-                                private final Button btn = new Button("Delete");
-
-                                {
-                                    btn.setOnAction(event -> {
-                                        Offer offer = getTableView().getItems().get(getIndex());
-                                        deleteOffer(offer);
-                                    });
-                                }
-
-                                @Override
-                                protected void updateItem(Void item, boolean empty) {
-                                    super.updateItem(item, empty);
-                                    if (empty) {
-                                        setGraphic(null);
+                                rate.setCellValueFactory(cellData -> {
+                                    Offer offer = cellData.getValue(); // Get the Offer instance for the current row
+                                    Float amountOffered = offer.getAmountToTrade();
+                                    Float amountRequested = offer.getAmountRequested();
+                                    if (offer.getUsdToLbp()) {
+                                        return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
                                     } else {
-                                        setGraphic(btn);
+                                        return new ReadOnlyObjectWrapper<>(amountOffered / amountRequested);
                                     }
-                                }
+                                });
+
+                                buttonColumn.setCellFactory(col -> new TableCell<Offer, Void>() {
+                                    private final Button btn = new Button("Delete");
+
+                                    {
+                                        btn.setOnAction(event -> {
+                                            Offer offer = getTableView().getItems().get(getIndex());
+                                            deleteOffer(offer);
+                                        });
+                                    }
+
+                                    @Override
+                                    protected void updateItem(Void item, boolean empty) {
+                                        super.updateItem(item, empty);
+                                        if (empty) {
+                                            setGraphic(null);
+                                        } else {
+                                            setGraphic(btn);
+                                        }
+                                    }
+                                });
                             });
-                        });
+                        }
+                        else {
+                            Alerts.showResponse(response);
+                        }
                     }
                     @Override
                     public void onFailure(Call<List<Offer>> call,
@@ -260,19 +279,23 @@ public class TradingOffers implements Initializable {
                     @Override
                     public void onResponse(Call<List<Offer>> call,
                                            Response<List<Offer>> response) {
-                        tableView.getItems().setAll(response.body());
+                        if (response.isSuccessful()) {
+                            tableView.getItems().setAll(response.body());
 
-                        rate.setCellValueFactory(cellData -> {
-                            Offer offer = cellData.getValue(); // Get the Offer instance for the current row
-                            Float amountOffered = offer.getAmountToTrade();
-                            Float amountRequested = offer.getAmountRequested();
-                            if (offer.getUsdToLbp()) {
-                                return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
-                            }
-                            else {
-                                return new ReadOnlyObjectWrapper<>(amountRequested * amountOffered);
-                            }
-                        });
+                            rate.setCellValueFactory(cellData -> {
+                                Offer offer = cellData.getValue();
+                                Float amountOffered = offer.getAmountToTrade();
+                                Float amountRequested = offer.getAmountRequested();
+                                if (offer.getUsdToLbp()) {
+                                    return new ReadOnlyObjectWrapper<>(amountRequested / amountOffered);
+                                } else {
+                                    return new ReadOnlyObjectWrapper<>(amountRequested * amountOffered);
+                                }
+                            });
+                        }
+                        else {
+                            Alerts.showResponse(response);
+                        }
                     }
                     @Override
                     public void onFailure(Call<List<Offer>> call,

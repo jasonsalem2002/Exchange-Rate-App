@@ -16,6 +16,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.Objects;
+
 public class Register implements PageCompleter {
     public TextField usernameTextField;
     public PasswordField passwordField;
@@ -25,6 +27,15 @@ public class Register implements PageCompleter {
         this.onPageCompleteListener = onPageCompleteListener;
     }
     public void register(ActionEvent actionEvent) {
+        if (Objects.equals(usernameTextField.getText(), "") || Objects.equals(passwordField.getText(), "")) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid input");
+                alert.setContentText("Please input a username and password");
+                alert.showAndWait();
+            });
+            return;
+        }
         User user = new User(usernameTextField.getText(),
                 passwordField.getText());
         ExchangeService.exchangeApi().addUser(user).enqueue(new
@@ -38,27 +49,26 @@ public class Register implements PageCompleter {
                                  @Override
                                  public void onResponse(Call<Token> call,
                                                         Response<Token> response) {
-
-                                     Authentication.getInstance().saveToken(response.body().getToken());
-                                     Authentication.getInstance().saveUsername(usernameTextField.getText());
-                                     Platform.runLater(() -> {
-                                         Alert alert = new Alert(Alert.AlertType.ERROR);
-                                         alert.setTitle("Success");
-                                         alert.setContentText("Account created successfully.");
-                                         alert.showAndWait();
-                                         onPageCompleteListener.onPageCompleted();
-                                     });
+                                     if (response.isSuccessful()) {
+                                         Authentication.getInstance().saveToken(response.body().getToken());
+                                         Authentication.getInstance().saveUsername(usernameTextField.getText());
+                                         Platform.runLater(() -> {
+                                             Alert alert = new Alert(Alert.AlertType.ERROR);
+                                             alert.setTitle("Success");
+                                             alert.setContentText("Account created successfully.");
+                                             alert.showAndWait();
+                                             onPageCompleteListener.onPageCompleted();
+                                         });
+                                     }
+                                     else {
+                                         Alerts.showResponse(response);
+                                     }
                                  }
 
                                  @Override
                                  public void onFailure(Call<Token> call, Throwable
                                          throwable) {
-                                     Platform.runLater(() -> {
-                                         Alert alert = new Alert(Alert.AlertType.ERROR);
-                                         alert.setTitle("Login Failed");
-                                         alert.setContentText("Failed to login.");
-                                         alert.showAndWait();
-                                     });
+                                     Alerts.connectionFailure();
                                  }
                              });
 

@@ -16,6 +16,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.Objects;
+
 public class Login implements PageCompleter {
     public TextField usernameTextField;
     public PasswordField passwordField;
@@ -25,6 +27,15 @@ public class Login implements PageCompleter {
         this.onPageCompleteListener = onPageCompleteListener;
     }
     public void login(ActionEvent actionEvent) {
+        if (Objects.equals(usernameTextField.getText(), "") || Objects.equals(passwordField.getText(), "")) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid input");
+                alert.setContentText("Please input a username and password");
+                alert.showAndWait();
+            });
+            return;
+        }
         User user = new User(usernameTextField.getText(),
                 passwordField.getText());
         ExchangeService.exchangeApi().authenticate(user).enqueue(new

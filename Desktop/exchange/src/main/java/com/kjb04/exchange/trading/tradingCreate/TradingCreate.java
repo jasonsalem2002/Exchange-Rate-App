@@ -64,7 +64,16 @@ public class TradingCreate implements PageCompleter {
             public void onResponse(Call<Object> call, Response<Object>
                     response) {
                 Platform.runLater(() -> {
-                    onPageCompleteListener.onPageCompleted();
+                    if (response.isSuccessful()) {
+                        onPageCompleteListener.onPageCompleted();
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Success");
+                        alert.setContentText("Submitted offer successfully.");
+                        alert.showAndWait();
+                    }
+                    else {
+                        Alerts.showResponse(response);
+                    }
                 });
             }
 

@@ -7,15 +7,15 @@ import java.util.Date;
 
 public class GroupMessage {
     @SerializedName("msg_id")
-    public Integer msgId;
+    private Integer msgId;
     @SerializedName("sender_username")
-    public String senderUsername;
+    private String senderUsername;
     @SerializedName("group_name")
-    public String groupName;
+    private String groupName;
     @SerializedName("content")
-    public String content;
+    private String content;
     @SerializedName("added_date")
-    public String addedDate;
+    private String addedDate;
 
 
     public Integer getMsgId() {

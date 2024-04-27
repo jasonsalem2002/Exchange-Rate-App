@@ -6,9 +6,9 @@ import java.util.Comparator;
 
 public class FutureRate implements Comparable<FutureRate> {
     @SerializedName("average_exchange_rate")
-    public Float averageExchangeRate;
+    private Float averageExchangeRate;
     @SerializedName("date")
-    public String date;
+    private String date;
 
     public Float getAverageExchangeRate() {
         return averageExchangeRate;

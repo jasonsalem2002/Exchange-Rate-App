@@ -36,7 +36,12 @@ public class Transactions implements Initializable {
                     public void onResponse(Call<List<Transaction>> call,
                                            Response<List<Transaction>> response) {
                         Platform.runLater(()-> {
-                            tableView.getItems().setAll(response.body());
+                            if (response.isSuccessful()) {
+                                tableView.getItems().setAll(response.body());
+                            }
+                            else {
+                                Alerts.showResponse(response);
+                            }
                         });
                     }
                     @Override

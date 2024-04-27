@@ -50,7 +50,26 @@ public class Statistics {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
 
         String startDate = startDatePicker.getValue().toString();
+        if (startDate.compareTo(LocalDate.now().toString()) > 0) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid input");
+                alert.setContentText("Cannot input start date in the future.");
+                alert.showAndWait();
+                startDateTVPicker.setValue(null);
+            });
+            return;
+        }
         String endDate = endDatePicker.getValue().toString();
+        if (startDate.compareTo(endDate) > -1) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid input");
+                alert.setContentText("Start date should be before end date.");
+                alert.showAndWait();
+            });
+            return;
+        }
         String granularity = granularityComboBox.getValue();
 
 
@@ -62,33 +81,37 @@ public class Statistics {
                     public void onResponse(Call<Map<String, Map<String, Float>>> call,
                                            Response<Map<String, Map<String, Float>>> response) {
                         Platform.runLater(() -> {
-                            lineChart.getData().clear();
-                            startDatePicker.setValue(null);
-                            endDatePicker.setValue(null);
-                            Map<String, Map<String, Float>> data = response.body();
-                            lineChart.setTitle(granularity + " number of transactions, " + startDate + " to " + endDate);
+                            if (response.isSuccessful()) {
+                                lineChart.getData().clear();
+                                startDatePicker.setValue(null);
+                                endDatePicker.setValue(null);
+                                Map<String, Map<String, Float>> data = response.body();
+                                lineChart.setTitle(granularity == null ? "daily" : granularity + " number of transactions, " + startDate + " to " + endDate);
 
-                            if (data == null) {
-                                Platform.runLater(() -> {
-                                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                                    alert.setTitle("Data Unavailable");
-                                    alert.setContentText("This data is not available at this time.");
-                                    alert.showAndWait();
-                                });
+                                if (data == null) {
+                                    Platform.runLater(() -> {
+                                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                                        alert.setTitle("Data Unavailable");
+                                        alert.setContentText("This data is not available at this time.");
+                                        alert.showAndWait();
+                                    });
+                                } else {
+                                    if (data.get("transactions_per_period") != null && !data.get("transactions_per_period").isEmpty()) {
+                                        for (String x : data.get("transactions_per_period").keySet()) {
+                                            series.getData().add(new XYChart.Data<>(x, Math.round(data.get("transactions_per_period").get(x) * 100) / 100.0f));
+                                        }
+                                        lineChart.getData().add(series);
+
+                                        Float min = Collections.min(data.get("transactions_per_period").values());
+                                        Float max = Collections.max(data.get("transactions_per_period").values());
+                                        yAxis.setTickUnit((max + min + (max - min) / 2) / 2000);
+                                        yAxis.setLowerBound(min - (max - min) / 4);
+                                        yAxis.setUpperBound(max + (max - min) / 4);
+                                    }
+                                }
                             }
                             else {
-                                if (data.get("transactions_per_period") != null && !data.get("transactions_per_period").isEmpty()) {
-                                    for (String x : data.get("transactions_per_period").keySet()) {
-                                        series.getData().add(new XYChart.Data<>(x, Math.round(data.get("transactions_per_period").get(x) * 100) / 100.0f));
-                                    }
-                                    lineChart.getData().add(series);
-
-                                    Float min = Collections.min(data.get("transactions_per_period").values());
-                                    Float max = Collections.max(data.get("transactions_per_period").values());
-                                    yAxis.setTickUnit((max + min + (max - min) / 2) / 2000);
-                                    yAxis.setLowerBound(min - (max - min) / 4);
-                                    yAxis.setUpperBound(max + (max - min) / 4);
-                                }
+                                Alerts.showResponse(response);
                             }
                         });
                     }
@@ -124,7 +147,13 @@ public class Statistics {
                                            Response<Map<String, Transaction>> response) {
                         Platform.runLater(() -> {
                             if (response.isSuccessful()) {
-                                highestTransactionTodayLabel.setText(response.body().get("highest_transaction").getLbpAmount().toString());
+                                Transaction transaction = response.body().get("highest_transaction");
+                                if (transaction.getUsdToLbp()){
+                                    highestTransactionTodayLabel.setText(transaction.getUsdAmount().toString()+" USD -> "+transaction.getLbpAmount().toString()+" LBP");
+                                }
+                                else {
+                                    highestTransactionTodayLabel.setText(transaction.getLbpAmount().toString()+" LBP -> "+transaction.getUsdAmount().toString()+" USD");
+                                }
                             }
                             else {
                                 Alerts.showResponse(response);
@@ -147,7 +176,26 @@ public class Statistics {
         String endDate;
         try {
             startDate = startDateLTPicker.getValue().toString();
+            if (startDate.compareTo(LocalDate.now().toString()) > 0) {
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Invalid input");
+                    alert.setContentText("Cannot input start date in the future.");
+                    alert.showAndWait();
+                    startDateTVPicker.setValue(null);
+                });
+                return;
+            }
             endDate = endDateLTPicker.getValue().toString();
+            if (startDate.compareTo(endDate) > -1) {
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Invalid input");
+                    alert.setContentText("Start date should be before end date.");
+                    alert.showAndWait();
+                });
+                return;
+            }
         } catch (NullPointerException e) {
             return;
         }
@@ -160,14 +208,18 @@ public class Statistics {
                     public void onResponse(Call<Map<String, Transaction>> call,
                                            Response<Map<String, Transaction>> response) {
                         Platform.runLater(() -> {
-                            Transaction transaction = response.body().get("largest_transaction");
-                            if (transaction.getUsdToLbp()){
-                                largestTransactionLabel1.setText(transaction.getUsdAmount().toString()+" USD -> "+transaction.getLbpAmount().toString()+" LBP");
+                            if (response.isSuccessful()) {
+                                Transaction transaction = response.body().get("largest_transaction");
+                                if (transaction.getUsdToLbp()) {
+                                    largestTransactionLabel1.setText(transaction.getUsdAmount().toString() + " USD -> " + transaction.getLbpAmount().toString() + " LBP");
+                                } else {
+                                    largestTransactionLabel1.setText(transaction.getLbpAmount().toString() + " LBP -> " + transaction.getUsdAmount().toString() + " USD");
+                                }
+                                largestTransactionLabel2.setText("Rate: " + transaction.getLbpAmount() / transaction.getUsdAmount());
                             }
                             else {
-                                largestTransactionLabel1.setText(transaction.getLbpAmount().toString()+" LBP -> "+transaction.getUsdAmount().toString()+" USD");
+                                Alerts.showResponse(response);
                             }
-                            largestTransactionLabel2.setText("Rate: "+transaction.getLbpAmount()/transaction.getUsdAmount());
                         });
                     }
 
@@ -184,7 +236,26 @@ public class Statistics {
         String endDate;
         try {
             startDate = startDateTVPicker.getValue().toString();
+            if (startDate.compareTo(LocalDate.now().toString()) > 0) {
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Invalid input");
+                    alert.setContentText("Cannot input start date in the future.");
+                    alert.showAndWait();
+                    startDateTVPicker.setValue(null);
+                });
+                return;
+            }
             endDate = endDateTVPicker.getValue().toString();
+            if (startDate.compareTo(endDate) > -1) {
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Invalid input");
+                    alert.setContentText("Start date should be before end date.");
+                    alert.showAndWait();
+                });
+                return;
+            }
         } catch (NullPointerException e) {
             return;
         }
@@ -197,8 +268,13 @@ public class Statistics {
                     public void onResponse(Call<Map<String, Float>> call,
                                            Response<Map<String, Float>> response) {
                         Platform.runLater(() -> {
-                            transactionVolumeLabel1.setText("USD "+response.body().get("usd_volume").toString());
-                            transactionVolumeLabel2.setText("LBP "+response.body().get("lbp_volume").toString());
+                            if (response.isSuccessful()) {
+                                transactionVolumeLabel1.setText("USD " + response.body().get("usd_volume").toString());
+                                transactionVolumeLabel2.setText("LBP " + response.body().get("lbp_volume").toString());
+                            }
+                            else {
+                                Alerts.showResponse(response);
+                            }
                         });
                     }
 

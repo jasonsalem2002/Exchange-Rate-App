@@ -41,7 +41,7 @@ public class Chat implements Initializable {
     public String selectedGroup;
     public Label chatName;
     public ComboBox joinGroupComboBox;
-    public TextArea messageBox;
+    public TextField messageBox;
     public ListView preview;
     public ListView chatPane;
     public BorderPane borderPane;
@@ -58,6 +58,9 @@ public class Chat implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         chatPane.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
             scrollPane.setVvalue(1.0);  // TODO - Fix
+        });
+        messageBox.setOnAction(event -> {
+            sendMessage();
         });
         selectPrivate();
     }
@@ -90,7 +93,7 @@ public class Chat implements Initializable {
         });
     }
 
-    public void sendMessage() throws IOException{
+    public void sendMessage() {
         if (chatType.getText().equals("Private Chat")) {
             sendPrivateMessage();
         }
@@ -99,7 +102,7 @@ public class Chat implements Initializable {
         }
     }
 
-    public void sendPrivateMessage() throws IOException {
+    public void sendPrivateMessage() {
         Message message = new Message(
                 selectedUsername,
                 messageBox.getText()
@@ -114,9 +117,14 @@ public class Chat implements Initializable {
                 public void onResponse(Call<Object> call, Response<Object>
                         response) {
                     Platform.runLater(() -> {
-                        messageBox.setText("");
-                        fetchUsernames();
-                        fetchChat();
+                        if (response.isSuccessful()) {
+                            messageBox.setText("");
+                            fetchUsernames();
+                            fetchChat();
+                        }
+                        else {
+                            Alerts.showResponse(response);
+                        }
                     });
                 }
 
@@ -142,8 +150,13 @@ public class Chat implements Initializable {
                     @Override
                     public void onResponse(Call<List<Message>> call,
                                            Response<List<Message>> response) {
-                        messageList = response.body();
-                        displayPreview();
+                        if (response.isSuccessful()) {
+                            messageList = response.body();
+                            displayPreview();
+                        }
+                        else {
+                            Alerts.showResponse(response);
+                        }
                     }
                     @Override
                     public void onFailure(Call<List<Message>> call,
@@ -162,8 +175,13 @@ public class Chat implements Initializable {
                     public void onResponse(Call<List<String>> call,
                                            Response<List<String>> response) {
                         Platform.runLater(() -> {
-                            usernameList = response.body();
-                            initComboBox();
+                            if (response.isSuccessful()) {
+                                usernameList = response.body();
+                                initComboBox();
+                            }
+                            else {
+                                Alerts.showResponse(response);
+                            }
                         });
                     }
                     @Override
@@ -245,10 +263,6 @@ public class Chat implements Initializable {
                     userBoxes.put(username, vbox);
                     preview.getItems().add(vbox);
                 }
-//                else {
-//                    vbox.getChildren().get(1).setAccessibleText(msg.getContent()); //check/////////////
-//                    vbox.getChildren().get(2).setAccessibleText(msg.getAddedDate());
-//                }
             }
             displayChat(selectedUsername);
         });
@@ -266,11 +280,11 @@ public class Chat implements Initializable {
                 vbox.setMaxWidth(chatPane.getWidth() - 20);
                 if (msg.getRecipientUsername().equals(Authentication.getInstance().getUsername())) {
                     vbox.setAlignment(Pos.TOP_LEFT);
-                    contentLabel.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+//                    contentLabel.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
                 }
                 else {
                     vbox.setAlignment(Pos.TOP_RIGHT);
-                    contentLabel.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
+//                    contentLabel.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
                 }
                 timeLabel.setFont(new Font(8));
                 vbox.getChildren().add(contentLabel);
@@ -310,7 +324,7 @@ public class Chat implements Initializable {
 
 
 
-    public void sendGrpMessage() throws IOException {
+    public void sendGrpMessage() {
         GroupMessage message = new GroupMessage(
                 messageBox.getText()
         );
@@ -329,8 +343,13 @@ public class Chat implements Initializable {
                 public void onResponse(Call<Object> call, Response<Object>
                         response) {
                     Platform.runLater(() -> {
-                        messageBox.setText("");
-                        refreshGroupChat();
+                        if (response.isSuccessful()) {
+                            messageBox.setText("");
+                            refreshGroupChat();
+                        }
+                        else {
+                            Alerts.showResponse(response);
+                        }
                     });
                 }
 
@@ -379,9 +398,14 @@ public class Chat implements Initializable {
                     public void onResponse(Call<List<String>> call,
                                            Response<List<String>> response) {
                         Platform.runLater(() -> {
-                                    groupList = response.body();
-                                    initComboBox();
-                                });
+                            if (response.isSuccessful()) {
+                                groupList = response.body();
+                                initComboBox();
+                            }
+                            else {
+                                Alerts.showResponse(response);
+                            }
+                        });
                     }
                     @Override
                     public void onFailure(Call<List<String>> call,
@@ -399,14 +423,13 @@ public class Chat implements Initializable {
                     @Override
                     public void onResponse(Call<List<String>> call,
                                            Response<List<String>> response) {
-                        userGroupList = response.body();
-//                        Platform.runLater(() -> {
-//                            Alert alert = new Alert(Alert.AlertType.ERROR);
-//                            alert.setTitle("TEST ALERT");
-//                            alert.setContentText(userGroupList.getFirst());
-//                            alert.showAndWait();
-//                        });
-                        displayGroupsPreview();
+                        if (response.isSuccessful()) {
+                            userGroupList = response.body();
+                            displayGroupsPreview();
+                        }
+                        else {
+                            Alerts.showResponse(response);
+                        }
                     }
                     @Override
                     public void onFailure(Call<List<String>> call,
@@ -424,14 +447,12 @@ public class Chat implements Initializable {
                     @Override
                     public void onResponse(Call<List<GroupMessage>> call,
                                            Response<List<GroupMessage>> response) {
-
-                        groupMessageMap.put(groupName,response.body());
-//                        Platform.runLater(()->{
-//                            Alert alert = new Alert(Alert.AlertType.ERROR);
-//                            alert.setTitle("TEST ALERT");
-//                            alert.setContentText("Fetched from: "+groupName);
-//                            alert.showAndWait();
-//                        });
+                        if (response.isSuccessful()) {
+                            groupMessageMap.put(groupName, response.body());
+                        }
+                        else {
+                            Alerts.showResponse(response);
+                        }
                     }
                     @Override
                     public void onFailure(Call<List<GroupMessage>> call,
@@ -475,13 +496,7 @@ public class Chat implements Initializable {
                     vbox.getChildren().add(new Label(groupMessageMap.get(groupName).getLast().getAddedDate().toString()));
                 }
                 vbox.setOnMouseClicked(event -> displayGroupChat(groupName));
-                //groupBoxes.put(groupName, vbox);
                 preview.getItems().add(vbox);
-
-//                Alert alert = new Alert(Alert.AlertType.ERROR);
-//                alert.setTitle("TEST ALERT");
-//                alert.setContentText("Added to preview: "+groupName);
-//                alert.showAndWait();
             }
             leaveGroupButton.setVisible(false);
             if (selectedGroup!=null && !selectedGroup.isEmpty()){
@@ -540,10 +555,17 @@ public class Chat implements Initializable {
             public void onResponse(Call<Object> call, Response<Object>
                     response) {
                 Platform.runLater(() -> {
-//                    selectedGroup = group;
-//                    chatName.setText(group);
-                    fetchUserGroups();
-                    initComboBox();
+                    if (response.isSuccessful()) {
+                        fetchUserGroups();
+                        initComboBox();
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Success");
+                        alert.setContentText("Joined group \""+groupName+"\".");
+                        alert.showAndWait();
+                    }
+                    else {
+                        Alerts.showResponse(response);
+                    }
                 });
             }
 
@@ -559,16 +581,25 @@ public class Chat implements Initializable {
         if (!userGroupList.contains(selectedGroup)) {
             return;
         }
-
+        String groupName = selectedGroup;
         String userToken = Authentication.getInstance().getToken();
         String authHeader = userToken != null ? "Bearer " + userToken : null;
-        ExchangeService.exchangeApi().leaveGroup(authHeader, selectedGroup)
+        ExchangeService.exchangeApi().leaveGroup(authHeader, groupName)
                 .enqueue(new Callback<Object>() {
                     @Override
                     public void onResponse(Call<Object> call, Response<Object>
                             response) {
                         Platform.runLater(() -> {
-                            selectGroup();
+                            if (response.isSuccessful()) {
+                                selectGroup();
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Success");
+                                alert.setContentText("Left group \""+groupName+"\".");
+                                alert.showAndWait();
+                            }
+                            else {
+                                Alerts.showResponse(response);
+                            }
                         });
                     }
 
@@ -592,8 +623,17 @@ public class Chat implements Initializable {
                     public void onResponse(Call<Object> call, Response<Object>
                             response) {
                         Platform.runLater(() -> {
-                            createGroupBox.setVisible(false);
-                            selectGroup();
+                            if (response.isSuccessful()) {
+                                createGroupBox.setVisible(false);
+                                selectGroup();
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Success");
+                                alert.setContentText("Created group \""+groupName+"\".");
+                                alert.showAndWait();
+                            }
+                            else {
+                                Alerts.showResponse(response);
+                            }
                         });
                     }
 
@@ -605,7 +645,7 @@ public class Chat implements Initializable {
     }
 
     public void revealCreateGroup() {
-        createGroupBox.setVisible(true);
+        createGroupBox.setVisible(!createGroupBox.isVisible());
     }
 
 }

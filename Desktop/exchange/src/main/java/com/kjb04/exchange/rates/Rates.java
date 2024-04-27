@@ -17,6 +17,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import javafx.scene.control.Alert;
 
+import java.util.Objects;
+
 
 public class Rates {
     public Label buyUsdRateLabel;
@@ -36,13 +38,18 @@ public class Rates {
              @Override
              public void onResponse(Call<ExchangeRates> call,
                                     Response<ExchangeRates> response) {
-                 ExchangeRates exchangeRates = response.body();
-                 Platform.runLater(() -> {
-                     if (exchangeRates != null ) {
-                         buyUsdRateLabel.setText(exchangeRates.lbpToUsd.toString());
-                         sellUsdRateLabel.setText(exchangeRates.usdToLbp.toString());
-                     }
-                 });
+                 if (response.isSuccessful()) {
+                     ExchangeRates exchangeRates = response.body();
+                     Platform.runLater(() -> {
+                         if (exchangeRates != null) {
+                             buyUsdRateLabel.setText(exchangeRates.getLbpToUsd().toString());
+                             sellUsdRateLabel.setText(exchangeRates.getUsdToLbp().toString());
+                         }
+                     });
+                 }
+                 else {
+                     Alerts.showResponse(response);
+                 }
              }
              @Override
              public void onFailure(Call<ExchangeRates> call, Throwable throwable) {
@@ -79,6 +86,17 @@ public class Rates {
             lbpTextField.setText("");
             return;
         }
+        if (usdAmount > 1000000000 || lbpAmount > 1000000000) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Transaction Failed");
+                alert.setContentText("Number too large. (> 10^15)");
+                alert.showAndWait();
+            });
+            usdTextField.setText("");
+            lbpTextField.setText("");
+            return;
+        }
         if (radioButton == null) {
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -104,11 +122,20 @@ public class Rates {
             @Override
             public void onResponse(Call<Object> call, Response<Object>
                     response) {
-                fetchRates();
-                Platform.runLater(() -> {
-                    usdTextField.setText("");
-                    lbpTextField.setText("");
-                });
+                if (response.isSuccessful()) {
+                    fetchRates();
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Success");
+                        alert.setContentText("Successfully added transaction.");
+                        alert.showAndWait();
+                        usdTextField.setText("");
+                        lbpTextField.setText("");
+                    });
+                }
+                else {
+                    Alerts.showResponse(response);
+                }
             }
 
             @Override
@@ -132,6 +159,15 @@ public class Rates {
             return;
         }
         else if (radioButtonConvert.getText().equals("LBP to USD")) {
+            if (Objects.equals(buyUsdRateLabel.getText(), "Not available")) {
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Calculator unavailable");
+                    alert.setContentText("LBP to USD rate unavailable.");
+                    alert.showAndWait();
+                });
+                return;
+            }
             float lbpAmount = 0;
             try {
                 lbpAmount = Float.parseFloat(lbpTextFieldConvert.getText());
@@ -161,6 +197,15 @@ public class Rates {
             usdTextFieldConvert.setText(amount.toString());
         }
         else if (radioButtonConvert.getText().equals("USD to LBP")) {
+            if (Objects.equals(sellUsdRateLabel.getText(), "Not available")) {
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Calculator unavailable");
+                    alert.setContentText("USD to LBP rate unavailable.");
+                    alert.showAndWait();
+                });
+                return;
+            }
             float usdAmount = 0;
             try {
                 usdAmount = Float.parseFloat(usdTextFieldConvert.getText());

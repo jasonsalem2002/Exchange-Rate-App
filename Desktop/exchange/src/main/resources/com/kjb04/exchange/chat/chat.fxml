@@ -40,13 +40,13 @@
                           prefHeight="700.0" prefWidth="200.0"/>
             </ScrollPane>
             <HBox minWidth="100.0" VBox.vgrow="NEVER">
-                <TextArea fx:id="messageBox" minWidth="100.0"
+                <TextField fx:id="messageBox" minWidth="100.0"
                           prefHeight="20.0" prefWidth="700.0"
                           promptText="Message" scaleShape="false" HBox.hgrow="ALWAYS">
                     <font>
                         <Font name="SansSerif Regular" size="16.0"/>
                     </font>
-                </TextArea>
+                </TextField>
                 <Button fx:id="sendMessageButton" alignment="CENTER" onAction="#sendMessage" prefHeight="20.0" prefWidth="100.0"
                         scaleShape="false" text="Send" textAlignment="CENTER" HBox.hgrow="NEVER"/>
             </HBox>

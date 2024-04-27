@@ -3,7 +3,15 @@ package com.kjb04.exchange.api.model;
 import com.google.gson.annotations.SerializedName;
 public class ExchangeRates {
     @SerializedName("usd_to_lbp")
-    public Float usdToLbp;
+    private Float usdToLbp;
     @SerializedName("lbp_to_usd")
-    public Float lbpToUsd;
+    private Float lbpToUsd;
+
+    public Float getUsdToLbp() {
+        return usdToLbp;
+    }
+
+    public Float getLbpToUsd() {
+        return lbpToUsd;
+    }
 }

@@ -41,40 +41,44 @@ public class Predictor {
                     public void onResponse(Call<Map<String,Map<String, Float>>> call,
                                            Response<Map<String,Map<String, Float>>> response) {
                         Platform.runLater(()->{
-                            lineChart.getData().clear();
-                            lineChart.setTitle("Daily exchange rate: last 30 days and next 30 days");
-                            Map<String, Map<String, Float>> data = response.body();
+                            if (response.isSuccessful()) {
+                                lineChart.getData().clear();
+                                lineChart.setTitle("daily exchange rate: last 30 days and next 30 days");
+                                Map<String, Map<String, Float>> data = response.body();
 
-                            if (data == null) {
-                                Platform.runLater(() -> {
-                                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                                    alert.setTitle("Data Unavailable");
-                                    alert.setContentText("Daily rates for the last 30 days are not available at this time.");
-                                    alert.showAndWait();
-                                });
+                                if (data == null) {
+                                    Platform.runLater(() -> {
+                                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                                        alert.setTitle("Data Unavailable");
+                                        alert.setContentText("Daily rates for the last 30 days are not available at this time.");
+                                        alert.showAndWait();
+                                    });
+                                } else {
+                                    if (data != null && data.get("lbp_to_usd") != null && !data.get("lbp_to_usd").isEmpty()) {
+                                        for (String x : data.get("lbp_to_usd").keySet()) {
+                                            buyUSDSeries.getData().add(new XYChart.Data<>(x, Math.round(data.get("lbp_to_usd").get(x) * 100) / 100.0f));
+                                        }
+                                        buyUSDSeries.setName("Buy USD");
+                                        lineChart.getData().add(buyUSDSeries);
+                                    }
+                                    if (data != null && data.get("usd_to_lbp") != null && !data.get("usd_to_lbp").isEmpty()) {
+                                        for (String x : data.get("usd_to_lbp").keySet()) {
+                                            sellUSDSeries.getData().add(new XYChart.Data<>(x, Math.round(data.get("usd_to_lbp").get(x) * 100) / 100.0f));
+                                        }
+                                        sellUSDSeries.setName("Sell USD");
+                                        lineChart.getData().add(sellUSDSeries);
+                                    }
+                                }
+                                Float min = Math.min(Collections.min(data.get("lbp_to_usd").values()), Collections.min(data.get("usd_to_lbp").values()));
+                                Float max = Math.max(Collections.max(data.get("lbp_to_usd").values()), Collections.max(data.get("usd_to_lbp").values()));
+                                yAxis.setTickUnit((max + min + (max - min) / 2) / 2000);
+                                yAxis.setLowerBound(min - (max - min) / 4);
+                                yAxis.setUpperBound(max + (max - min) / 4);
+                                displayPredGraph();
                             }
                             else {
-                                if (data != null && data.get("lbp_to_usd") != null && !data.get("lbp_to_usd").isEmpty()) {
-                                    for (String x : data.get("lbp_to_usd").keySet()) {
-                                        buyUSDSeries.getData().add(new XYChart.Data<>(x, Math.round(data.get("lbp_to_usd").get(x) * 100) / 100.0f));
-                                    }
-                                    buyUSDSeries.setName("Buy USD");
-                                    lineChart.getData().add(buyUSDSeries);
-                                }
-                                if (data != null && data.get("usd_to_lbp") != null && !data.get("usd_to_lbp").isEmpty()) {
-                                    for (String x : data.get("usd_to_lbp").keySet()) {
-                                        sellUSDSeries.getData().add(new XYChart.Data<>(x, Math.round(data.get("usd_to_lbp").get(x) * 100) / 100.0f));
-                                    }
-                                    sellUSDSeries.setName("Sell USD");
-                                    lineChart.getData().add(sellUSDSeries);
-                                }
+                                Alerts.showResponse(response);
                             }
-                            Float min = Math.min(Collections.min(data.get("lbp_to_usd").values()),Collections.min(data.get("usd_to_lbp").values()));
-                            Float max = Math.max(Collections.max(data.get("lbp_to_usd").values()),Collections.max(data.get("usd_to_lbp").values()));
-                            yAxis.setTickUnit((max + min + (max-min)/2)/2000);
-                            yAxis.setLowerBound(min - (max-min)/4);
-                            yAxis.setUpperBound(max + (max-min)/4);
-                            displayPredGraph();
                         });
                     }
                     @Override
@@ -94,24 +98,28 @@ public class Predictor {
                     @Override
                     public void onResponse(Call<List<FutureRate>> call,
                                            Response<List<FutureRate>> response) {
-                        Platform.runLater(()->{
-                            List<FutureRate> data = response.body();
-                            if (data == null) {
-                                Platform.runLater(() -> {
-                                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                                    alert.setTitle("Data Unavailable");
-                                    alert.setContentText("This data is not available at this time.");
-                                    alert.showAndWait();
-                                });
-                            }
-                            else {
-                                for (FutureRate x : data) {
-                                    predSeries.getData().add(new XYChart.Data<>(x.getDate(), Math.round(x.getAverageExchangeRate() * 100) / 100.0f));
-                                }
-                                lineChart.getData().add(predSeries);
+                        if (response.isSuccessful()) {
+                            Platform.runLater(() -> {
+                                List<FutureRate> data = response.body();
+                                if (data == null) {
+                                    Platform.runLater(() -> {
+                                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                                        alert.setTitle("Data Unavailable");
+                                        alert.setContentText("This data is not available at this time.");
+                                        alert.showAndWait();
+                                    });
+                                } else {
+                                    for (FutureRate x : data) {
+                                        predSeries.getData().add(new XYChart.Data<>(x.getDate(), Math.round(x.getAverageExchangeRate() * 100) / 100.0f));
+                                    }
+                                    lineChart.getData().add(predSeries);
 //                                yAxis.setLowerBound(data.stream().max());
-                            }
-                        });
+                                }
+                            });
+                        }
+                        else {
+                            Alerts.showResponse(response);
+                        }
                     }
                     @Override
                     public void onFailure(Call<List<FutureRate>> call,
@@ -123,6 +131,24 @@ public class Predictor {
 
     public void predictRate() {
         String date = datePicker.getValue().toString();
+        if (date.compareTo(LocalDate.now().toString()) < 1) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid input");
+                alert.setContentText("Please input a future date.");
+                alert.showAndWait();
+            });
+            return;
+        }
+        if (date.compareTo(LocalDate.ofYearDay(2030,1).toString()) > 0) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid input");
+                alert.setContentText("Please input a date before 2030.");
+                alert.showAndWait();
+            });
+            return;
+        }
 
         ExchangeService.exchangeApi().getPredRate(
                 "Bearer " + Authentication.getInstance().getToken(), date)
@@ -131,8 +157,13 @@ public class Predictor {
                     public void onResponse(Call<FutureRate> call,
                                            Response<FutureRate> response) {
                         Platform.runLater(()->{
-                            predictionLabel.setText("Predicted rate for "+response.body().getDate()+
-                                    ": "+ response.body().getAverageExchangeRate());
+                            if (response.isSuccessful()) {
+                                predictionLabel.setText("Predicted rate for " + response.body().getDate() +
+                                        ": " + response.body().getAverageExchangeRate());
+                            }
+                            else {
+                                Alerts.showResponse(response);
+                            }
                         });
                     }
                     @Override

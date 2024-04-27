@@ -7,15 +7,15 @@ import java.util.Date;
 
 public class Offer {
     @SerializedName("usd_to_lbp")
-    public Boolean usdToLbp;
+    private Boolean usdToLbp;
     @SerializedName("amount_requested")
-    public Float amountRequested;
+    private Float amountRequested;
     @SerializedName("amount_to_trade")
-    public Float amountToTrade;
+    private Float amountToTrade;
     @SerializedName("id")
-    public Integer id;
+    private Integer id;
     @SerializedName("username")
-    public String username;
+    private String username;
     @SerializedName("added_date")
     private String addedDate;
 
@@ -31,9 +31,6 @@ public class Offer {
     public String getAddedDate() {
         return addedDate;
     }
-//    public Date getAddedDate() {
-//        return DateParser.convertStringToDate(addedDate);
-//    }
 
     public String getUsername() { return username; }
 
