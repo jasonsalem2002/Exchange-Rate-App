@@ -107,7 +107,7 @@ def get_next_30_days_rates():
                         }
                     )
             current_date += datetime.timedelta(days=1)
-
+        print(results)
         return jsonify(results)
 
     except Exception as e:

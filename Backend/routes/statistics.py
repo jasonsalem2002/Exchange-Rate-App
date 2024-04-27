@@ -4,9 +4,9 @@ from ..utils.util import extract_auth_token, decode_token
 from ..models.Transaction import Transaction
 from collections import defaultdict
 import datetime
+from datetime import datetime, timedelta
 
 statistics_bp = Blueprint("statistics_bp", __name__)
-
 
 @statistics_bp.route("/number_of_transactions", methods=["GET"])
 def get_statistics():
@@ -24,7 +24,7 @@ def get_statistics():
         if granularity == "daily":
             max_start_date = end_date - datetime.timedelta(days=30)
         elif granularity == "weekly":
-            max_start_date = end_date - datetime.timedelta(weeks=52)
+            max_start_date = end_date - datetime.timedelta(weeks=52)  
         elif granularity == "monthly":
             max_start_date = end_date - datetime.timedelta(days=1096)
         else:
@@ -36,12 +36,9 @@ def get_statistics():
         transactions = Transaction.query.filter(
             Transaction.added_date >= start_date, Transaction.added_date <= end_date
         ).all()
-
+        
         if not transactions:
-            return (
-                jsonify({"error": "No transactions found for the specified period."}),
-                404,
-            )
+            return jsonify({"error": "No transactions found for the specified period."}), 404
 
         transactions_per_period = defaultdict(int)
 
@@ -86,6 +83,13 @@ def get_statistics():
         print(e)
         return jsonify({"error": "Internal server error."}), 500
 
+from flask import jsonify, request
+from datetime import datetime, timedelta
+from collections import defaultdict
+
+from datetime import timedelta
+
+from datetime import timedelta
 
 @statistics_bp.route("/average_exchange_rate", methods=["GET"])
 def get_average_exchange_rate():
@@ -105,86 +109,71 @@ def get_average_exchange_rate():
         if not start_date or not end_date:
             return jsonify({"error": "Start date and end date are required."}), 400
 
-        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
 
+        # Validate maximum duration based on granularity
+        max_duration = None
         if granularity == "daily":
-            max_start_date = end_date - datetime.timedelta(days=30)
+            max_duration = timedelta(days=90)
         elif granularity == "weekly":
-            max_start_date = end_date - datetime.timedelta(weeks=52)
+            max_duration = timedelta(weeks=52)
         elif granularity == "monthly":
-            max_start_date = end_date - datetime.timedelta(days=1096)
-        else:
-            max_start_date = None
+            max_duration = timedelta(days=36 * 30)  # Assuming 30 days per month for simplicity
 
-        if max_start_date and start_date < max_start_date:
-            start_date = max_start_date
+        if max_duration is not None and (end_date - start_date) > max_duration:
+            end_date = start_date + max_duration
+
+        # Validate granularity
+        if granularity not in ["daily", "weekly", "monthly", "yearly"]:
+            return jsonify({"error": "Invalid granularity. Please choose either 'daily', 'weekly', 'monthly', or 'yearly'."}), 400
 
         transactions = Transaction.query.filter(
             Transaction.added_date >= start_date, Transaction.added_date <= end_date
         ).all()
 
         if not transactions:
-            return (
-                jsonify({"error": "No transactions found for the specified period."}),
-                404,
-            )
+            return jsonify({"error": "No transactions found for the specified period."}), 404
 
         lbp_to_usd_totals = defaultdict(float)
         usd_to_lbp_totals = defaultdict(float)
-        counts = defaultdict(int)
+        lbp_to_usd_counts = defaultdict(int)
+        usd_to_lbp_counts = defaultdict(int)
 
         for transaction in transactions:
-            if transaction.usd_to_lbp:
-                usd_amount = transaction.usd_amount
-                lbp_amount = transaction.lbp_amount
-            else:
-                usd_amount = transaction.lbp_amount
-                lbp_amount = transaction.usd_amount
-
             transaction_date = transaction.added_date.date()
+            period = format_period(transaction_date, granularity)
 
-            if granularity == "daily":
-                period = transaction_date.strftime("%Y-%m-%d")
-            elif granularity == "weekly":
-                week_number = transaction_date.isocalendar()[1]
-                period = f"{transaction_date.year}-W{week_number:02d}"
-            elif granularity == "monthly":
-                period = transaction_date.strftime("%Y-%m")
-            elif granularity == "yearly":
-                period = transaction_date.year
+            if transaction.usd_to_lbp:
+                usd_to_lbp_totals[period] += transaction.lbp_amount / transaction.usd_amount
+                usd_to_lbp_counts[period] += 1
             else:
-                return (
-                    jsonify(
-                        {
-                            "error": "Invalid granularity. Please choose either 'daily', 'weekly', 'monthly', or 'yearly'."
-                        }
-                    ),
-                    400,
-                )
+                lbp_to_usd_totals[period] += transaction.lbp_amount / transaction.usd_amount
+                lbp_to_usd_counts[period] += 1
 
-            lbp_to_usd_totals[period] += lbp_amount / usd_amount
-            usd_to_lbp_totals[period] += usd_amount / lbp_amount
-            counts[period] += 1
-
-        average_lbp_to_usd = {
-            period: lbp_to_usd_totals[period] / counts[period]
-            for period in lbp_to_usd_totals
-        }
-        average_usd_to_lbp = {
-            period: usd_to_lbp_totals[period] / counts[period]
-            for period in usd_to_lbp_totals
-        }
+        average_lbp_to_usd = {period: total / lbp_to_usd_counts[period] for period, total in lbp_to_usd_totals.items() if lbp_to_usd_counts[period] > 0}
+        average_usd_to_lbp = {period: total / usd_to_lbp_counts[period] for period, total in usd_to_lbp_totals.items() if usd_to_lbp_counts[period] > 0}
 
         response = {"lbp_to_usd": average_lbp_to_usd, "usd_to_lbp": average_usd_to_lbp}
         return jsonify(response), 200
 
     except ValueError:
         return jsonify({"error": "Invalid date format. Please use YYYY-MM-DD."}), 400
-
     except Exception as e:
-        print(e)
-        return jsonify({"error": "Internal server error."}), 500
+        return jsonify({"error": str(e)}), 500
+
+def format_period(date, granularity):
+    if granularity == "daily":
+        return date.strftime("%Y-%m-%d")
+    elif granularity == "weekly":
+        week_number = date.isocalendar()[1]
+        return f"{date.year}-W{week_number:02d}"
+    elif granularity == "monthly":
+        return date.strftime("%Y-%m")
+    elif granularity == "yearly":
+        return str(date.year)
+
+
 
 
 @statistics_bp.route("/highest_transaction_today", methods=["GET"])
@@ -194,14 +183,10 @@ def get_highest_transaction_today():
         start_of_day = datetime.datetime.combine(today, datetime.time.min)
         end_of_day = datetime.datetime.combine(today, datetime.time.max)
 
-        highest_transaction = (
-            Transaction.query.filter(
-                Transaction.added_date >= start_of_day,
-                Transaction.added_date <= end_of_day,
-            )
-            .order_by(Transaction.usd_amount.desc())
-            .first()
-        )
+        highest_transaction = Transaction.query.filter(
+            Transaction.added_date >= start_of_day,
+            Transaction.added_date <= end_of_day
+        ).order_by(Transaction.usd_amount.desc()).first()
 
         if not highest_transaction:
             return jsonify({"error": "No transactions found for today."}), 404
@@ -233,29 +218,22 @@ def get_volume_of_transactions():
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
         end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
 
-        usd_volume = (
-            db.session.query(db.func.sum(Transaction.usd_amount))
-            .filter(
-                Transaction.usd_to_lbp == True,
-                Transaction.added_date >= start_date,
-                Transaction.added_date <= end_date,
-            )
-            .scalar()
-            or 0
-        )
+        usd_volume = db.session.query(db.func.sum(Transaction.usd_amount)).filter(
+            Transaction.usd_to_lbp == True,
+            Transaction.added_date >= start_date,
+            Transaction.added_date <= end_date
+        ).scalar() or 0
 
-        lbp_volume = (
-            db.session.query(db.func.sum(Transaction.lbp_amount))
-            .filter(
-                Transaction.usd_to_lbp == False,
-                Transaction.added_date >= start_date,
-                Transaction.added_date <= end_date,
-            )
-            .scalar()
-            or 0
-        )
+        lbp_volume = db.session.query(db.func.sum(Transaction.lbp_amount)).filter(
+            Transaction.usd_to_lbp == False,
+            Transaction.added_date >= start_date,
+            Transaction.added_date <= end_date
+        ).scalar() or 0
 
-        response = {"usd_volume": int(usd_volume), "lbp_volume": int(lbp_volume)}
+        response = {
+            "usd_volume": int(usd_volume),
+            "lbp_volume": int(lbp_volume)
+        }
 
         return jsonify(response), 200
 
@@ -279,28 +257,20 @@ def get_largest_transaction_amount():
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
         end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
 
-        largest_transaction = (
-            Transaction.query.filter(
-                Transaction.added_date >= start_date, Transaction.added_date <= end_date
-            )
-            .order_by(Transaction.usd_amount.desc())
-            .first()
-        )
+        largest_transaction = Transaction.query.filter(
+            Transaction.added_date >= start_date,
+            Transaction.added_date <= end_date
+        ).order_by(Transaction.usd_amount.desc()).first()
 
         if not largest_transaction:
-            return (
-                jsonify({"error": "No transactions found for the specified period."}),
-                404,
-            )
+            return jsonify({"error": "No transactions found for the specified period."}), 404
 
         response = {
             "largest_transaction": {
                 "usd_amount": largest_transaction.usd_amount,
                 "lbp_amount": largest_transaction.lbp_amount,
                 "usd_to_lbp": largest_transaction.usd_to_lbp,
-                "added_date": largest_transaction.added_date.strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                ),
+                "added_date": largest_transaction.added_date.strftime("%Y-%m-%d %H:%M:%S")
             }
         }
 
