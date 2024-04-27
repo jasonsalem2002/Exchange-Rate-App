@@ -62,4 +62,5 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="past_30_days_vs_predicted_30_days">Past 30 days vs Predicted 30 days</string>
 </resources>

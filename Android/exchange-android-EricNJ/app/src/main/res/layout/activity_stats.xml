@@ -1,70 +1,112 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".stats">
+    android:orientation="vertical"
+    tools:context=".ChartFragment">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.152"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45" />
+        android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="2dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/past_30_days_vs_predicted_30_days"
+                android:layout_gravity="center"
+                android:textSize="15dp" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart1"
+                android:layout_width="match_parent"
+                android:layout_height="600dp" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="9dp"
-        android:layout_marginBottom="7dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/textView6"
-        app:layout_constraintEnd_toEndOf="@+id/textView6" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Statistics"
+                android:textSize="30dp"
+                >
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
-        android:layout_marginBottom="2dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/textView4"
-        app:layout_constraintEnd_toEndOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            </TextView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                android:id="@+id/highest"
+                android:layout_width="wrap_content"
+                android:text="Highest Transaction Amount Today:         "
+                android:layout_height="40dp" />
+            <TextView
+                android:id="@+id/highestamount"
+                android:layout_width="wrap_content"
+                android:text="Amount Today:"
+                android:layout_height="40dp" />
+        </LinearLayout>
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+              <TextView
+                  android:id="@+id/largest"
+                  android:layout_width="wrap_content"
+                  android:text="Largest Transaction:                                     "
+                  android:layout_height="40dp" />
+              <TextView
+                  android:id="@+id/largestamount"
+                  android:layout_width="wrap_content"
+                  android:text="Amount Today:"
+                  android:layout_height="40dp" />
+
+          </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/volume"
+                    android:layout_width="wrap_content"
+                    android:text="Trnsaction Volume:                                       "
+                    android:layout_height="40dp" />
+                <TextView
+                    android:id="@+id/volumeamount"
+                    android:layout_width="wrap_content"
+                    android:text="Amount Today:"
+                    android:layout_height="40dp" />
+
+            </LinearLayout>
+
+
+            <EditText
+                android:id="@+id/startDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Start Date"
+                android:focusable="false"/>
+
+            <EditText
+                android:id="@+id/endDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="End Date"
+                android:focusable="false"/>
+
+
+            <Button
+                android:id="@+id/showGraphButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Dates to Generate Statistics"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
